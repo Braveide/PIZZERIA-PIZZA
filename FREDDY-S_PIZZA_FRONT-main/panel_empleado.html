@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FREDDY'S PIZZA - Panel de Empleado</title>
+    <style>
+        /* Estilos Generales y Reset */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; 
+            background: #f5f5f5; 
+        }
+
+        /* ------------------------------------ */
+        /* HEADER (Encabezado Oscuro de la Referencia) */
+        /* ------------------------------------ */
+        .header {
+            background: #1e293b;
+            padding: 15px 30px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header-left h1 { font-size: 24px; font-weight: 600; }
+        .header-left p { font-size: 14px; opacity: 0.8; margin-top: 2px; }
+
+        .back-btn { background: none; border: none; color: white; font-size: 24px; cursor: pointer; padding: 5px; text-decoration: none; line-height: 1; }
+        .logout-btn { background: none; border: 1px solid white; color: white; padding: 8px 15px; border-radius: 6px; font-size: 14px; cursor: pointer; transition: background 0.3s; }
+        .logout-btn:hover { background: rgba(255, 255, 255, 0.1); }
+
+        /* ------------------------------------ */
+        /* CONTENEDOR Y FILTROS */
+        /* ------------------------------------ */
+        .panel-container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        
+        .section-title-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .pedido-count {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .filter-select {
+            padding: 8px 15px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            background: white;
+            font-size: 14px;
+            cursor: pointer;
+            appearance: none;
+        }
+
+        /* ------------------------------------ */
+        /* TARJETA DE PEDIDO INDIVIDUAL */
+        /* ------------------------------------ */
+        .order-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            position: relative;
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .order-header h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .time-elapsed {
+            font-size: 13px;
+            color: #999;
+        }
+
+        .status-tag {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+
+        .tag-Pendiente { background: #fff3cd; color: #ffc107; }
+        .tag-Preparando { background: #d1ecf1; color: #007bff; } /* Azul claro para En Preparación */
+        .tag-EnCamino { background: #d4edda; color: #28a745; }
+        .tag-Entregado { background: #e6e6fa; color: #6f42c1; }
+        .tag-Cancelado { background: #f8d7da; color: #dc3545; }
+
+
+        .client-info-list {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 15px;
+        }
+        
+        .client-info-list li {
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .client-info-list .icon {
+            color: #ff6b00; /* Naranja para iconos de información */
+            margin-right: 10px;
+            min-width: 15px;
+            text-align: center;
+        }
+
+        .product-details {
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+        }
+        
+        .product-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .product-row.total {
+            font-weight: 700;
+            margin-top: 10px;
+        }
+        
+        .product-row.total .price {
+            color: #ff6b00;
+        }
+
+        .action-btn-full {
+            width: 100%;
+            padding: 12px 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s, opacity 0.3s;
+            margin-top: 20px;
+        }
+
+        .btn-blue { background: #007bff; color: white; }
+        .btn-red { background: #dc3545; color: white; margin-left: 10px; }
+        
+        .btn-blue:hover, .btn-red:hover { opacity: 0.9; }
+
+        @media (max-width: 600px) {
+            .header { padding: 15px; }
+            .panel-container { padding: 0 10px; }
+            .header-left h1 { font-size: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-left">
+            
+            <div class="header-info">
+                <h1>Panel de Vendedor</h1>
+                <p>Gestiona tus pedidos</p>
+            </div>
+        </div>
+        <a href="login.html" class="logout-btn" onclick="cerrarSesion()">Cerrar Sesión</a>
+    </header>
+
+    <div class="panel-container">
+        
+        <div class="section-title-bar">
+            <h2 class="pedido-count" id="pedidoCount">Pedidos (0)</h2>
+            <select id="statusFilter" class="filter-select" onchange="filterOrders()">
+                <option value="Activos">Activos (Pendiente, Prep., Camino)</option>
+                <option value="Todos">Todos</option>
+                <option value="Pendiente">Pendiente</option>
+                <option value="Preparando">En Preparación</option>
+                <option value="En Camino">En Camino</option>
+                <option value="Entregado">Entregado</option>
+                <option value="Cancelado">Cancelado</option>
+            </select>
+        </div>
+
+        <div id="ordersList">
+            <p style="text-align: center; color: #999; margin-top: 50px;">Cargando pedidos...</p>
+        </div>
+
+    </div>
+
+    <script>
+        const ORDER_STORAGE_KEY = 'listaPedidos';
+        let orders = [];
+
+        // Mapeo de estados para textos y colores de botones
+        const STATUS_MAP = {
+            'Pendiente': { tag: 'tag-Pendiente', btnText: 'Marcar en Preparación', nextStatus: 'Preparando', btnClass: 'btn-blue' },
+            'Preparando': { tag: 'tag-Preparando', btnText: 'Marcar En Camino', nextStatus: 'En Camino', btnClass: 'btn-blue' },
+            'En Camino': { tag: 'tag-EnCamino', btnText: 'Marcar Entregado', nextStatus: 'Entregado', btnClass: 'btn-blue' },
+            'Entregado': { tag: 'tag-Entregado', btnText: 'Pedido Finalizado', nextStatus: 'Entregado', disabled: true, btnClass: 'btn-secondary' },
+            'Cancelado': { tag: 'tag-Cancelado', btnText: 'Pedido Cancelado', nextStatus: 'Cancelado', disabled: true, btnClass: 'btn-secondary' }
+        };
+
+        // ----------------------------------------------------
+        // LÓGICA DE CARGA Y RENDERIZACIÓN
+        // ----------------------------------------------------
+
+        function loadOrders() {
+            const savedOrders = localStorage.getItem(ORDER_STORAGE_KEY);
+            orders = savedOrders ? JSON.parse(savedOrders) : [];
+            filterOrders(); // Aplicar el filtro inicial
+        }
+
+        function saveOrders() {
+            localStorage.setItem(ORDER_STORAGE_KEY, JSON.stringify(orders));
+        }
+        
+        function filterOrders() {
+            const statusFilter = document.getElementById('statusFilter').value;
+            let filteredOrders;
+
+            if (statusFilter === 'Activos') {
+                filteredOrders = orders.filter(o => ['Pendiente', 'Preparando', 'En Camino'].includes(o.estado));
+            } else if (statusFilter === 'Todos') {
+                filteredOrders = orders;
+            } else {
+                filteredOrders = orders.filter(o => o.estado === statusFilter);
+            }
+            
+            // Actualizar el contador de pedidos
+            document.getElementById('pedidoCount').textContent = `Pedidos (${filteredOrders.length})`;
+
+            renderOrders(filteredOrders);
+        }
+
+
+        function renderOrders(currentOrders) {
+            const ordersListContainer = document.getElementById('ordersList');
+            ordersListContainer.innerHTML = '';
+
+            if (currentOrders.length === 0) {
+                ordersListContainer.innerHTML = '<p style="text-align: center; color: #999; margin-top: 30px;">No se encontraron pedidos con este filtro.</p>';
+                return;
+            }
+
+            currentOrders.forEach(order => {
+                const map = STATUS_MAP[order.estado] || STATUS_MAP['Pendiente'];
+                const disabled = map.disabled ? 'disabled' : '';
+                
+                // Simulación de tiempo transcurrido (para coincidir con la referencia)
+                const orderTimeElapsed = Math.floor(Math.random() * 20) + 5; 
+                
+                const itemsHtml = order.items.map(item => 
+                    `<div class="product-row"><span>${item.name} x${item.quantity}</span><span class="price">$${(item.price * item.quantity).toFixed(2)}</span></div>`
+                ).join('');
+
+                const orderCard = document.createElement('div');
+                orderCard.classList.add('order-card');
+                
+                orderCard.innerHTML = `
+                    <div class="order-header">
+                        <h3>Pedido #${order.id} <span class="status-tag ${map.tag}">${order.estado === 'Preparando' ? 'En Preparación' : order.estado}</span></h3>
+                        <span class="time-elapsed">${orderTimeElapsed}m</span>
+                    </div>
+
+                    <ul class="client-info-list">
+                        <li><span class="icon">📞</span>${order.cliente} -- ${order.telefono}</li>
+                        <li><span class="icon">📍</span>${order.direccion}</li>
+                        <li><span class="icon">💳</span>${order.metodoPago === 'Efectivo' ? 'Pago en Efectivo' : 'Pago con Tarjeta'}</li>
+                    </ul>
+
+                    <div class="product-details">
+                        ${itemsHtml}
+                        <div class="product-row total"><span>Total:</span><span class="price">$${order.total.toFixed(2)}</span></div>
+                    </div>
+
+                    <div style="display: flex; gap: 10px;">
+                        <button class="action-btn-full ${map.btnClass}" onclick="updateOrderStatus('${order.id}', '${map.nextStatus}')" ${disabled}>
+                            ${map.btnText}
+                        </button>
+                        ${order.estado !== 'Entregado' && order.estado !== 'Cancelado' ? 
+                            `<button class="action-btn-full btn-red" style="width: auto;" onclick="updateOrderStatus('${order.id}', 'Cancelado')">
+                                Cancelar
+                            </button>` 
+                        : ''}
+                    </div>
+                `;
+                ordersListContainer.appendChild(orderCard);
+            });
+        }
+
+        // ----------------------------------------------------
+        // LÓGICA DE ACTUALIZACIÓN DE ESTADO
+        // ----------------------------------------------------
+        
+        function updateOrderStatus(id, newStatus) {
+            const orderIndex = orders.findIndex(o => o.id === id);
+
+            if (orderIndex !== -1) {
+                // Previene modificar estados finales
+                if (orders[orderIndex].estado === 'Entregado' || orders[orderIndex].estado === 'Cancelado') {
+                    alert('El pedido ya está en un estado final y no puede ser modificado.');
+                    return;
+                }
+                
+                // Si el nuevo estado es Cancelado, lo marcamos y salimos
+                if (newStatus === 'Cancelado') {
+                    if (!confirm(`¿Estás seguro de cancelar el Pedido #${id}?`)) return;
+                }
+
+                orders[orderIndex].estado = newStatus;
+                saveOrders();
+                loadOrders(); // Recargar la vista completa
+            }
+        }
+
+        // ----------------------------------------------------
+        // INICIALIZACIÓN Y CIERRE DE SESIÓN
+        // ----------------------------------------------------
+
+        function cerrarSesion() {
+            window.location.href = 'login.html'; 
+        }
+
+        document.addEventListener('DOMContentLoaded', loadOrders);
+    </script>
+</body>
+</html>

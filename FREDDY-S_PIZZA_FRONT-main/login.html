@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FREDDY'S PIZZA - Iniciar Sesión</title>
+    <style>
+      
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background:#ff6b00;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 450px;
+            width: 100%;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .logo {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, #ff6b00 0%, #ff3d00 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 20px rgba(255, 61, 0, 0.3);
+        }
+
+        .logo img {
+            width: 50%; 
+            height: 50%;
+            object-fit: contain;
+            
+        }
+        
+        .logo:empty::before {
+            content: "🍕";
+            font-size: 40px;
+            line-height: 100px;
+        }
+
+        h1 {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 16px;
+            margin-bottom: 30px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 12px;
+            background: #f5f5f5;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #666;
+        }
+
+        .tab.active {
+            background: #e8e8e8;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            background: #f5f5f5;
+            border-radius: 10px;
+            padding: 0 15px;
+        }
+
+        .input-icon {
+            color: #999;
+            margin-right: 10px;
+            font-size: 18px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 15px 0;
+            border: none;
+            background: transparent;
+            font-size: 15px;
+            color: #333;
+            outline: none;
+        }
+
+        .form-group input::placeholder {
+            color: #999;
+        }
+
+        .toggle-password {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #999;
+            font-size: 18px;
+            padding: 5px;
+            user-select: none; 
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(90deg, #ff6b00 0%, #ff3d00 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            margin-top: 10px;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(255, 61, 0, 0.3);
+        }
+
+        .btn-submit:active {
+            transform: translateY(0);
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: #ff6b00; 
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .back-link:hover {
+            color: #ff3d00; 
+        }
+
+        #registerForm {
+            display: none;
+        }
+        
+        #errorMessage {
+            color: #e3342f; 
+            background-color: #fcebeb; 
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 500;
+            display: none; 
+            border: 1px solid #e3342f;
+        }
+
+        /* --- NUEVO ESTILO: Separador y Botón de Google --- */
+        .separator {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 25px 0 15px;
+        }
+
+        .separator::before,
+        .separator::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .separator:not(:empty)::before {
+            margin-right: .25em;
+        }
+
+        .separator:not(:empty)::after {
+            margin-left: .25em;
+        }
+
+        .google-btn {
+            width: 100%;
+            padding: 12px;
+            background: white;
+            color: #333;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s, box-shadow 0.2s;
+        }
+
+        .google-btn:hover {
+            background: #f8f8f8;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .google-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+    
+        <div class="logo">
+            <img src="imagenes\logo_pizza.png" alt="Logo Freddy's Pizza">
+        </div>
+
+        <h1>Freddy´s Pizza</h1>
+        <p class="subtitle">¡Bienvenido!</p>
+    
+        <div id="errorMessage"></div>
+
+        <div class="tabs">
+            <button class="tab active">Iniciar Sesión</button>
+            <a href="registro.html" style="flex: 1; text-decoration: none;">
+                <button type="button" class="tab" style="width: 100%;">Registrarse</button>
+            </a>
+        </div>
+
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="emailInput">Correo Electrónico</label>
+                <div class="input-wrapper">
+                    <span class="input-icon">📧</span>
+                    <input type="email" id="emailInput" placeholder="tu@email.com" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="passwordInput">Contraseña</label>
+                <div class="input-wrapper">
+                    <span class="input-icon">🔒</span>
+                    <input type="password" id="passwordInput" placeholder="Tu contraseña" required>
+                    <button type="button" class="toggle-password" onclick="togglePassword('passwordInput')">👁️</button>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-submit">Iniciar Sesión</button>
+        </form>
+
+        <div class="separator">o</div>
+        
+        <button class="google-btn" onclick="iniciarSesionGoogle()">
+             <img src="data:image/svg+xml;utf8,<svg version='1.1' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'><path fill='%23EA4335' d='M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.12 30.49 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.9 12.7 18.06 9.5 24 9.5z'/><path fill='%234285F4' d='M46.33 24c0-.75-.06-1.5-.18-2.24H24v4.49h12.94c-.58 2.9-2.5 5.28-5.46 6.82l7.98 6.19C42.84 35.8 46.33 30.64 46.33 24z'/><path fill='%23FBBC05' d='M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.28-3.14.76-4.59l-7.98-6.19C2.12 17.5 0 20.64 0 24c0 3.36 2.12 6.5 5.29 9.59l7.98-6.19z'/><path fill='%2334A853' d='M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.98-6.19c-2.73 1.83-6.18 2.9-9.91 2.9-5.44 0-10.42-3.13-12.79-7.7L2.56 34.78C6.51 42.62 14.62 48 24 48z'/></svg>" class="google-icon" alt="Google Icon">
+            Iniciar Sesión con Google
+        </button>
+        <a href="menu_cliente.html" class="back-link">← Volver al Menú Principal</a>
+    </div>
+
+    <script>
+        // ----------------------------------------------------
+        // 1. SIMULACIÓN DE USUARIOS REGISTRADOS
+        // ----------------------------------------------------
+        const registeredUsers = [
+            { email: 'admin@freddys.com', password: 'admin', role: 'admin' }, 
+            { email: 'cliente@freddys.com', password: '123456', role: 'client' }
+        ];
+
+        // ----------------------------------------------------
+        // 2. LÓGICA DE INICIO DE SESIÓN CON FORMULARIO
+        // ----------------------------------------------------
+        const loginForm = document.getElementById('loginForm');
+        const emailInput = document.getElementById('emailInput');
+        const passwordInput = document.getElementById('passwordInput');
+        const errorMessageDiv = document.getElementById('errorMessage');
+
+        loginForm.addEventListener('submit', function(event) {
+            event.preventDefault(); 
+            handleLogin();
+        });
+
+        function handleLogin() {
+            const email = emailInput.value.trim();
+            const password = passwordInput.value.trim();
+            
+            errorMessageDiv.style.display = 'none';
+
+            const user = registeredUsers.find(u => u.email === email && u.password === password);
+
+            if (user) {
+                if (user.role === 'admin') {
+                    window.location.href = 'admin_menu.html';
+                } else if (user.role === 'client') {
+                    window.location.href = 'menu_cliente.html';
+                }
+            } else {
+                showError('Correo electrónico o contraseña incorrectos. Prueba con admin@freddys.com / admin o cliente@freddys.com / 123456');
+            }
+        }
+
+        // ----------------------------------------------------
+        // 3. LÓGICA DE INICIO DE SESIÓN CON GOOGLE (Placeholder)
+        // ----------------------------------------------------
+        function iniciarSesionGoogle() {
+            // NOTA: Aquí iría la lógica real de la API de Google (GSI)
+            alert("API de Google no configurada. ¡Redirigiendo a cliente por defecto!");
+            
+            // Simulación de éxito de login con Google
+            window.location.href = 'menu_cliente.html'; 
+        }
+
+
+        // ----------------------------------------------------
+        // 4. FUNCIONES DE UTILIDAD
+        // ----------------------------------------------------
+        function showError(message) {
+            errorMessageDiv.textContent = message;
+            errorMessageDiv.style.display = 'block';
+        }
+
+        function togglePassword(id) {
+            const input = document.getElementById(id);
+            const button = input.nextElementSibling; 
+
+            if (input.type === "password") {
+                input.type = "text";
+                button.textContent = "🙈"; 
+            } else {
+                input.type = "password";
+                button.textContent = "👁️"; 
+            }
+        }
+    </script>
+</body>
+</html>
