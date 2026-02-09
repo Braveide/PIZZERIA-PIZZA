@@ -435,25 +435,28 @@
         document.getElementById('total').textContent = `$${total.toFixed(2)}`;
     }
 
-    // FUNCIÓN CORREGIDA: Guarda el carrito actualizado y redirige a pago.html
+    
     function checkout() {
         const items = Object.values(cart);
         
-        // 1. Validar que hay productos
+       
         if (items.length === 0) {
             alert("Tu carrito está vacío. Agrega algo delicioso antes de proceder al pago.");
             return;
         }
         
-        // 2. Guarda el carrito en localStorage (CRUCIAL para que 'pago.html' funcione)
-        saveCart();
+               saveCart();
         
-        // 3. Redirige a la página de pago
-        window.location.href = 'pago.html'; 
-    }
+               const simuladorErrorDeRed = false; 
+        
+        if (simuladorErrorDeRed) {
+            // Redirigimos manualmente a tu pantalla 404
+            window.location.href = '404.html';
+            return; // Detener la ejecución
+        }
+            }
 
-    // Cargar el carrito al iniciar la página
-    loadCart();
+       loadCart();
 </script>
 </body>
-</html>
+</html>g
