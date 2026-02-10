@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FREDDY'S PIZZA - Iniciar Sesión</title>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <style>
-      
         * {
             margin: 0;
             padding: 0;
@@ -48,7 +48,6 @@
             width: 50%; 
             height: 50%;
             object-fit: contain;
-            
         }
         
         .logo:empty::before {
@@ -200,7 +199,7 @@
             border: 1px solid #e3342f;
         }
 
-        /* --- NUEVO ESTILO: Separador y Botón de Google --- */
+        /* Separador y contenedor del botón de Google */
         .separator {
             display: flex;
             align-items: center;
@@ -223,31 +222,9 @@
             margin-left: .25em;
         }
 
-        .google-btn {
-            width: 100%;
-            padding: 12px;
-            background: white;
-            color: #333;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background 0.2s, box-shadow 0.2s;
-        }
-
-        .google-btn:hover {
-            background: #f8f8f8;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-        }
-
-        .google-icon {
-            width: 20px;
-            height: 20px;
-            margin-right: 10px;
+        /* Contenedor invisible para inicializar Google */
+        #g_id_onload {
+            display: none;
         }
 
     </style>
@@ -256,7 +233,7 @@
     <div class="container">
     
         <div class="logo">
-            <img src="imagenes\logo_pizza.png" alt="Logo Freddy's Pizza">
+            <img src="imagenes/logo_pizza.png" alt="Logo Freddy's Pizza">
         </div>
 
         <h1>Freddy´s Pizza</h1>
@@ -294,10 +271,22 @@
 
         <div class="separator">o</div>
         
-        <button class="google-btn" onclick="iniciarSesionGoogle()">
-             <img src="data:image/svg+xml;utf8,<svg version='1.1' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'><path fill='%23EA4335' d='M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.12 30.49 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.9 12.7 18.06 9.5 24 9.5z'/><path fill='%234285F4' d='M46.33 24c0-.75-.06-1.5-.18-2.24H24v4.49h12.94c-.58 2.9-2.5 5.28-5.46 6.82l7.98 6.19C42.84 35.8 46.33 30.64 46.33 24z'/><path fill='%23FBBC05' d='M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.28-3.14.76-4.59l-7.98-6.19C2.12 17.5 0 20.64 0 24c0 3.36 2.12 6.5 5.29 9.59l7.98-6.19z'/><path fill='%2334A853' d='M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.98-6.19c-2.73 1.83-6.18 2.9-9.91 2.9-5.44 0-10.42-3.13-12.79-7.7L2.56 34.78C6.51 42.62 14.62 48 24 48z'/></svg>" class="google-icon" alt="Google Icon">
-            Iniciar Sesión con Google
-        </button>
+        <div id="g_id_onload"
+             data-client_id="TU_ID_DE_CLIENTE_AQUÍ.apps.googleusercontent.com"
+             data-callback="handleCredentialResponse"
+             data-auto_prompt="false">
+        </div>
+        
+        <div class="g_id_signin"
+             data-type="standard"
+             data-size="large"
+             data-theme="outline"
+             data-text="sign_in_with"
+             data-shape="rectangular"
+             data-logo_alignment="left"
+             style="width: 100%; display: flex; justify-content: center;">
+        </div>
+
         <a href="menu_cliente.html" class="back-link">← Volver al Menú Principal</a>
     </div>
 
@@ -343,14 +332,33 @@
         }
 
         // ----------------------------------------------------
-        // 3. LÓGICA DE INICIO DE SESIÓN CON GOOGLE (Placeholder)
+        // 3. LÓGICA DE INICIO DE SESIÓN CON GOOGLE (Real)
         // ----------------------------------------------------
-        function iniciarSesionGoogle() {
-            // NOTA: Aquí iría la lógica real de la API de Google (GSI)
-            alert("API de Google no configurada. ¡Redirigiendo a cliente por defecto!");
+        function handleCredentialResponse(response) {
+            // Decodificar el token JWT recibido de Google
+            const responsePayload = decodeJwtResponse(response.credential);
+
+            console.log("ID: " + responsePayload.sub);
+            console.log('Nombre: ' + responsePayload.name);
+            console.log('Correo: ' + responsePayload.email);
+
+            // Simulación de inicio de sesión guardando datos en LocalStorage
+            localStorage.setItem('userEmail', responsePayload.email);
+            localStorage.setItem('userName', responsePayload.name);
             
-            // Simulación de éxito de login con Google
-            window.location.href = 'menu_cliente.html'; 
+            // Redirigir al menú principal
+            window.location.href = 'menu_cliente.html';
+        }
+
+        // Función para decodificar el token JWT
+        function decodeJwtResponse(token) {
+            var base64Url = token.split('.')[1];
+            var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+            var jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            }).join(''));
+
+            return JSON.parse(jsonPayload);
         }
 
 
