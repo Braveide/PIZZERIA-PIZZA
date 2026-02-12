@@ -32,7 +32,7 @@
         .input-icon-group { display: flex; align-items: center; gap: 10px; margin-bottom: 5px; }
         .input-icon { font-size: 20px; color: #ff6b00; }
 
-        /* Métodos de Pago - ACTUALIZADO */
+        /* Métodos de Pago - ADAPTADO */
         .payment-option { display: flex; align-items: center; padding: 15px; border-radius: 8px; margin-bottom: 10px; cursor: pointer; border: 2px solid #eee; transition: all 0.2s; }
         .payment-option:hover { border-color: #ff6b00; }
         .payment-option.selected { border-color: #ff6b00; background: #fff8f5; }
@@ -44,7 +44,13 @@
 
         .payment-info { flex-grow: 1; display: flex; align-items: center; gap: 10px; }
         .payment-info h3 { font-size: 16px; color: #333; }
-        .payment-logo { height: 30px; }
+        .payment-info p { font-size: 13px; color: #777; }
+        .payment-logo { height: 25px; }
+
+        /* Campos de tarjeta */
+        .card-fields { margin-top: 15px; padding-top: 15px; border-top: 1px solid #f0f0f0; display: none; }
+        .split-fields { display: flex; gap: 15px; }
+        .split-fields .input-group { flex: 1; }
 
         /* Botones */
         .action-buttons { display: flex; gap: 20px; margin-top: 30px; margin-bottom: 50px; }
@@ -100,10 +106,37 @@
                     </div>
                 </div>
 
+                <div class="payment-option" data-method="card">
+                    <span class="radio-icon"></span>
+                    <div class="payment-info">
+                        <h3>Tarjeta de Crédito/Débito</h3>
+                    </div>
+                </div>
+                
+                <div id="card-details" class="card-fields">
+                    <div class="input-group">
+                        <label>Número de Tarjeta</label>
+                        <input type="text" class="input-field" placeholder="0000 0000 0000 0000" maxlength="19">
+                    </div>
+                    <div class="split-fields">
+                        <div class="input-group">
+                            <label>MM/YY</label>
+                            <input type="text" class="input-field" placeholder="MM/YY" maxlength="5">
+                        </div>
+                        <div class="input-group">
+                            <label>CVV</label>
+                            <input type="text" class="input-field" placeholder="123" maxlength="4">
+                        </div>
+                    </div>
+                </div>
+
                 <div class="payment-option" data-method="mercadopago">
                     <span class="radio-icon"></span>
                     <div class="payment-info">
-                        <h3>Mercado Pago</h3>
+                        <div>
+                            <h3>Mercado Pago</h3>
+                            <p>Pagar rápido y seguro</p>
+                        </div>
                         <img src="https://logospng.org/download/mercado-pago/logo-mercado-pago-256.png" class="payment-logo" alt="MP">
                     </div>
                 </div>
@@ -111,7 +144,10 @@
                 <div class="payment-option" data-method="paypal">
                     <span class="radio-icon"></span>
                     <div class="payment-info">
-                        <h3>PayPal</h3>
+                        <div>
+                            <h3>PayPal</h3>
+                            <p>Pago internacional seguro</p>
+                        </div>
                         <img src="https://logospng.org/download/paypal/logo-paypal-256.png" class="payment-logo" alt="PP">
                     </div>
                 </div>
@@ -119,7 +155,7 @@
             
             <div class="action-buttons">
                 <button class="back-button" onclick="window.location.href='carrito.html'" type="button">Volver</button>
-                <button class="confirm-button" type="submit">Continuar al Pago</button>
+                <button class="confirm-button" type="submit">Confirmar Pedido</button>
             </div>
         </form>
     </div>
@@ -158,21 +194,25 @@
         document.getElementById('order-total').textContent = `$${totalAmount.toFixed(2)}`;
     }
 
-    // 2. Selección de método de pago
+    // 2. Selección de método de pago (Adaptado para mostrar campos de tarjeta)
     function setupPaymentSelection() {
         const options = document.querySelectorAll('.payment-option');
+        const cardDetails = document.getElementById('card-details');
+
         options.forEach(option => {
             option.addEventListener('click', () => {
                 options.forEach(opt => opt.classList.remove('selected'));
                 option.classList.add('selected');
                 selectedMethod = option.getAttribute('data-method');
+                
+                // Mostrar campos de tarjeta solo si se selecciona "Tarjeta"
+                cardDetails.style.display = (selectedMethod === 'card') ? 'block' : 'none';
             });
         });
     }
     
-    // 3. Lógica para iniciar el pago (Adaptado para Vercel Functions)
-    async function initiatePayment() {
-        // Recoger datos del formulario
+    // 3. Lógica para confirmar pedido
+    function initiatePayment() {
         const orderData = {
             nombre: document.getElementById('nombre').value,
             telefono: document.getElementById('telefono').value,
@@ -182,24 +222,24 @@
             metodo: selectedMethod
         };
 
-        if (selectedMethod === 'cash') {
-            // Lógica para efectivo (igual que antes)
-            saveOrderToSQL(orderData, 'Efectivo');
-            window.location.href = 'pedido_confirmado.html';
+        // Lógica de redirección según el método
+        if (selectedMethod === 'mercadopago') {
+            alert("Redirigiendo a Mercado Pago...");
+            // Aquí iría tu fetch al backend para obtener la URL de pago
+        } else if (selectedMethod === 'paypal') {
+            alert("Redirigiendo a PayPal...");
+            // Aquí iría tu fetch al backend para obtener la URL de pago
         } else {
-            // LLAMAR A TU BACKEND EN VERCEL
-            // Aquí llamarías a una función serverless tipo /api/crear-pago.js
-            alert(`Iniciando pago con ${selectedMethod}. Esto redirigiría a la plataforma.`);
-            
-            // SIMULACIÓN: Redirigir como si fuera éxito
-            saveOrderToSQL(orderData, selectedMethod === 'paypal' ? 'PayPal' : 'Mercado Pago');
-            window.location.href = 'pedido_confirmado.html';
+            // Efectivo o Tarjeta genérica (simulación)
+            alert("Pedido confirmado.");
         }
+        
+        saveOrderToSQL(orderData);
+        window.location.href = 'pedido_confirmado.html';
     }
 
-    // Función simulada para guardar en SQL Server vía backend
-    function saveOrderToSQL(data, metodo) {
-        console.log("Guardando en SQL Server...", { ...data, metodo });
+    function saveOrderToSQL(data) {
+        console.log("Guardando en SQL Server...", data);
         // Aquí iría tu fetch('/api/guardar-pedido', ...)
     }
 
