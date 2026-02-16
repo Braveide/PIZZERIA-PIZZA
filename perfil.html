@@ -27,28 +27,33 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // 1. Leer los datos guardados en el login
-            const userDataJSON = localStorage.getItem('userPizzaApp');
+    document.addEventListener('DOMContentLoaded', () => {
+        // 1. Leer los datos guardados en el login
+        const userDataJSON = localStorage.getItem('userPizzaApp');
 
-            if (userDataJSON) {
+        if (userDataJSON) {
+            try {
                 const userData = JSON.parse(userDataJSON);
 
                 // 2. Insertar los datos en el HTML
                 document.getElementById('user-name').textContent = userData.name;
                 document.getElementById('user-email').textContent = userData.email;
                 document.getElementById('user-picture').src = userData.picture;
-            } else {
-                // Si no hay sesión, volver al login
-                window.location.href = 'login.html';
+            } catch (e) {
+                console.error("Error al parsear datos de usuario", e);
+                window.location.href = 'login.html'; // Si hay error, al login
             }
-        });
-
-        // Función para cerrar sesión
-        function logout() {
-            localStorage.removeItem('userPizzaApp');
+        } else {
+            // Si no hay sesión, volver al login
             window.location.href = 'login.html';
         }
-    </script>
+    });
+
+    // Función para cerrar sesión
+    function logout() {
+        localStorage.removeItem('userPizzaApp');
+        window.location.href = 'login.html';
+    }
+</script>
 </body>
 </html>

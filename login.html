@@ -335,22 +335,27 @@
         // ----------------------------------------------------
         // 3. LÓGICA DE INICIO DE SESIÓN CON GOOGLE (Real)
         // ----------------------------------------------------
-     function handleCredentialResponse(response) {
-    // Decodificar el token de Google
+   // --- ESTE ES EL CODIGO QUE DEBES ACTUALIZAR EN login.html ---
+
+function handleCredentialResponse(response) {
+    // 1. Decodificar el token de Google
     const responsePayload = decodeJwtResponse(response.credential);
 
-    // GUARDAR EN LOCALSTORAGE
+    console.log("Datos de Google:", responsePayload); // Para depurar
+
+    // 2. GUARDAR EN LOCALSTORAGE
+    // Asegúrate de usar la misma llave 'userPizzaApp' en login y perfil
     localStorage.setItem('userPizzaApp', JSON.stringify({
         name: responsePayload.name,
         email: responsePayload.email,
         picture: responsePayload.picture
     }));
 
-    // REDIRIGIR AL PERFIL
+    // 3. REDIRIGIR AL PERFIL
     window.location.href = 'perfil.html';
 }
 
-// Función para decodificar el token (si no la tienes, agrégala)
+// Asegúrate de tener la función decodeJwtResponse tal como la tienes
 function decodeJwtResponse(token) {
     var base64Url = token.split('.')[1];
     var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
