@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FREDDY'S PIZZA - Mi Perfil</title>
+    <style>
+        body { font-family: sans-serif; background: #f5f5f5; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .card { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center; width: 300px; }
+        .profile-pic { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; margin-bottom: 20px; border: 4px solid #ff6b00; }
+        h2 { margin: 10px 0; color: #333; }
+        p { color: #666; margin-bottom: 25px; }
+        .btn-logout { background: #333; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; text-decoration: none; display: inline-block; }
+        .btn-logout:hover { background: #555; }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <img id="user-picture" src="https://via.placeholder.com/100" alt="Foto de perfil" class="profile-pic">
+        
+        <h2 id="user-name">Cargando...</h2>
+        
+        <p id="user-email">cargando...</p>
+        
+        <a href="#" class="btn-logout" onclick="logout()">Cerrar Sesión</a>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. Leer los datos guardados en el login
+            const userDataJSON = localStorage.getItem('userPizzaApp');
+
+            if (userDataJSON) {
+                const userData = JSON.parse(userDataJSON);
+
+                // 2. Insertar los datos en el HTML
+                document.getElementById('user-name').textContent = userData.name;
+                document.getElementById('user-email').textContent = userData.email;
+                document.getElementById('user-picture').src = userData.picture;
+            } else {
+                // Si no hay sesión, volver al login
+                window.location.href = 'login.html';
+            }
+        });
+
+        // Función para cerrar sesión
+        function logout() {
+            localStorage.removeItem('userPizzaApp');
+            window.location.href = 'login.html';
+        }
+    </script>
+</body>
+</html>
