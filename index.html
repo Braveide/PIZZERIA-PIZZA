@@ -10,24 +10,35 @@
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="freddy.png">
     <title>FREDDY'S PIZZA - Catálogo</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Arial', sans-serif; background: #f5f5f5; }
+        
         /* Estilos del Loader */
         #loader-wrapper { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #fff; display: flex; justify-content: center; align-items: center; z-index: 9999; transition: opacity 0.5s ease, visibility 0.5s; }
         .loader { border: 8px solid #f3f3f3; border-top: 8px solid #ff3d00; border-radius: 50%; width: 60px; height: 60px; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         #loader-wrapper.hidden { opacity: 0; visibility: hidden; }
+        
         /* Estilos Header */
         .header { background: linear-gradient(135deg, #ff6b35 0%, #ff4500 100%); color: white; padding: 20px 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); }
         .header-left { display: flex; align-items: center; gap: 15px; }
         .header-title h1 { font-size: 24px; font-weight: bold; }
         .header-title p { font-size: 14px; opacity: 0.9; margin-top: 2px; }
-        .header-right { display: flex; gap: 15px; align-items: center; }
-        .cart-btn { background: rgba(255, 255, 255, 0.2); border: none; color: white; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 20px; transition: background 0.3s; position: relative; }
+        
+        /* --- AJUSTE DE LA CABECERA DERECHA PARA MÁS BOTONES --- */
+        .header-right { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
+        
+        /* --- ESTILOS DE LOS BOTONES --- */
+        .btn-header { text-decoration: none; color: white; font-weight: bold; padding: 8px 12px; background: rgba(255,255,255,0.2); border-radius: 20px; transition: background 0.3s; font-size: 13px; white-space: nowrap; }
+        .btn-header:hover { background: rgba(255,255,255,0.3); }
+        
+        .cart-btn { background: rgba(255, 255, 255, 0.2); border: none; color: white; width: 35px; height: 35px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; transition: background 0.3s; position: relative; }
         .cart-btn:hover { background: rgba(255, 255, 255, 0.3); }
-        .cart-badge { position: absolute; top: -5px; right: -5px; background-color: #fff; color: #ff3d00; border-radius: 50%; padding: 2px 6px; font-size: 12px; font-weight: bold; }
+        .cart-badge { position: absolute; top: -5px; right: -5px; background-color: #fff; color: #ff3d00; border-radius: 50%; padding: 2px 6px; font-size: 10px; font-weight: bold; }
+        
         .subtitle { text-align: center; padding: 25px 20px; color: #666; font-size: 14px; }
         .section-title { text-align: left; margin: 30px 0 20px 0; color: #333; font-size: 24px; border-bottom: 2px solid #ff6b35; padding-bottom: 10px; }
         .container { max-width: 1200px; margin: 0 auto; padding: 0 20px 40px; }
@@ -43,7 +54,16 @@
         .card-price { color: #ff6b35; font-size: 24px; font-weight: bold; }
         .add-btn { background: linear-gradient(135deg, #ff6b35 0%, #ff4500 100%); color: white; border: none; padding: 12px 30px; border-radius: 25px; cursor: pointer; font-size: 15px; font-weight: bold; display: flex; align-items: center; gap: 8px; transition: transform 0.2s, box-shadow 0.2s; }
         .add-btn:hover { transform: scale(1.05); box-shadow: 0 5px 15px rgba(255, 107, 53, 0.3); }
-        @media (max-width: 768px) { .header { padding: 15px 20px; } .card { flex-direction: column; } .card-image { width: 100%; height: 200px; } .drink-image { width: 100%; height: 150px; object-fit: contain; margin-left: 0; } .card-footer { flex-direction: column; gap: 15px; align-items: stretch; } .add-btn { width: 100%; justify-content: center; } }
+        
+        @media (max-width: 768px) { 
+            .header { padding: 15px 10px; flex-direction: column; gap: 10px; } 
+            .header-right { gap: 5px; justify-content: center; }
+            .card { flex-direction: column; } 
+            .card-image { width: 100%; height: 200px; } 
+            .drink-image { width: 100%; height: 150px; object-fit: contain; margin-left: 0; } 
+            .card-footer { flex-direction: column; gap: 15px; align-items: stretch; } 
+            .add-btn { width: 100%; justify-content: center; } 
+        }
     </style>
 </head>
 <body>
@@ -60,7 +80,9 @@
             </div>
         </div>
         <div class="header-right">
-            <a href="contacto.html" style="text-decoration: none; color: white; font-weight: bold; margin-right: 15px;">Contáctanos</a>
+            <a href="contacto.html" class="btn-header">Contáctanos</a>
+            <a href="Conta.html" class="btn-header">Formulario</a>
+            
             <a href="login.html" id="loginLink" style="text-decoration: none;">
                 <button class="cart-btn">👤</button>
             </a>
