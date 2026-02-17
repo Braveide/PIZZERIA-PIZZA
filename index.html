@@ -261,7 +261,7 @@
         <div class="header-right">
             <a href="contacto.html" style="text-decoration: none; color: white; font-weight: bold; margin-right: 15px;">Contáctanos</a>
             
-            <a href="login.html" id="profileLink" style="text-decoration: none;">
+            <a href="login.html" style="text-decoration: none;">
                 <button class="cart-btn">👤</button>
             </a>
             
@@ -384,34 +384,16 @@
         </div>
 
     <script>
-        // ----------------------------------------------------
-        // 1. VERIFICACIÓN DE SESIÓN (PROTECCIÓN DE PÁGINA)
-        // ----------------------------------------------------
-        (function() {
-            const userDataJSON = localStorage.getItem('userPizzaApp');
-            if (!userDataJSON) {
-                window.location.href = 'login.html';
-            }
-        })();
-
-        // ----------------------------------------------------
-        // 2. LOADER Y LÓGICA DE PÁGINA
-        // ----------------------------------------------------
-        document.addEventListener('DOMContentLoaded', () => {
-            const profileLink = document.getElementById('profileLink');
-            if (localStorage.getItem('userPizzaApp')) {
-                profileLink.href = 'perfil.html';
-            }
-            updateCartBadge();
-        });
-
+        // Loader logic
         window.addEventListener('load', function() {
             const loader = document.getElementById('loader-wrapper');
+            
             setTimeout(() => {
                 loader.classList.add('hidden');
             }, 500);
         });
 
+        // Cart logic
         const CART_KEY = 'pizzaCart';
 
         function addToCart(name, price, type) {
@@ -423,7 +405,7 @@
                 cart[name] = {
                     name: name,
                     price: price,
-                    type: type,
+                    type: type, // Pizza o Bebida
                     quantity: 1
                 };
             }
@@ -449,6 +431,8 @@
                 badge.style.display = 'none';
             }
         }
+
+        updateCartBadge();
     </script>
 </body>
 </html>
