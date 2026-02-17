@@ -6,6 +6,7 @@
     <title>FREDDY'S PIZZA - Iniciar Sesión</title>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <style>
+        /* --- ESTILOS ORIGINALES DE TU ARCHIVO --- */
         * {
             margin: 0;
             padding: 0;
@@ -185,12 +186,12 @@
         #errorMessage {
             color: #e3342f; 
             background-color: #fcebeb; 
-            padding: 10px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            text-align: center;
-            font-size: 14px;
-            font-weight: 500;
+            padding: 10px; 
+            border-radius: 8px; 
+            margin-bottom: 20px; 
+            text-align: center; 
+            font-size: 14px; 
+            font-weight: 500; 
             display: none; 
             border: 1px solid #e3342f;
         }
@@ -223,8 +224,7 @@
     <div class="container">
     
         <div class="logo">
-            <img src="imagenes/logo_pizza.png" alt="Logo Freddy's Pizza">
-        </div>
+            </div>
 
         <h1>Freddy´s Pizza</h1>
         <p class="subtitle">¡Bienvenido!</p>
@@ -238,12 +238,12 @@
             </a>
         </div>
 
-        <form id="loginForm">
+        <form id="adminLoginForm">
             <div class="form-group">
-                <label for="emailInput">Correo Electrónico</label>
+                <label for="usernameInput">Usuario (Email Demo)</label>
                 <div class="input-wrapper">
-                    <span class="input-icon">📧</span>
-                    <input type="email" id="emailInput" placeholder="tu@email.com" required>
+                    <span class="input-icon">👤</span>
+                    <input type="text" id="usernameInput" placeholder="admin@demo.com" required>
                 </div>
             </div>
 
@@ -251,7 +251,7 @@
                 <label for="passwordInput">Contraseña</label>
                 <div class="input-wrapper">
                     <span class="input-icon">🔒</span>
-                    <input type="password" id="passwordInput" placeholder="Tu contraseña" required>
+                    <input type="password" id="passwordInput" placeholder="Cualquier contraseña" required>
                     <button type="button" class="toggle-password" onclick="togglePassword('passwordInput')">👁️</button>
                 </div>
             </div>
@@ -281,103 +281,49 @@
     </div>
 
     <script>
-        // ----------------------------------------------------
-        // 1. DETECTAR SESIÓN ACTIVA (PERSISTENCIA)
-        // ----------------------------------------------------
-        document.addEventListener('DOMContentLoaded', () => {
-            const userDataJSON = localStorage.getItem('userPizzaApp');
+        // --- LÓGICA DE LOGIN DEMO ---
+        document.getElementById('adminLoginForm').addEventListener('submit', function(event) {
+            event.preventDefault();
             
-            // Si ya existe sesión, redirigir directo al menú o perfil
-            if (userDataJSON) {
-                console.log("Sesión activa detectada, redirigiendo...");
-                window.location.href = 'menu_cliente.html';
+            const email = document.getElementById('usernameInput').value.trim();
+            const pass = document.getElementById('passwordInput').value.trim();
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.style.display = 'none';
+
+            let role = null;
+
+            // Validación de credenciales demo
+            if (email === 'admin@demo.com') {
+                role = 'admin';
+            } else if (email === 'vendor@demo.com') {
+                role = 'vendor';
+            } else if (email === 'cliente@demo.com') {
+                role = 'client';
             }
-        });
 
-        // ----------------------------------------------------
-        // 2. SIMULACIÓN DE USUARIOS REGISTRADOS
-        // ----------------------------------------------------
-        const registeredUsers = [
-            { email: 'admin@freddys.com', password: 'admin', role: 'admin', name: 'Administrador' }, 
-            { email: 'cliente@freddys.com', password: '123456', role: 'client', name: 'Juan Cliente' }
-        ];
-
-        // ----------------------------------------------------
-        // 3. LÓGICA DE INICIO DE SESIÓN CON FORMULARIO
-        // ----------------------------------------------------
-        const loginForm = document.getElementById('loginForm');
-        const emailInput = document.getElementById('emailInput');
-        const passwordInput = document.getElementById('passwordInput');
-        const errorMessageDiv = document.getElementById('errorMessage');
-
-        loginForm.addEventListener('submit', function(event) {
-            event.preventDefault(); 
-            handleLogin();
-        });
-
-        function handleLogin() {
-            const email = emailInput.value.trim();
-            const password = passwordInput.value.trim();
-            
-            errorMessageDiv.style.display = 'none';
-
-            const user = registeredUsers.find(u => u.email === email && u.password === password);
-
-            if (user) {
-                // --- ADAPTACIÓN: GUARDAR SESIÓN EN LOCALSTORAGE ---
+            if (role) {
+                // Guardar sesión en localStorage
                 localStorage.setItem('userPizzaApp', JSON.stringify({
-                    name: user.name, 
-                    email: user.email,
-                    picture: 'https://cdn-icons-png.flaticon.com/512/149/149071.png'
+                    email: email,
+                    role: role,
+                    name: 'Usuario Demo'
                 }));
-                // --------------------------------------------------
 
-                if (user.role === 'admin') {
-                    window.location.href = 'admin_menu.html';
-                } else if (user.role === 'client') {
+                // Redirección basada en rol
+                if (role === 'admin') {
+                    window.location.href = 'panelA.html';
+                } else if (role === 'vendor') {
+                    window.location.href = 'panel-vendedor.html'; // Asegúrate de crear este archivo
+                } else {
                     window.location.href = 'menu_cliente.html';
                 }
             } else {
-                showError('Correo electrónico o contraseña incorrectos.');
+                errorDiv.textContent = 'Correo electrónico demo incorrecto.';
+                errorDiv.style.display = 'block';
             }
-        }
+        });
 
-        // ----------------------------------------------------
-        // 4. LÓGICA DE INICIO DE SESIÓN CON GOOGLE (Real)
-        // ----------------------------------------------------
-        function handleCredentialResponse(response) {
-            // 1. Decodificar el token de Google
-            const responsePayload = decodeJwtResponse(response.credential);
-
-            // 2. GUARDAR EN LOCALSTORAGE
-            localStorage.setItem('userPizzaApp', JSON.stringify({
-                name: responsePayload.name,
-                email: responsePayload.email,
-                picture: responsePayload.picture
-            }));
-
-            // 3. REDIRIGIR AL MENU
-            window.location.href = 'menu_cliente.html';
-        }
-
-        function decodeJwtResponse(token) {
-            var base64Url = token.split('.')[1];
-            var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-            var jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-            }).join(''));
-            return JSON.parse(jsonPayload);
-        }
-
-
-        // ----------------------------------------------------
-        // 5. FUNCIONES DE UTILIDAD
-        // ----------------------------------------------------
-        function showError(message) {
-            errorMessageDiv.textContent = message;
-            errorMessageDiv.style.display = 'block';
-        }
-
+        // Función original para mostrar/ocultar contraseña
         function togglePassword(id) {
             const input = document.getElementById(id);
             const button = input.nextElementSibling; 
@@ -389,6 +335,27 @@
                 input.type = "password";
                 button.textContent = "👁️"; 
             }
+        }
+
+        // --- LÓGICA DE GOOGLE (Original de tu archivo) ---
+        function handleCredentialResponse(response) {
+            const responsePayload = decodeJwtResponse(response.credential);
+            localStorage.setItem('userPizzaApp', JSON.stringify({
+                name: responsePayload.name,
+                email: responsePayload.email,
+                role: 'client',
+                picture: responsePayload.picture
+            }));
+            window.location.href = 'menu_cliente.html';
+        }
+
+        function decodeJwtResponse(token) {
+            var base64Url = token.split('.')[1];
+            var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+            var jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            }).join(''));
+            return JSON.parse(jsonPayload);
         }
     </script>
 </body>
