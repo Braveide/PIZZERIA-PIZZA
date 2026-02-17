@@ -181,10 +181,6 @@
         .back-link:hover {
             color: #ff3d00; 
         }
-
-        #registerForm {
-            display: none;
-        }
         
         #errorMessage {
             color: #e3342f; 
@@ -221,12 +217,6 @@
         .separator:not(:empty)::after {
             margin-left: .25em;
         }
-
-        /* Contenedor invisible para inicializar Google */
-        #g_id_onload {
-            display: none;
-        }
-
     </style>
 </head>
 <body>
@@ -287,33 +277,33 @@
              style="width: 100%; display: flex; justify-content: center;">
         </div>
 
-        <a href="menu_cliente.html" class="back-link">← Volver al Menú Principal</a>
+        <a href="index.html" class="back-link">← Volver al Catálogo</a>
     </div>
 
     <script>
         // ----------------------------------------------------
-        // 0. DETECTAR SESIÓN ACTIVA (PERSISTENCIA)
+        // 1. DETECTAR SESIÓN ACTIVA (PERSISTENCIA)
         // ----------------------------------------------------
         document.addEventListener('DOMContentLoaded', () => {
             const userDataJSON = localStorage.getItem('userPizzaApp');
             
-            // Si ya existe sesión, redirigir directo al perfil
+            // Si ya existe sesión, redirigir directo al menú o perfil
             if (userDataJSON) {
                 console.log("Sesión activa detectada, redirigiendo...");
-                window.location.href = 'perfil.html';
+                window.location.href = 'menu_cliente.html';
             }
         });
 
         // ----------------------------------------------------
-        // 1. SIMULACIÓN DE USUARIOS REGISTRADOS
+        // 2. SIMULACIÓN DE USUARIOS REGISTRADOS
         // ----------------------------------------------------
         const registeredUsers = [
-            { email: 'admin@freddys.com', password: 'admin', role: 'admin' }, 
-            { email: 'cliente@freddys.com', password: '123456', role: 'client' }
+            { email: 'admin@freddys.com', password: 'admin', role: 'admin', name: 'Administrador' }, 
+            { email: 'cliente@freddys.com', password: '123456', role: 'client', name: 'Juan Cliente' }
         ];
 
         // ----------------------------------------------------
-        // 2. LÓGICA DE INICIO DE SESIÓN CON FORMULARIO
+        // 3. LÓGICA DE INICIO DE SESIÓN CON FORMULARIO
         // ----------------------------------------------------
         const loginForm = document.getElementById('loginForm');
         const emailInput = document.getElementById('emailInput');
@@ -336,8 +326,8 @@
             if (user) {
                 // --- ADAPTACIÓN: GUARDAR SESIÓN EN LOCALSTORAGE ---
                 localStorage.setItem('userPizzaApp', JSON.stringify({
-                    name: email, 
-                    email: email,
+                    name: user.name, 
+                    email: user.email,
                     picture: 'https://cdn-icons-png.flaticon.com/512/149/149071.png'
                 }));
                 // --------------------------------------------------
@@ -353,7 +343,7 @@
         }
 
         // ----------------------------------------------------
-        // 3. LÓGICA DE INICIO DE SESIÓN CON GOOGLE (Real)
+        // 4. LÓGICA DE INICIO DE SESIÓN CON GOOGLE (Real)
         // ----------------------------------------------------
         function handleCredentialResponse(response) {
             // 1. Decodificar el token de Google
@@ -366,8 +356,8 @@
                 picture: responsePayload.picture
             }));
 
-            // 3. REDIRIGIR AL PERFIL
-            window.location.href = 'perfil.html';
+            // 3. REDIRIGIR AL MENU
+            window.location.href = 'menu_cliente.html';
         }
 
         function decodeJwtResponse(token) {
@@ -381,7 +371,7 @@
 
 
         // ----------------------------------------------------
-        // 4. FUNCIONES DE UTILIDAD
+        // 5. FUNCIONES DE UTILIDAD
         // ----------------------------------------------------
         function showError(message) {
             errorMessageDiv.textContent = message;
@@ -402,4 +392,4 @@
         }
     </script>
 </body>
-</html>g
+</html>
