@@ -32,7 +32,9 @@
         .header-info p { font-size: 14px; opacity: 0.8; margin-top: 2px; }
 
         .back-btn { background: none; border: none; color: white; font-size: 24px; cursor: pointer; padding: 5px; text-decoration: none; line-height: 1; }
-        .logout-btn { background: none; border: none; color: white; padding: 8px 15px; border-radius: 6px; font-size: 15px; cursor: pointer; font-weight: 500; transition: background 0.3s; }
+        
+        /* Estilos del botón Cerrar Sesión movido al header */
+        .logout-btn { background: none; border: 1px solid white; color: white; padding: 8px 15px; border-radius: 6px; font-size: 14px; cursor: pointer; text-decoration: none; transition: background 0.3s; }
         .logout-btn:hover { background: rgba(255, 255, 255, 0.1); }
 
         /* ------------------------------------ */
@@ -186,7 +188,7 @@
         }
 
         /* ------------------------------------ */
-        /* ESTILOS DEL MODAL (COPIA DE INVENTARIO) */
+        /* ESTILOS DEL MODAL */
         /* ------------------------------------ */
         .modal-overlay {
             position: fixed;
@@ -274,7 +276,7 @@
         }
 
         .modal-form input:focus {
-            border-color: #a855f7; /* Color púrpura para enfoque en usuarios */
+            border-color: #a855f7;
             outline: none;
         }
 
@@ -306,7 +308,7 @@
         }
 
         .btn-add {
-            background: #a855f7; /* Púrpura */
+            background: #a855f7;
             color: white;
             border: none;
             padding: 12px 25px;
@@ -328,10 +330,9 @@
             <a href="admin_menu.html" class="back-btn" title="Volver al Panel">←</a>
             <div class="header-info">
                 <h1>Panel de Administrador</h1>
-                
             </div>
         </div>
-        
+        <a href="login.html" class="logout-btn" onclick="cerrarSesion()">Cerrar Sesión</a>
     </header>
 
     <div class="users-container">
@@ -395,6 +396,7 @@
             </form>
         </div>
     </div>
+    
     <script>
         const USER_STORAGE_KEY = 'registeredUsers';
         let users = [];
@@ -455,7 +457,6 @@
         // LÓGICA DEL MODAL
         // ----------------------------------------------------
 
-        // Abrir el modal (para crear o editar)
         function openUserModal(user = null) {
             const modal = document.getElementById('userModal');
             const form = document.getElementById('userForm');
@@ -464,7 +465,7 @@
             document.getElementById('user_id').value = ''; 
             document.getElementById('modalTitle').textContent = 'Registrar Nuevo Usuario';
             document.getElementById('modalSubmitBtn').textContent = 'Registrar';
-            document.getElementById('modalPassword').setAttribute('required', 'required'); // Contraseña es obligatoria al crear
+            document.getElementById('modalPassword').setAttribute('required', 'required');
 
             if (user) {
                 document.getElementById('modalTitle').textContent = 'Editar Usuario';
@@ -473,19 +474,16 @@
                 document.getElementById('modalName').value = user.name;
                 document.getElementById('modalEmail').value = user.email;
                 document.getElementById('modalPhone').value = user.phone;
-                // No pre-rellenar la contraseña por seguridad, pero hacerla opcional
                 document.getElementById('modalPassword').removeAttribute('required'); 
             }
             
             modal.style.display = 'flex';
         }
 
-        // Cerrar el modal
         function closeModal() {
             document.getElementById('userModal').style.display = 'none';
         }
 
-        // Manejar el envío del formulario (Registrar o Editar)
         document.getElementById('userForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
@@ -496,25 +494,21 @@
             const password = document.getElementById('modalPassword').value;
 
             if (id) {
-                // Lógica de edición (Update)
                 const index = users.findIndex(u => u.id == id);
                 if (index !== -1) {
                     users[index].name = name;
                     users[index].email = email;
                     users[index].phone = phone;
-                    // Solo actualizar contraseña si se proporcionó una nueva
                     if (password) users[index].password = password; 
                 }
             } else {
-                // Lógica de agregar nuevo usuario (Create)
                 const newId = users.length > 0 ? Math.max(...users.map(u => u.id)) + 1 : 101;
-                // Asignar datos por defecto para nuevos usuarios
                 const newUser = { 
                     id: newId, 
                     name, 
                     email, 
                     phone, 
-                    password, // En un entorno real, la contraseña debe ser hasheada
+                    password,
                     orders: 0, 
                     registered: new Date().toLocaleDateString('es-MX') 
                 };
@@ -531,7 +525,6 @@
         // FUNCIONALIDADES
         // ----------------------------------------------------
 
-        // Filtrar usuarios (búsqueda)
         function filterUsers() {
             const searchTerm = document.getElementById('searchInput').value.toLowerCase();
             
@@ -544,7 +537,6 @@
             renderUsers(filtered);
         }
 
-        // Apertura del modal en modo edición
         function editUser(id) {
             const user = users.find(u => u.id === id);
             if (user) {
@@ -552,22 +544,19 @@
             }
         }
 
-        // Eliminación de usuario
         function deleteUser(id) {
             if (confirm('¿Estás seguro de que quieres eliminar a este usuario?')) {
                 users = users.filter(user => user.id !== id);
                 saveUsers();
                 renderUsers(users);
-                alert(`Usuario ID ${id} eliminado.`);
             }
         }
         
-        // Función de cerrar sesión
         function cerrarSesion() {
+            // Lógica de cierre de sesión aquí
             window.location.href = 'login.html'; 
         }
 
-        // Inicialización
         document.addEventListener('DOMContentLoaded', loadUsers);
     </script>
 </body>
