@@ -5,59 +5,137 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FREDDY'S PIZZA - Mi Perfil</title>
     <style>
-        body { font-family: 'Arial', sans-serif; background: #f5f5f5; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
-        .card { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center; width: 350px; }
-        .profile-pic { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; margin-bottom: 20px; border: 5px solid #ff6b35; }
-        h2 { margin: 10px 0; color: #333; }
-        p { color: #666; margin-bottom: 25px; font-size: 16px; }
-        .btn-logout { background: #ff4500; color: white; border: none; padding: 12px 25px; border-radius: 25px; cursor: pointer; text-decoration: none; display: inline-block; font-weight: bold; transition: background 0.3s; }
-        .btn-logout:hover { background: #e03e00; }
-        .btn-back { display: block; margin-top: 15px; color: #ff6b35; text-decoration: none; font-size: 14px; }
+        /* Estilos Generales */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+            background: #f5f5f5; 
+            color: #333;
+        }
+
+        /* Header Estilizado */
+        .header {
+            background: #ff6b00;
+            padding: 15px 30px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .back-link {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        /* Contenedor principal */
+        .profile-container {
+            max-width: 500px;
+            margin: 40px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            text-align: center;
+        }
+
+        .profile-icon {
+            font-size: 60px;
+            color: #ff6b00;
+            margin-bottom: 20px;
+        }
+
+        h1 { margin-bottom: 10px; font-size: 24px; }
+        .subtitle { color: #666; margin-bottom: 30px; }
+
+        /* Detalles del perfil */
+        .info-card {
+            background: #f9f9f9;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .info-row:last-child { border-bottom: none; }
+        .label { font-weight: 600; color: #555; }
+        .value { color: #333; font-weight: 400; }
+
+        /* Botones */
+        .btn-logout {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 25px;
+            background: #dc3545;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+        }
+
+        @media (max-width: 600px) {
+            .profile-container { margin: 20px; padding: 20px; }
+        }
     </style>
 </head>
 <body>
 
-    <div class="card">
-        <img id="user-picture" src="https://via.placeholder.com/120" alt="Foto de perfil" class="profile-pic">
-        
-        <h2 id="user-name">Cargando...</h2>
-        
-        <p id="user-email">cargando...</p>
-        
-        <button class="btn-logout" onclick="logout()">🚪 Cerrar Sesión</button>
-        <a href="index.html" class="btn-back">← Volver al Catálogo</a>
+    <header class="header">
+        <a href="menu_cliente.html" class="back-link">← Volver al Menú</a>
+        <h2>Mi Perfil</h2>
+    </header>
+
+    <div class="profile-container">
+        <div class="profile-icon">👤</div>
+        <h1 id="userName">Cargando...</h1>
+        <p class="subtitle" id="userEmail">Cargando...</p>
+
+        <div class="info-card">
+            <div class="info-row">
+                <span class="label">Rol:</span>
+                <span class="value" id="userRole">Cliente</span>
+            </div>
+            <div class="info-row">
+                <span class="label">Método de Login:</span>
+                <span class="value">Google / Demo</span>
+            </div>
+        </div>
+
+        <button class="btn-logout" onclick="cerrarSesion()">Cerrar Sesión</button>
     </div>
 
     <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        // 1. Leer los datos guardados en el login
-        const userDataJSON = localStorage.getItem('userPizzaApp');
+        // 1. Verificar si hay sesión activa
+        const userSession = localStorage.getItem('userPizzaApp');
 
-        if (userDataJSON) {
-            try {
-                const userData = JSON.parse(userDataJSON);
-
-                // 2. Insertar los datos en el HTML
-                document.getElementById('user-name').textContent = userData.name;
-                document.getElementById('user-email').textContent = userData.email;
-                if(userData.picture) {
-                    document.getElementById('user-picture').src = userData.picture;
-                }
-            } catch (e) {
-                console.error("Error al parsear datos de usuario", e);
-                window.location.href = 'login.html'; // Si hay error, al login
-            }
+        if (!userSession) {
+            // Si no hay sesión, redirigir al login
+            window.location.href = 'login.html';
         } else {
-            // Si no hay sesión, volver al login
+            // 2. Cargar datos del usuario
+            const user = JSON.parse(userSession);
+            document.getElementById('userName').textContent = user.name || 'Usuario';
+            document.getElementById('userEmail').textContent = user.email;
+            document.getElementById('userRole').textContent = user.role.toUpperCase();
+        }
+
+        // 3. Función cerrar sesión
+        function cerrarSesion() {
+            localStorage.removeItem('userPizzaApp');
             window.location.href = 'login.html';
         }
-    });
-
-    // Función para cerrar sesión
-    function logout() {
-        localStorage.removeItem('userPizzaApp');
-        window.location.href = 'login.html';
-    }
-</script>
+    </script>
 </body>
 </html>
