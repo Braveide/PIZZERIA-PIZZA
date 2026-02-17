@@ -7,7 +7,7 @@
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <link rel="stylesheet" href="estilos.css">
     <style>
-        /* ESTILOS DE TU DISEÑO */
+        /* MANTENEMOS TUS ESTILOS AQUÍ POR SEGURIDAD */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background:#ff6b00; min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; }
         .container { background: white; border-radius: 20px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3); max-width: 450px; width: 100%; padding: 40px 30px; text-align: center; }
@@ -28,9 +28,6 @@
         #errorMessage { color: #e3342f; background-color: #fcebeb; padding: 10px; border-radius: 8px; margin-bottom: 20px; display: none; border: 1px solid #e3342f; }
         .separator { display: flex; align-items: center; text-align: center; margin: 25px 0 15px; }
         .separator::before, .separator::after { content: ''; flex: 1; border-bottom: 1px solid #ddd; }
-        
-        /* Centrar botón de Google */
-        .g_id_signin { display: flex; justify-content: center; margin-top: 15px; }
     </style>
 </head>
 <body>
@@ -74,13 +71,13 @@
              data-callback="handleCredentialResponse"
              data-auto_prompt="false">
         </div>
-        <div class="g_id_signin" data-type="standard" data-size="large" data-theme="outline" data-text="sign_in_with" data-shape="rectangular" data-logo_alignment="left"></div>
+        <div class="g_id_signin" data-type="standard" data-size="large" data-theme="outline" data-text="sign_in_with" data-shape="rectangular" data-logo_alignment="left" style="width: 100%; display: flex; justify-content: center;"></div>
 
         <a href="index.html" class="back-link">← Volver al Catálogo</a>
     </div>
 
     <script>
-        // --- 1. LÓGICA DE LOGIN DEMO ---
+        // --- LÓGICA DE LOGIN ---
         document.getElementById('loginForm').addEventListener('submit', function(event) {
             event.preventDefault();
             
@@ -100,57 +97,27 @@
             }
 
             if (role) {
-                guardarSesionYRedirigir(email, role);
+                // Guardar sesión en localStorage
+                localStorage.setItem('userPizzaApp', JSON.stringify({
+                    email: email,
+                    role: role,
+                    name: role === 'admin' ? 'Admin' : (role === 'vendor' ? 'Empleado' : 'Cliente')
+                }));
+
+                // --- REDIRECCIÓN A TUS ARCHIVOS ---
+                if (role === 'admin') {
+                    window.location.href = 'panelA.html';
+                } else if (role === 'vendor') {
+                    window.location.href = 'panel_empleado.html'; // <-- AHORA APUNTA AL NOMBRE CORRECTO
+                } else {
+                    window.location.href = 'menu_cliente.html';
+                }
             } else {
                 errorDiv.textContent = 'Correo electrónico demo incorrecto.';
                 errorDiv.style.display = 'block';
             }
         });
 
-        // --- 2. LÓGICA DE GOOGLE LOGIN (La que faltaba) ---
-        function handleCredentialResponse(response) {
-            // Decodificar el token JWT que envía Google
-            const responsePayload = decodeJwtResponse(response.credential);
-
-            console.log("Login exitoso con Google");
-            console.log('Email: ' + responsePayload.email);
-            console.log('Name: ' + responsePayload.name);
-
-            // Por defecto, asignamos rol 'client' a quien inicie con Google
-            guardarSesionYRedirigir(responsePayload.email, 'client', responsePayload.name);
-        }
-
-        // Función auxiliar para decodificar JWT
-        function decodeJwtResponse(token) {
-            var base64Url = token.split('.')[1];
-            var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-            var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
-                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-            }).join(''));
-
-            return JSON.parse(jsonPayload);
-        }
-
-        // --- 3. FUNCIÓN UNIFICADA PARA SESIÓN ---
-        function guardarSesionYRedirigir(email, role, name = null) {
-            // Guardar sesión en localStorage
-            localStorage.setItem('userPizzaApp', JSON.stringify({
-                email: email,
-                role: role,
-                name: name || (role === 'admin' ? 'Admin' : (role === 'vendor' ? 'Empleado' : 'Cliente'))
-            }));
-
-            // Redirección basada en rol
-            if (role === 'admin') {
-                window.location.href = 'panelA.html';
-            } else if (role === 'vendor') {
-                window.location.href = 'panel_empleado.html';
-            } else {
-                window.location.href = 'menu_cliente.html';
-            }
-        }
-
-        // --- UTILS ---
         function togglePassword(id) {
             const input = document.getElementById(id);
             const button = input.nextElementSibling; 
