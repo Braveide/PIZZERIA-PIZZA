@@ -45,15 +45,22 @@
         .header-info h1 { font-size: 24px; font-weight: 600; }
         .header-info p { font-size: 14px; opacity: 0.8; margin-top: 2px; }
         
+        /* --- ESTILO DEL BOTÓN CERRAR SESIÓN --- */
         .logout-btn {
-            background: none;
-            border: none;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             color: white;
             padding: 8px 15px;
             border-radius: 6px;
-            font-size: 15px;
+            font-size: 14px;
             cursor: pointer;
+            transition: background 0.2s;
         }
+        
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        /* ------------------------------------ */
 
         /* ------------------------------------ */
         /* CONTENEDOR Y BARRA DE BÚSQUEDA */
@@ -277,14 +284,15 @@
 <body>
     <header class="header">
         <div class="header-left">
-            <a href="admin_menu.html" class="back-btn" title="Volver al Panel">←</a>
+            <a href="panelA.html" class="back-btn" title="Volver al Panel">←</a>
             <div class="header-info">
                 <h1>Panel de Administrador</h1>
-                
+                <p>Gestión de Pedidos</p>
             </div>
         </div>
         
-    </header>
+        <button onclick="cerrarSesion()" class="logout-btn">Cerrar Sesión</button>
+        </header>
 
     <div class="orders-container">
         
@@ -477,6 +485,8 @@
 
         // Inicialización
         document.addEventListener('DOMContentLoaded', loadOrders);
+
+        // --- FUNCIÓN DE CERRAR SESIÓN ---
         function cerrarSesion() {
             window.location.href = 'login.html'; 
         }
