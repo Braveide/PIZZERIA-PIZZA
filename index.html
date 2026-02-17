@@ -10,7 +10,7 @@
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FREDDY'S PIZZA - Catálogo de Pizzas</title>
+    <title>FREDDY'S PIZZA - Catálogo</title>
     <style>
         * {
             margin: 0;
@@ -130,19 +130,28 @@
             font-size: 14px;
         }
 
+        .section-title {
+            text-align: left;
+            margin: 30px 0 20px 0;
+            color: #333;
+            font-size: 24px;
+            border-bottom: 2px solid #ff6b35;
+            padding-bottom: 10px;
+        }
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 20px 40px;
         }
 
-        .pizza-list {
+        .list-container {
             display: flex;
             flex-direction: column;
             gap: 20px;
         }
 
-        .pizza-card {
+        .card {
             background: white;
             border-radius: 15px;
             padding: 20px;
@@ -152,46 +161,55 @@
             transition: transform 0.3s, box-shadow 0.3s;
         }
 
-        .pizza-card:hover {
+        .card:hover {
             transform: translateY(-3px);
             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.12);
         }
 
-        .pizza-image {
+        .card-image {
             width: 120px;
             height: 120px;
             border-radius: 12px;
             object-fit: cover;
             flex-shrink: 0;
         }
+        
+        /* Estilos específicos para bebidas (más pequeñas) */
+        .drink-image {
+            width: 80px;
+            height: 100px;
+            object-fit: contain; /* Para que la botella no se corte */
+            margin-top: 10px;
+            margin-left: 20px;
+        }
 
-        .pizza-info {
+        .card-info {
             flex: 1;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
         }
 
-        .pizza-header h3 {
+        .card-header h3 {
             font-size: 20px;
             color: #333;
             margin-bottom: 8px;
         }
 
-        .pizza-description {
+        .card-description {
             color: #666;
             font-size: 14px;
             line-height: 1.5;
             margin-bottom: 12px;
         }
 
-        .pizza-footer {
+        .card-footer {
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
-        .pizza-price {
+        .card-price {
             color: #ff6b35;
             font-size: 24px;
             font-weight: bold;
@@ -219,9 +237,10 @@
 
         @media (max-width: 768px) {
             .header { padding: 15px 20px; }
-            .pizza-card { flex-direction: column; }
-            .pizza-image { width: 100%; height: 200px; }
-            .pizza-footer { flex-direction: column; gap: 15px; align-items: stretch; }
+            .card { flex-direction: column; }
+            .card-image { width: 100%; height: 200px; }
+            .drink-image { width: 100%; height: 150px; object-fit: contain; margin-left: 0; }
+            .card-footer { flex-direction: column; gap: 15px; align-items: stretch; }
             .add-btn { width: 100%; justify-content: center; }
         }
     </style>
@@ -236,7 +255,7 @@
         <div class="header-left">
             <div class="header-title">
                 <h1>FREDDY'S PIZZA</h1>
-                <p>Catálogo de Pizzas</p>
+                <p>Catálogo</p>
             </div>
         </div>
         <div class="header-right">
@@ -256,76 +275,113 @@
     </header>
 
     <div class="subtitle">
-        Selecciona tus favoritas y agrégalas al carrito
+        Selecciona tus productos y agrégalos al carrito
     </div>
 
     <div class="container">
-        <div class="pizza-list">
-            <div class="pizza-card">
-                <img src="imagenes/pizza_marg.png" alt="Margherita" class="pizza-image">
-                <div class="pizza-info">
+        
+        <h2 class="section-title">Nuestras Pizzas</h2>
+        <div class="list-container">
+            <div class="card">
+                <img src="imagenes/pizza_marg.png" alt="Margherita" class="card-image">
+                <div class="card-info">
                     <div>
-                        <div class="pizza-header">
+                        <div class="card-header">
                             <h3>Margherita</h3>
                         </div>
-                        <p class="pizza-description">Salsa de tomate, mozzarella fresca, albahaca y aceite de oliva</p>
+                        <p class="card-description">Salsa de tomate, mozzarella fresca, albahaca y aceite de oliva</p>
                     </div>
-                    <div class="pizza-footer">
-                        <span class="pizza-price">$18.99</span>
-                        <button class="add-btn" onclick="addToCart('Margherita', 18.99, 'Salsa de tomate, mozzarella...')">+ Agregar</button>
+                    <div class="card-footer">
+                        <span class="card-price">$18.99</span>
+                        <button class="add-btn" onclick="addToCart('Margherita', 18.99, 'Pizza')">+ Agregar</button>
                     </div>
                 </div>
             </div>
 
-            <div class="pizza-card">
-                <img src="imagenes/pizza_pepe.png" alt="Pepperoni" class="pizza-image">
-                <div class="pizza-info">
+            <div class="card">
+                <img src="imagenes/pizza_pepe.png" alt="Pepperoni" class="card-image">
+                <div class="card-info">
                     <div>
-                        <div class="pizza-header">
+                        <div class="card-header">
                             <h3>Pepperoni</h3>
                         </div>
-                        <p class="pizza-description">Salsa de tomate, mozzarella y pepperoni premium</p>
+                        <p class="card-description">Salsa de tomate, mozzarella y pepperoni premium</p>
                     </div>
-                    <div class="pizza-footer">
-                        <span class="pizza-price">$21.99</span>
-                        <button class="add-btn" onclick="addToCart('Pepperoni', 21.99, 'Salsa de tomate, mozzarella...')">+ Agregar</button>
+                    <div class="card-footer">
+                        <span class="card-price">$21.99</span>
+                        <button class="add-btn" onclick="addToCart('Pepperoni', 21.99, 'Pizza')">+ Agregar</button>
                     </div>
                 </div>
             </div>
 
-            <div class="pizza-card">
-                <img src="imagenes/pizza_hawa.png" alt="Hawaiana" class="pizza-image">
-                <div class="pizza-info">
+            <div class="card">
+                <img src="imagenes/pizza_hawa.png" alt="Hawaiana" class="card-image">
+                <div class="card-info">
                     <div>
-                        <div class="pizza-header">
+                        <div class="card-header">
                             <h3>Hawaiana</h3>
                         </div>
-                        <p class="pizza-description">Salsa de tomate, mozzarella, jamón y piña tropical</p>
+                        <p class="card-description">Salsa de tomate, mozzarella, jamón y piña tropical</p>
                     </div>
-                    <div class="pizza-footer">
-                        <span class="pizza-price">$23.99</span>
-                        <button class="add-btn" onclick="addToCart('Hawaiana', 23.99, 'Salsa de tomate, mozzarella...')">+ Agregar</button>
+                    <div class="card-footer">
+                        <span class="card-price">$23.99</span>
+                        <button class="add-btn" onclick="addToCart('Hawaiana', 23.99, 'Pizza')">+ Agregar</button>
                     </div>
                 </div>
             </div>
 
-            <div class="pizza-card">
-                <img src="imagenes/pizza_suprema.png" alt="Suprema" class="pizza-image">
-                <div class="pizza-info">
+            <div class="card">
+                <img src="imagenes/pizza_suprema.png" alt="Suprema" class="card-image">
+                <div class="card-info">
                     <div>
-                        <div class="pizza-header">
+                        <div class="card-header">
                             <h3>Suprema</h3>
                         </div>
-                        <p class="pizza-description">Salsa de tomate, mozzarella, pepperoni, pimientos, cebolla y champiñones</p>
+                        <p class="card-description">Salsa de tomate, mozzarella, pepperoni, pimientos, cebolla y champiñones</p>
                     </div>
-                    <div class="pizza-footer">
-                        <span class="pizza-price">$26.99</span>
-                        <button class="add-btn" onclick="addToCart('Suprema', 26.99, 'Salsa de tomate, mozzarella, pepperoni...')">+ Agregar</button>
+                    <div class="card-footer">
+                        <span class="card-price">$26.99</span>
+                        <button class="add-btn" onclick="addToCart('Suprema', 26.99, 'Pizza')">+ Agregar</button>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+
+        <h2 class="section-title">Bebidas</h2>
+        <div class="list-container">
+            <div class="card">
+                <img src="https://carnemart.com/wp-content/uploads/2025/10/wp-image-2050.png" alt="Coca Cola" class="card-image drink-image">
+                <div class="card-info">
+                    <div>
+                        <div class="card-header">
+                            <h3>Coca-Cola 1.5L</h3>
+                        </div>
+                        <p class="card-description">Refresco clásico sabor original</p>
+                    </div>
+                    <div class="card-footer">
+                        <span class="card-price">$3.50</span>
+                        <button class="add-btn" onclick="addToCart('Coca-Cola 1.5L', 3.50, 'Bebida')">+ Agregar</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <img src="https://resources.coca-colaentuhogar.com/media/catalog/product/c/i/ciemin-natu-nor-pet-600ml-6pz.png" alt="Agua" class="card-image drink-image">
+                <div class="card-info">
+                    <div>
+                        <div class="card-header">
+                            <h3>Agua Mineral 1L</h3>
+                        </div>
+                        <p class="card-description">Agua purificada refrescante</p>
+                    </div>
+                    <div class="card-footer">
+                        <span class="card-price">$2.00</span>
+                        <button class="add-btn" onclick="addToCart('Agua Mineral 1L', 2.00, 'Bebida')">+ Agregar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
 
     <script>
         // Loader logic
@@ -340,7 +396,7 @@
         // Cart logic
         const CART_KEY = 'pizzaCart';
 
-        function addToCart(name, price, description) {
+        function addToCart(name, price, type) {
             let cart = JSON.parse(localStorage.getItem(CART_KEY)) || {};
             
             if (cart[name]) {
@@ -349,7 +405,7 @@
                 cart[name] = {
                     name: name,
                     price: price,
-                    description: description,
+                    type: type, // Pizza o Bebida
                     quantity: 1
                 };
             }
