@@ -19,13 +19,13 @@
         }
 
         /* ------------------------------------ */
-        /* HEADER (Encabezado de Administrador) */
+        /* HEADER (Sincronizado con panelA.html) */
         /* ------------------------------------ */
         .admin-header {
-            background: #2c3e50;
+            background: #1e293b; /* Azul oscuro igual al panel principal */
             padding: 15px 30px;
             color: white;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -36,27 +36,21 @@
             font-weight: 600;
         }
 
-        .header-actions {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
         .logout-btn {
-            background: #e74c3c;
+            background: none;
+            border: 1px solid rgba(255,255,255,0.3);
             color: white;
-            border: none;
+            text-decoration: none;
             padding: 8px 15px;
             border-radius: 6px;
-            cursor: pointer;
+            transition: all 0.3s;
             font-size: 14px;
             font-weight: 600;
-            text-decoration: none;
-            transition: background 0.2s ease;
         }
 
         .logout-btn:hover {
-            background: #c0392b;
+            background: #ef4444;
+            border-color: #ef4444;
         }
 
         /* ------------------------------------ */
@@ -89,33 +83,29 @@
             color: #333;
         }
 
+        /* BOTÓN DE REGRESO CORREGIDO */
         .back-btn {
-            background: none;
+            background: #f1f5f9;
             border: none;
             color: #333;
-            font-size: 24px;
+            font-size: 20px;
             cursor: pointer;
-            padding: 5px;
-            text-decoration: none;
-        }
-
-        .reports-actions {
+            width: 40px;
+            height: 40px;
             display: flex;
-            gap: 15px;
             align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            text-decoration: none;
+            transition: background 0.3s;
         }
 
-        .date-select {
-            padding: 8px 12px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            font-size: 14px;
-            background: white;
-            cursor: pointer;
+        .back-btn:hover {
+            background: #e2e8f0;
         }
 
         .export-btn {
-            background: #3498db;
+            background: #ff6b00; /* Naranja corporativo */
             color: white;
             border: none;
             padding: 8px 15px;
@@ -130,7 +120,7 @@
         }
 
         .export-btn:hover {
-            background: #2980b9;
+            background: #e66000;
         }
 
         /* ------------------------------------ */
@@ -138,9 +128,9 @@
         /* ------------------------------------ */
         .card {
             background: white;
-            border-radius: 8px;
+            border-radius: 12px;
             padding: 20px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
             margin-bottom: 20px;
         }
 
@@ -157,27 +147,15 @@
             align-items: center;
         }
 
-        .metric-info p {
-            font-size: 14px;
-            color: #7f8c8d;
-            margin-bottom: 5px;
-        }
-
         .metric-value {
             font-size: 24px;
             font-weight: 700;
             color: #333;
         }
 
-        .metric-change {
-            font-size: 12px;
-            font-weight: 500;
-            margin-top: 4px;
-        }
-
         .metric-icon {
-            width: 50px;
-            height: 50px;
+            width: 45px;
+            height: 45px;
             border-radius: 8px;
             display: flex;
             align-items: center;
@@ -186,17 +164,13 @@
             color: white;
         }
 
-        /* Colores específicos para métricas */
-        .icon-sales { background: #27ae60; }
-        .icon-orders { background: #3498db; }
-        .icon-ticket { background: #f39c12; }
-        .icon-clients { background: #9b59b6; }
-        .change-green { color: #2ecc71; }
-        .change-orange { color: #f39c12; }
-        .change-purple { color: #9b59b6; }
+        .icon-sales { background: #10b981; }
+        .icon-orders { background: #3b82f6; }
+        .icon-ticket { background: #f97316; }
+        .icon-clients { background: #a855f7; }
 
         /* ------------------------------------ */
-        /* GRÁFICOS Y TABLAS */
+        /* GRÁFICOS SIMULADOS */
         /* ------------------------------------ */
         .chart-grid {
             display: grid;
@@ -204,218 +178,71 @@
             gap: 20px;
         }
 
-        .chart-title {
-            font-size: 18px;
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 15px;
-        }
-
-        /* Gráfico de Barras */
         .bar-chart-container {
             display: flex;
-            flex-direction: column;
-            height: 300px;
-        }
-
-        .bar-chart-y-axis {
-            display: flex;
-            flex-direction: column-reverse;
-            justify-content: space-between;
-            height: 100%;
-            width: 40px;
-            font-size: 12px;
-            color: #7f8c8d;
-            text-align: right;
-            padding-bottom: 25px;
-            padding-right: 5px;
+            height: 250px;
+            margin-top: 20px;
         }
 
         .bar-chart-plot {
             display: flex;
-            flex-grow: 1;
-            padding-top: 5px;
-            border-left: 1px solid #ddd;
-            position: relative;
-        }
-
-        .bar-chart-data {
-            display: flex;
-            justify-content: space-around;
             align-items: flex-end;
+            justify-content: space-around;
             flex-grow: 1;
-            padding: 0 5px;
-            z-index: 1;
-        }
-        
-        .bar-wrapper {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: calc(100% / 7 - 10px);
-            max-width: 50px;
-            height: 100%;
-            position: relative;
+            border-bottom: 2px solid #eee;
+            gap: 10px;
         }
 
         .bar {
             background: #ff6b00;
-            width: 80%;
-            border-top-left-radius: 4px;
-            border-top-right-radius: 4px;
-            transition: height 0.3s ease;
-        }
-
-        .bar-label {
-            position: absolute;
-            bottom: -20px;
-            font-size: 12px;
-            color: #7f8c8d;
-        }
-
-        /* Alturas simuladas */
-        .bar-lun { height: 38%; }
-        .bar-mar { height: 52%; }
-        .bar-mie { height: 48%; }
-        .bar-jue { height: 60%; }
-        .bar-vie { height: 75%; }
-        .bar-sab { height: 100%; }
-        .bar-dom { height: 93%; }
-
-        /* Gráfico de Línea */
-        .line-chart-body {
-            display: flex;
-            height: 300px;
-            align-items: flex-end;
-        }
-
-        .line-chart-y {
-            display: flex;
-            flex-direction: column-reverse;
-            justify-content: space-between;
-            height: 100%;
-            width: 70px;
-            font-size: 12px;
-            color: #7f8c8d;
-            text-align: right;
-            padding-bottom: 25px;
-            padding-right: 10px;
-        }
-        
-        .line-chart-plot-container {
-            flex-grow: 1;
-            height: 100%;
-            padding: 0 10px 20px 0;
-            position: relative;
-        }
-
-        .line-chart-plot {
             width: 100%;
-            height: 100%;
+            max-width: 40px;
+            border-radius: 4px 4px 0 0;
             position: relative;
-            border-bottom: 1px solid #ddd;
         }
 
-        .line-point {
+        .bar::after {
+            content: attr(data-label);
             position: absolute;
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: #ff6b00;
-            border: 2px solid white;
-            box-shadow: 0 0 0 1px #ff6b00;
-            transform: translate(-50%, 50%);
-            z-index: 2;
-        }
-        
-        .point-ene { bottom: 30%; left: 0%; }
-        .point-feb { bottom: 35%; left: 20%; }
-        .point-mar { bottom: 58%; left: 40%; }
-        .point-abr { bottom: 45%; left: 60%; }
-        .point-may { bottom: 70%; left: 80%; }
-        .point-jun { bottom: 85%; left: 100%; }
-
-        .line-chart-x-axis {
-            display: flex;
-            justify-content: space-between;
-            padding: 5px 0;
-            margin-left: 70px;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
             font-size: 12px;
             color: #7f8c8d;
         }
 
-        /* Gráfico Pie */
-        .pie-chart-container {
-            padding: 10px;
-            display: flex;
-            justify-content: center;
-        }
-        
-        .pie-chart-area {
-            width: 200px;
-            height: 200px;
-            background: conic-gradient(
-                #ff6b00 0% 30%,
-                #ffa500 30% 54%,
-                #ffdb58 54% 73%,
-                #00e676 73% 89%,
-                #20b2aa 89% 100%
-            );
-            border-radius: 50%;
-            position: relative;
-        }
-
-        /* Tabla Productos */
+        /* ------------------------------------ */
+        /* TABLA */
+        /* ------------------------------------ */
         .product-table {
             width: 100%;
             border-collapse: collapse;
             font-size: 14px;
-            margin-top: 15px;
-        }
-
-        .product-table th, .product-table td {
-            padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid #eee;
         }
 
         .product-table th {
-            background-color: #f9f9f9;
-            color: #7f8c8d;
-            font-weight: 600;
-            text-transform: uppercase;
+            text-align: left;
+            padding: 12px;
+            background: #f8fafc;
+            color: #64748b;
         }
-        
-        .product-name {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-weight: 600;
-        }
-        
-        .color-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-        }
-        
-        .dot-margherita { background-color: #ff6b00; }
-        .dot-pepperoni { background-color: #ffa500; }
-        .dot-hawaiana { background-color: #ffdb58; }
-        .dot-suprema { background-color: #00e676; }
-        .dot-otros { background-color: #20b2aa; }
 
-        /* Responsividad */
+        .product-table td {
+            padding: 12px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .color-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
         @media (max-width: 900px) {
             .metrics-grid { grid-template-columns: repeat(2, 1fr); }
             .chart-grid { grid-template-columns: 1fr; }
-        }
-
-        @media (max-width: 600px) {
-            .reports-container { padding: 10px; }
-            .metrics-grid { grid-template-columns: 1fr; }
-            .reports-header { flex-direction: column; gap: 15px; }
-            .reports-actions { flex-direction: column; width: 100%; }
         }
     </style>
 </head>
@@ -424,7 +251,7 @@
     <header class="admin-header">
         <h1>Panel de Administrador</h1>
         <div class="header-actions">
-            <a href="login.html" class="logout-btn" onclick="cerrarSesion()">Cerrar Sesión</a>
+            <a href="login.html" class="logout-btn">Cerrar Sesión</a>
         </div>
     </header>
 
@@ -432,163 +259,107 @@
         
         <div class="reports-header">
             <div class="reports-header-text">
-                <a href="admin_dashboard.html" class="back-btn">←</a>
-                <h2>Reportes y Análisis</h2>
-                <p style="color: #7f8c8d; font-size: 14px;">Métricas de ventas y rendimiento</p>
+                <a href="panelA.html" class="back-btn" title="Volver al Panel">←</a>
+                <div>
+                    <h2>Reportes y Análisis</h2>
+                    <p style="color: #7f8c8d; font-size: 14px;">Métricas de rendimiento de Freddy's Pizza</p>
+                </div>
             </div>
             <div class="reports-actions">
-                <select class="date-select">
-                    <option>Esta Semana</option>
-                    <option>Este Mes</option>
-                    <option>Últimos 30 Días</option>
-                </select>
                 <button class="export-btn">
-                    <span style="font-weight: bold;">↓</span> Exportar
+                    <span>↓</span> Exportar PDF
                 </button>
             </div>
         </div>
 
         <div class="metrics-grid">
-            
             <div class="card metric-card">
                 <div class="metric-info">
-                    <p>Ventas Totales</p>
+                    <p style="color: #64748b; font-size: 14px;">Ventas Totales</p>
                     <div class="metric-value">$5,860</div>
-                    <div class="metric-change change-green">+12.5% vs semana pasada</div>
+                    <p style="color: #10b981; font-size: 12px;">+12.5% vs ayer</p>
                 </div>
                 <div class="metric-icon icon-sales">$</div>
             </div>
             
             <div class="card metric-card">
                 <div class="metric-info">
-                    <p>Pedidos</p>
+                    <p style="color: #64748b; font-size: 14px;">Pedidos</p>
                     <div class="metric-value">273</div>
-                    <div class="metric-change change-green">+8.2% vs semana pasada</div>
+                    <p style="color: #10b981; font-size: 12px;">+8.2% vs ayer</p>
                 </div>
                 <div class="metric-icon icon-orders">🛒</div>
             </div>
             
             <div class="card metric-card">
                 <div class="metric-info">
-                    <p>Ticket Promedio</p>
+                    <p style="color: #64748b; font-size: 14px;">Ticket Promedio</p>
                     <div class="metric-value">$21.46</div>
-                    <div class="metric-change change-orange">+3.8% vs semana pasada</div>
+                    <p style="color: #f97316; font-size: 12px;">+3.8%</p>
                 </div>
                 <div class="metric-icon icon-ticket">🗓️</div>
             </div>
             
             <div class="card metric-card">
                 <div class="metric-info">
-                    <p>Nuevos Clientes</p>
+                    <p style="color: #64748b; font-size: 14px;">Nuevos Clientes</p>
                     <div class="metric-value">47</div>
-                    <div class="metric-change change-purple">+15.6% vs semana pasada</div>
+                    <p style="color: #a855f7; font-size: 12px;">+15.6%</p>
                 </div>
                 <div class="metric-icon icon-clients">👥</div>
             </div>
-
         </div>
 
         <div class="chart-grid">
-            <div>
-                <div class="card">
-                    <h3 class="chart-title">Ventas por Día</h3>
-                    <div class="bar-chart-container">
-                        <div class="bar-chart-y-axis">
-                            <div>$1200</div>
-                            <div>$900</div>
-                            <div>$600</div>
-                            <div>$300</div>
-                            <div>$0</div>
-                        </div>
-                        <div class="bar-chart-plot">
-                            <div class="bar-chart-data">
-                                <div class="bar-wrapper"><div class="bar bar-lun"></div><span class="bar-label">Lun</span></div>
-                                <div class="bar-wrapper"><div class="bar bar-mar"></div><span class="bar-label">Mar</span></div>
-                                <div class="bar-wrapper"><div class="bar bar-mie"></div><span class="bar-label">Mié</span></div>
-                                <div class="bar-wrapper"><div class="bar bar-jue"></div><span class="bar-label">Jue</span></div>
-                                <div class="bar-wrapper"><div class="bar bar-vie"></div><span class="bar-label">Vie</span></div>
-                                <div class="bar-wrapper"><div class="bar bar-sab"></div><span class="bar-label">Sáb</span></div>
-                                <div class="bar-wrapper"><div class="bar bar-dom"></div><span class="bar-label">Dom</span></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <h3 class="chart-title">Tendencia Mensual</h3>
-                    <div class="line-chart-body">
-                        <div class="line-chart-y">
-                            <span>$20.000</span>
-                            <span>$15.000</span>
-                            <span>$10.000</span>
-                            <span>$5.000</span>
-                            <span>$0</span>
-                        </div>
-                        <div class="line-chart-plot-container">
-                            <div class="line-chart-plot">
-                                <div class="line-point point-ene"></div>
-                                <div class="line-point point-feb"></div>
-                                <div class="line-point point-mar"></div>
-                                <div class="line-point point-abr"></div>
-                                <div class="line-point point-may"></div>
-                                <div class="line-point point-jun"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="line-chart-x-axis">
-                        <span>Ene</span><span>Feb</span><span>Mar</span><span>Abr</span><span>May</span><span>Jun</span>
+            <div class="card">
+                <h3 style="font-size: 18px; margin-bottom: 10px;">Ventas de la Semana</h3>
+                <div class="bar-chart-container">
+                    <div class="bar-chart-plot">
+                        <div class="bar" style="height: 40%;" data-label="Lun"></div>
+                        <div class="bar" style="height: 60%;" data-label="Mar"></div>
+                        <div class="bar" style="height: 55%;" data-label="Mie"></div>
+                        <div class="bar" style="height: 70%;" data-label="Jue"></div>
+                        <div class="bar" style="height: 90%;" data-label="Vie"></div>
+                        <div class="bar" style="height: 100%;" data-label="Sab"></div>
+                        <div class="bar" style="height: 85%;" data-label="Dom"></div>
                     </div>
                 </div>
             </div>
 
-            <div>
-                <div class="card">
-                    <h3 class="chart-title">Productos Más Vendidos</h3>
-                    <div class="pie-chart-container">
-                        <div class="pie-chart-area"></div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <h3 class="chart-title">Top 10 Productos</h3>
-                    <table class="product-table">
-                        <thead>
-                            <tr>
-                                <th>Producto</th>
-                                <th>Ventas</th>
-                                <th>Ingresos</th>
-                                <th>%</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><div class="product-name"><span class="color-dot dot-margherita"></span> Margherita</div></td>
-                                <td>125</td>
-                                <td>$2750</td>
-                                <td>30.4%</td>
-                            </tr>
-                            <tr>
-                                <td><div class="product-name"><span class="color-dot dot-pepperoni"></span> Pepperoni</div></td>
-                                <td>98</td>
-                                <td>$2156</td>
-                                <td>23.8%</td>
-                            </tr>
-                            <tr>
-                                <td><div class="product-name"><span class="color-dot dot-hawaiana"></span> Hawaiana</div></td>
-                                <td>78</td>
-                                <td>$1716</td>
-                                <td>19.0%</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+            <div class="card">
+                <h3 style="font-size: 18px; margin-bottom: 15px;">Top Productos</h3>
+                <table class="product-table">
+                    <thead>
+                        <tr>
+                            <th>Pizza</th>
+                            <th>Ventas</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="color-dot" style="background:#ff6b00"></span> Pepperoni</td>
+                            <td><strong>125</strong></td>
+                        </tr>
+                        <tr>
+                            <td><span class="color-dot" style="background:#3b82f6"></span> Margherita</td>
+                            <td><strong>98</strong></td>
+                        </tr>
+                        <tr>
+                            <td><span class="color-dot" style="background:#10b981"></span> Hawaiana</td>
+                            <td><strong>78</strong></td>
+                        </tr>
+                        <tr>
+                            <td><span class="color-dot" style="background:#a855f7"></span> Suprema</td>
+                            <td><strong>64</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </main>
 
     <script>
         function cerrarSesion() {
-            // Lógica para cerrar sesión (ej. limpiar localStorage)
             window.location.href = 'login.html';
         }
     </script>
