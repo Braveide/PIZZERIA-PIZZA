@@ -8,74 +8,97 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #fdf2e9; min-height: 100vh; }
         
-        /* Header */
         .header { background: linear-gradient(90deg, #ff6b00 0%, #ff3d00 100%); padding: 20px 30px; color: white; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); display: flex; align-items: center; gap: 15px; position: sticky; top: 0; z-index: 1000; }
-        
-        /* FLECHITA DE ARRIBA -> VA AL INDEX */
         .back-btn { background: rgba(255,255,255,0.2); border: none; color: white; font-size: 20px; cursor: pointer; padding: 8px 12px; border-radius: 50%; display: flex; align-items: center; transition: all 0.2s ease; text-decoration: none; }
         
-        .header-content h1 { font-size: 22px; font-weight: 800; }
+        #emptyCart { display: none; flex-direction: column; align-items: center; justify-content: center; padding: 100px 20px; text-align: center; }
+        .cart-icon-big { font-size: 80px; margin-bottom: 20px; }
+        .catalog-btn { background: #ff6b00; color: white; padding: 15px 30px; border-radius: 50px; text-decoration: none; font-weight: bold; margin-top: 20px; box-shadow: 0 4px 10px rgba(255,107,0,0.3); }
 
-        /* Contenedor vacío */
-        .empty-cart { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: calc(100vh - 150px); padding: 40px 20px; text-align: center; }
-        .cart-icon-large { font-size: 80px; margin-bottom: 20px; }
-        
-        /* BOTÓN NARANJA -> VA AL CATALOGO.HTML */
-        .catalog-btn { display: inline-flex; align-items: center; padding: 15px 35px; background: #ff6b00; color: white; border-radius: 50px; font-weight: 700; text-decoration: none; margin-top: 20px; box-shadow: 0 4px 15px rgba(255, 107, 0, 0.3); }
-
-        /* Estilos de items y sumario */
-        .cart-items { max-width: 700px; margin: 30px auto; padding: 0 20px; }
+        #cartContent { display: none; }
+        .cart-items { max-width: 700px; margin: 30px auto 10px; padding: 0 20px; }
         .cart-item { background: white; border-radius: 16px; padding: 20px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); display: flex; justify-content: space-between; align-items: center; border: 1px solid #eee; }
-        .item-info h3 { font-size: 18px; color: #2d3436; }
-        .quantity-controls { display: flex; align-items: center; gap: 15px; background: #f8f9fa; padding: 5px 10px; border-radius: 10px; }
-        .qty-btn { width: 28px; height: 28px; border: none; background: white; border-radius: 6px; cursor: pointer; font-weight: bold; }
-        .cart-summary { max-width: 700px; margin: 20px auto 50px; padding: 0 20px; }
-        .summary-card { background: white; border-radius: 20px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); }
-        .summary-row { display: flex; justify-content: space-between; margin-bottom: 12px; color: #636e72; }
-        .total-row { border-top: 2px dashed #eee; margin-top: 15px; padding-top: 15px; font-size: 22px; font-weight: 800; color: #2d3436; }
+        
+        .item-info { flex-grow: 1; }
+        .item-name { font-size: 18px; font-weight: 700; color: #2d3436; }
+        .item-description { font-size: 13px; color: #636e72; margin-top: 5px; }
+        .item-price { color: #ff6b00; font-weight: 800; margin-top: 8px; display: block; }
+
+        .qty-controls { display: flex; align-items: center; gap: 12px; background: #f8f9fa; padding: 8px; border-radius: 12px; }
+        .qty-btn { width: 30px; height: 30px; border: none; background: white; border-radius: 8px; cursor: pointer; font-weight: bold; }
+
+        .payment-section { max-width: 700px; margin: 20px auto; padding: 0 20px; }
+        .payment-card-box { background: white; border-radius: 20px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .payment-option { display: flex; align-items: center; gap: 15px; padding: 15px; border: 2px solid #f0f0f0; border-radius: 12px; margin-bottom: 5px; cursor: pointer; transition: 0.3s; }
+        .payment-option.active { border-color: #ff6b00; background: #fff9f5; }
+        
+        .api-container { display: none; padding: 15px; border-radius: 12px; margin-bottom: 10px; }
+        .card-input { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 8px; border: 1px solid #ddd; }
+
+        .summary-card { background: white; border-radius: 20px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); max-width: 700px; margin: 20px auto 50px; }
         .checkout-btn { width: 100%; padding: 18px; background: linear-gradient(90deg, #ff6b00 0%, #ff3d00 100%); color: white; border: none; border-radius: 15px; font-size: 18px; font-weight: 700; cursor: pointer; margin-top: 20px; }
     </style>
 </head>
 <body>
     <header class="header">
         <a href="index.html" class="back-btn">←</a>
-        <div class="header-content">
-            <h1>FREDDY'S PIZZA</h1>
-            <p style="font-size: 12px; opacity: 0.8;">Tu Carrito</p>
-        </div>
+        <div class="header-content"><h1>FREDDY'S PIZZA</h1></div>
     </header>
 
-    <div id="emptyCart" class="empty-cart">
-        <div class="cart-icon-large">🍕</div>
-        <h2>¡Tu carrito está vacío!</h2>
-        <p>Parece que aún no has elegido nada.</p>
-        <a href="catalogo.html" class="catalog-btn">Volver al Catálogo</a>
+    <div id="emptyCart">
+        <div class="cart-icon-big">🍕</div>
+        <h2>Tu carrito está vacío</h2>
+        <a href="catalogo.html" class="catalog-btn">Ir al Catálogo</a>
     </div>
 
-    <div id="cartContent" style="display: none;">
-        <div class="cart-items" id="cartItems"></div>
-        <div class="cart-summary">
-            <div class="summary-card">
-                <div class="summary-row"><span>Subtotal</span><span id="subtotal">$0.00</span></div>
-                <div class="summary-row"><span>Envío</span><span id="shipping">$50.00</span></div>
-                <div class="summary-row total-row"><span>Total</span><span id="total" style="color: #ff6b00;">$0.00</span></div>
-                <button class="checkout-btn" onclick="checkout()">Confirmar y Pagar</button>
+    <div id="cartContent">
+        <div class="cart-items" id="cartList"></div>
+
+        <form id="orderForm" onsubmit="confirmOrder(event)">
+            <div class="payment-section">
+                <div class="payment-card-box">
+                    <h3 style="margin-bottom:15px;">Método de Pago</h3>
+                    
+                    <div class="payment-option active" onclick="setPay(this, 'cash')">
+                        <span>💵</span><div><b>Efectivo</b><p style="font-size:12px;">Paga al recibir en casa</p></div>
+                    </div>
+
+                    <div class="payment-option" onclick="setPay(this, 'card')">
+                        <span>💳</span><div><b>Tarjeta</b><p style="font-size:12px;">Débito o Crédito</p></div>
+                    </div>
+                    <div id="box-card" class="api-container">
+                        <input type="text" id="numT" class="card-input" placeholder="Número de Tarjeta" pattern="\d{16}">
+                        <div style="display:flex; gap:10px;">
+                            <input type="text" id="expT" class="card-input" placeholder="MM/AA">
+                            <input type="text" id="cvvT" class="card-input" placeholder="CVV" maxlength="3">
+                        </div>
+                    </div>
+
+                    <div class="payment-option" onclick="setPay(this, 'paypal')">
+                        <span>💙</span><div><b>PayPal</b><p style="font-size:12px;">Paga de forma segura</p></div>
+                    </div>
+
+                    <div class="payment-option" onclick="setPay(this, 'mercadopago')">
+                        <span>🤝</span><div><b>Mercado Pago</b><p style="font-size:12px;">Paga con tu saldo o tarjeta</p></div>
+                    </div>
+                </div>
             </div>
-        </div>
+
+            <div class="summary-card">
+                <div style="display:flex; justify-content:space-between; font-size:20px; font-weight:bold;">
+                    <span>Total a Pagar</span><span id="finalTotal" style="color:#ff6b00;">$0.00</span>
+                </div>
+                <button type="submit" class="checkout-btn">Finalizar Pedido</button>
+            </div>
+        </form>
     </div>
 
     <script>
         const CART_KEY = 'pizzaCart';
-        let cart = {};
+        let currentMethod = 'cash';
 
-        function loadCart() {
-            const savedCart = localStorage.getItem(CART_KEY);
-            cart = savedCart ? JSON.parse(savedCart) : {};
-            renderCart();
-        }
-
-        function renderCart() {
-            const container = document.getElementById('cartItems');
+        function updateCart() {
+            const cart = JSON.parse(localStorage.getItem(CART_KEY)) || {};
             const items = Object.values(cart);
             if (items.length === 0) {
                 document.getElementById('emptyCart').style.display = 'flex';
@@ -85,41 +108,65 @@
             document.getElementById('emptyCart').style.display = 'none';
             document.getElementById('cartContent').style.display = 'block';
 
-            container.innerHTML = items.map(item => `
+            document.getElementById('cartList').innerHTML = items.map(item => `
                 <div class="cart-item">
                     <div class="item-info">
-                        <h3>${item.name}</h3>
-                        <p style="color:#ff6b00; font-weight:bold;">$${(item.price * item.quantity).toFixed(2)}</p>
+                        <div class="item-name">${item.name}</div>
+                        <div class="item-description">${item.description || 'Pizza recién horneada.'}</div>
+                        <span class="item-price">$${(item.price * item.quantity).toFixed(2)}</span>
                     </div>
-                    <div class="quantity-controls">
-                        <button class="qty-btn" onclick="updateQty('${item.name}', -1)">-</button>
+                    <div class="qty-controls">
+                        <button class="qty-btn" type="button" onclick="changeQty('${item.name}', -1)">-</button>
                         <span>${item.quantity}</span>
-                        <button class="qty-btn" onclick="updateQty('${item.name}', 1)">+</button>
+                        <button class="qty-btn" type="button" onclick="changeQty('${item.name}', 1)">+</button>
                     </div>
                 </div>
             `).join('');
-            updateSummary();
+
+            const subtotal = items.reduce((s, i) => s + (i.price * i.quantity), 0);
+            document.getElementById('finalTotal').textContent = `$${(subtotal + 50).toFixed(2)}`;
         }
 
-        function updateQty(name, change) {
-            cart[name].quantity += change;
-            if (cart[name].quantity <= 0) delete cart[name];
-            localStorage.setItem(CART_KEY, JSON.stringify(cart));
-            renderCart();
+        function changeQty(name, delta) {
+            let cart = JSON.parse(localStorage.getItem(CART_KEY)) || {};
+            if (cart[name]) {
+                cart[name].quantity += delta;
+                if (cart[name].quantity <= 0) delete cart[name];
+                localStorage.setItem(CART_KEY, JSON.stringify(cart));
+                updateCart();
+            }
         }
 
-        function updateSummary() {
-            const subtotal = Object.values(cart).reduce((s, i) => s + (i.price * i.quantity), 0);
-            const shipping = subtotal > 0 ? 50 : 0;
-            document.getElementById('subtotal').textContent = `$${subtotal.toFixed(2)}`;
-            document.getElementById('shipping').textContent = `$${shipping.toFixed(2)}`;
-            document.getElementById('total').textContent = `$${(subtotal + shipping).toFixed(2)}`;
+        function setPay(el, method) {
+            document.querySelectorAll('.payment-option').forEach(o => o.classList.remove('active'));
+            document.getElementById('box-card').style.display = 'none';
+            document.getElementById('numT').required = false;
+            el.classList.add('active');
+            currentMethod = method;
+            if (method === 'card') {
+                document.getElementById('box-card').style.display = 'block';
+                document.getElementById('numT').required = true;
+            }
         }
 
-        function checkout() {
+        function confirmOrder(e) {
+            e.preventDefault();
+            
+            if(currentMethod === 'paypal') {
+                window.location.href = "https://www.paypal.com/checkout"; // Aquí iría tu link de cobro
+                return;
+            }
+            if(currentMethod === 'mercadopago') {
+                window.location.href = "https://www.mercadopago.com.mx/checkout"; // Aquí iría tu link de cobro
+                return;
+            }
+
             alert("¡Pedido realizado con éxito!");
+            localStorage.removeItem(CART_KEY);
+            window.location.href = 'index.html';
         }
-        loadCart();
+
+        updateCart();
     </script>
 </body>
 </html>
