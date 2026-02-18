@@ -6,10 +6,10 @@
     <link rel="icon" type="image/x-icon" href="freddy.png">
     <title>FREDDY'S PIZZA - Menú Completo</title>
     <style>
+        /* Estilos originales preservados */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f9f9f9; color: #333; }
         
-        /* Header */
         .header { background: linear-gradient(135deg, #ff6b35 0%, #ff4500 100%); color: white; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); position: sticky; top: 0; z-index: 1000; }
         .header-title h1 { font-size: 22px; }
         .header-title p { font-size: 13px; opacity: 0.9; }
@@ -21,17 +21,15 @@
         .cart-btn { background: rgba(255, 255, 255, 0.2); border: none; color: white; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; transition: background 0.3s; position: relative; text-decoration: none; }
         .cart-badge { position: absolute; top: -5px; right: -5px; background-color: #fff; color: #ff3d00; border-radius: 50%; padding: 2px 6px; font-size: 10px; font-weight: bold; }
         
-        /* Contenedor Principal */
         .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
         .section-title { margin: 30px 0 20px 0; color: #333; font-size: 26px; border-left: 5px solid #ff4500; padding-left: 15px; }
         
-        /* Grid de Productos - UX Mejorada */
         .grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
         .card { background: white; border-radius: 15px; padding: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: transform 0.2s, box-shadow 0.2s; display: flex; flex-direction: column; justify-content: space-between; }
         .card:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
         
         .card-image { width: 100%; height: 180px; border-radius: 10px; object-fit: cover; margin-bottom: 15px; }
-        .drink-image { object-fit: contain; background-color: #f0f0f0; } /* Para botellas */
+        .drink-image { object-fit: contain; background-color: #f0f0f0; }
         
         .card-info h3 { font-size: 18px; margin-bottom: 5px; color: #333; }
         .card-description { color: #777; font-size: 13px; margin-bottom: 15px; height: 40px; overflow: hidden; }
@@ -41,9 +39,7 @@
         .add-btn { background: #333; color: white; border: none; padding: 10px 20px; border-radius: 20px; cursor: pointer; font-size: 14px; font-weight: bold; transition: background 0.3s; }
         .add-btn:hover { background: #ff4500; }
         
-        /* Botón Volver Arriba */
         #backToTop { position: fixed; bottom: 30px; right: 30px; background: #ff4500; color: white; border: none; width: 50px; height: 50px; border-radius: 50%; font-size: 20px; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.3); display: none; z-index: 1001; transition: opacity 0.3s; }
-        #backToTop:hover { background: #e03e00; }
     </style>
 </head>
 <body>
@@ -62,114 +58,98 @@
     </header>
 
     <div class="container">
-        
         <h2 class="section-title">Pizzas Artesanales</h2>
-        <div class="grid-container">
-            <script>
-                const pizzas = [
-                    { name: "Margherita", price: 18.99, desc: "Mozzarella fresca, albahaca, aceite de oliva", img: "imagenes/pizza_marg.png" },
-                    { name: "Pepperoni", price: 21.99, desc: "Salsa de tomate, mozzarella y pepperoni premium", img: "imagenes/pizza_pepe.png" },
-                    { name: "Hawaiana", price: 23.99, desc: "Jamón dulce y piña tropical fresca", img: "imagenes/pizza_hawa.png" },
-                    { name: "Suprema", price: 26.99, desc: "Pepperoni, pimientos, cebolla, champiñones", img: "imagenes/pizza_suprema.png" },
-                    { name: "Cuatro Quesos", price: 24.99, desc: "Mozzarella, parmesano, gorgonzola, provolone", img: "imagenes/cuatroqueso.png" },
-                    { name: "BBQ Chicken", price: 25.99, desc: "Pollo a la parrilla, salsa BBQ, cebolla roja", img: "imagenes/bbq.png" }
-                ];
-                pizzas.forEach(p => document.write(`
-                    <div class="card">
-                        <img src="${p.img}" alt="${p.name}" class="card-image">
-                        <div class="card-info">
-                            <h3>${p.name}</h3>
-                            <p class="card-description">${p.desc}</p>
-                        </div>
-                        <div class="card-footer">
-                            <span class="card-price">$${p.price.toFixed(2)}</span>
-                            <button class="add-btn" onclick="addToCart('${p.name}', ${p.price}, 'Pizza')">Agregar</button>
-                        </div>
-                    </div>
-                `));
-            </script>
-        </div>
+        <div class="grid-container" id="pizzas-container"></div>
 
         <h2 class="section-title">Bebidas Refrescantes</h2>
-        <div class="grid-container">
-            <script>
-                const bebidas = [
-                    { name: "Coca-Cola 1.5L", price: 3.50, desc: "Sabor original", img: "https://carnemart.com/wp-content/uploads/2025/10/wp-image-2050.png" },
-                    { name: "Agua Mineral 1L", price: 2.00, desc: "Purificada", img: "https://resources.coca-colaentuhogar.com/media/catalog/product/c/i/ciemin-natu-nor-pet-600ml-6pz.png" },
-                    { name: "Sprite 1.5L", price: 3.50, desc: "Limón-Lima", img: "imagenes/sprite.png" },
-                    { name: "Fanta Naranja 1.5L", price: 3.50, desc: "Sabor naranja", img: "imagenes/fanta.png" },
-                    { name: "Té Frío", price: 2.50, desc: "Limón o Durazno", img: "imagenes/tefrio.png" },
-                    { name: "Cerveza Artesanal", price: 4.50, desc: "Solo mayores de 18", img: "imagenes/cerveza.png" }
-                ];
-                bebidas.forEach(b => document.write(`
-                    <div class="card">
-                        <img src="${b.img}" alt="${b.name}" class="card-image drink-image">
-                        <div class="card-info">
-                            <h3>${b.name}</h3>
-                            <p class="card-description">${b.desc}</p>
-                        </div>
-                        <div class="card-footer">
-                            <span class="card-price">$${b.price.toFixed(2)}</span>
-                            <button class="add-btn" onclick="addToCart('${b.name}', ${b.price}, 'Bebida')">Agregar</button>
-                        </div>
-                    </div>
-                `));
-            </script>
-        </div>
+        <div class="grid-container" id="bebidas-container"></div>
     </div>
 
     <button id="backToTop" onclick="scrollToTop()">↑</button>
 
     <script>
-        // Lógica de carrito
         const CART_KEY = 'pizzaCart';
-        function addToCart(name, price, type) {
+
+        const pizzas = [
+            { name: "Margherita", price: 18.99, desc: "Mozzarella fresca, albahaca, aceite de oliva", img: "imagenes/pizza_marg.png" },
+            { name: "Pepperoni", price: 21.99, desc: "Salsa de tomate, mozzarella y pepperoni premium", img: "imagenes/pizza_pepe.png" },
+            { name: "Hawaiana", price: 23.99, desc: "Jamón dulce y piña tropical fresca", img: "imagenes/pizza_hawa.png" },
+            { name: "Suprema", price: 26.99, desc: "Pepperoni, pimientos, cebolla, champiñones", img: "imagenes/pizza_suprema.png" },
+            { name: "Cuatro Quesos", price: 24.99, desc: "Mozzarella, parmesano, gorgonzola, provolone", img: "imagenes/cuatroqueso.png" },
+            { name: "BBQ Chicken", price: 25.99, desc: "Pollo a la parrilla, salsa BBQ, cebolla roja", img: "imagenes/bbq.png" }
+        ];
+
+        const bebidas = [
+            { name: "Coca-Cola 1.5L", price: 3.50, desc: "Sabor original", img: "https://carnemart.com/wp-content/uploads/2025/10/wp-image-2050.png" },
+            { name: "Agua Mineral 1L", price: 2.00, desc: "Purificada", img: "https://resources.coca-colaentuhogar.com/media/catalog/product/c/i/ciemin-natu-nor-pet-600ml-6pz.png" },
+            { name: "Sprite 1.5L", price: 3.50, desc: "Limón-Lima", img: "imagenes/sprite.png" },
+            { name: "Fanta Naranja 1.5L", price: 3.50, desc: "Sabor naranja", img: "imagenes/fanta.png" },
+            { name: "Té Frío", price: 2.50, desc: "Limón o Durazno", img: "imagenes/tefrio.png" },
+            { name: "Cerveza Artesanal", price: 4.50, desc: "Solo mayores de 18", img: "imagenes/cerveza.png" }
+        ];
+
+        function render() {
+            document.getElementById('pizzas-container').innerHTML = pizzas.map(p => `
+                <div class="card">
+                    <img src="${p.img}" alt="${p.name}" class="card-image">
+                    <div class="card-info">
+                        <h3>${p.name}</h3>
+                        <p class="card-description">${p.desc}</p>
+                    </div>
+                    <div class="card-footer">
+                        <span class="card-price">$${p.price.toFixed(2)}</span>
+                        <button class="add-btn" onclick="addToCart('${p.name}', ${p.price})">Agregar</button>
+                    </div>
+                </div>
+            `).join('');
+
+            document.getElementById('bebidas-container').innerHTML = bebidas.map(b => `
+                <div class="card">
+                    <img src="${b.img}" alt="${b.name}" class="card-image drink-image">
+                    <div class="card-info">
+                        <h3>${b.name}</h3>
+                        <p class="card-description">${b.desc}</p>
+                    </div>
+                    <div class="card-footer">
+                        <span class="card-price">$${b.price.toFixed(2)}</span>
+                        <button class="add-btn" onclick="addToCart('${b.name}', ${b.price})">Agregar</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function addToCart(name, price) {
             let cart = JSON.parse(localStorage.getItem(CART_KEY)) || {};
-            cart[name] = cart[name] ? {...cart[name], quantity: cart[name].quantity + 1} : {name, price, type, quantity: 1};
+            cart[name] = cart[name] ? {...cart[name], quantity: cart[name].quantity + 1} : {name, price, quantity: 1};
             localStorage.setItem(CART_KEY, JSON.stringify(cart));
             updateCartBadge();
-            // Feedback sutil sin alert
             showToast(`¡${name} agregado!`);
         }
-        
+
         function updateCartBadge() {
             let cart = JSON.parse(localStorage.getItem(CART_KEY)) || {};
-            let totalItems = 0;
-            for (let item in cart) totalItems += cart[item].quantity;
+            let total = Object.values(cart).reduce((s, i) => s + i.quantity, 0);
             const badge = document.getElementById('cartBadge');
-            if (totalItems > 0) { badge.textContent = totalItems; badge.style.display = 'block'; }
-            else { badge.style.display = 'none'; }
+            badge.style.display = total > 0 ? 'block' : 'none';
+            badge.textContent = total;
         }
-        updateCartBadge();
 
-        // Lógica Botón Volver Arriba
-        const backToTopBtn = document.getElementById("backToTop");
-        window.onscroll = function() {
-            if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
-                backToTopBtn.style.display = "block";
-            } else {
-                backToTopBtn.style.display = "none";
-            }
+        function scrollToTop() { window.scrollTo({top: 0, behavior: 'smooth'}); }
+        
+        function showToast(m) {
+            let t = document.createElement("div"); t.textContent = m;
+            t.style.cssText = "position:fixed; bottom:20px; left:20px; background:#333; color:white; padding:10px 20px; border-radius:20px; z-index:1002; font-size:14px;";
+            document.body.appendChild(t);
+            setTimeout(() => t.remove(), 2000);
+        }
+
+        window.onscroll = () => {
+            document.getElementById("backToTop").style.display = 
+                (document.documentElement.scrollTop > 300) ? "block" : "none";
         };
 
-        function scrollToTop() {
-            window.scrollTo({top: 0, behavior: 'smooth'});
-        }
-
-        // Toast Notification (UX mejorada)
-        function showToast(message) {
-            let toast = document.createElement("div");
-            toast.textContent = message;
-            toast.style.cssText = "position:fixed; bottom:20px; left:20px; background:#333; color:white; padding:10px 20px; border-radius:20px; z-index:1002; font-size:14px; opacity:0; transition:opacity 0.3s";
-            document.body.appendChild(toast);
-            setTimeout(() => toast.style.opacity = "1", 10);
-            setTimeout(() => {
-                toast.style.opacity = "0";
-                setTimeout(() => document.body.removeChild(toast), 300);
-            }, 2000);
-        }
+        render();
+        updateCartBadge();
     </script>
 </body>
 </html>
-
-
