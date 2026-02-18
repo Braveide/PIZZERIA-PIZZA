@@ -14,172 +14,116 @@
     <title>FREDDY'S PIZZA - Inicio</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Arial', sans-serif; background: #f5f5f5; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #fff; color: #333; }
         
-        /* Estilos del Loader */
+        /* Loader */
         #loader-wrapper { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #fff; display: flex; justify-content: center; align-items: center; z-index: 9999; transition: opacity 0.5s ease, visibility 0.5s; }
         .loader { border: 8px solid #f3f3f3; border-top: 8px solid #ff3d00; border-radius: 50%; width: 60px; height: 60px; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         #loader-wrapper.hidden { opacity: 0; visibility: hidden; }
         
-        /* Estilos Header */
-        .header { background: linear-gradient(135deg, #ff6b35 0%, #ff4500 100%); color: white; padding: 20px 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); }
-        .header-left { display: flex; align-items: center; gap: 15px; }
-        .header-title h1 { font-size: 24px; font-weight: bold; }
-        .header-title p { font-size: 14px; opacity: 0.9; margin-top: 2px; }
+        /* Header */
+        .header { background: #fff; color: #333; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 1000; }
+        .logo { font-size: 22px; font-weight: bold; color: #ff4500; }
         
-        .header-right { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
+        .header-right { display: flex; gap: 10px; align-items: center; }
         
-        /* --- ESTILOS DE LOS BOTONES --- */
-        .btn-header { text-decoration: none; color: white; font-weight: bold; padding: 8px 12px; background: rgba(255,255,255,0.2); border-radius: 20px; transition: background 0.3s; font-size: 13px; white-space: nowrap; }
-        .btn-header:hover { background: rgba(255,255,255,0.3); }
+        .btn-header { text-decoration: none; color: #333; font-weight: 600; padding: 8px 15px; border-radius: 20px; transition: background 0.3s; font-size: 14px; }
+        .btn-header:hover { background: #f0f0f0; }
         
-        .cart-btn { background: rgba(255, 255, 255, 0.2); border: none; color: white; width: 35px; height: 35px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; transition: background 0.3s; position: relative; text-decoration: none;}
-        .cart-btn:hover { background: rgba(255, 255, 255, 0.3); }
-        .cart-badge { position: absolute; top: -5px; right: -5px; background-color: #fff; color: #ff3d00; border-radius: 50%; padding: 2px 6px; font-size: 10px; font-weight: bold; }
+        .cart-btn { background: #333; border: none; color: white; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; text-decoration: none; position: relative; }
+        .cart-btn:hover { background: #555; }
+        .cart-badge { position: absolute; top: -5px; right: -5px; background-color: #ff3d00; color: white; border-radius: 50%; padding: 3px 7px; font-size: 10px; }
+
+        /* Hero Section */
+        .hero { background: linear-gradient(135deg, #ff6b35 0%, #ff4500 100%); color: white; padding: 60px 20px; text-align: center; }
+        .hero h1 { font-size: 48px; margin-bottom: 10px; }
+        .hero p { font-size: 18px; margin-bottom: 25px; opacity: 0.9; }
         
-        .subtitle { text-align: center; padding: 25px 20px; color: #666; font-size: 14px; }
-        .section-title { text-align: left; margin: 30px 0 20px 0; color: #333; font-size: 24px; border-bottom: 2px solid #ff6b35; padding-bottom: 10px; }
-        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px 40px; }
-        .list-container { display: flex; flex-direction: column; gap: 20px; }
-        .card { background: white; border-radius: 15px; padding: 20px; display: flex; gap: 20px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08); transition: transform 0.3s, box-shadow 0.3s; }
-        .card:hover { transform: translateY(-3px); box-shadow: 0 5px 20px rgba(0, 0, 0, 0.12); }
-        .card-image { width: 120px; height: 120px; border-radius: 12px; object-fit: cover; flex-shrink: 0; }
-        .card-info { flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
-        .card-header h3 { font-size: 20px; color: #333; margin-bottom: 8px; }
-        .card-description { color: #666; font-size: 14px; line-height: 1.5; margin-bottom: 12px; }
-        .card-footer { display: flex; justify-content: space-between; align-items: center; }
-        .card-price { color: #ff6b35; font-size: 24px; font-weight: bold; }
-        .add-btn { background: linear-gradient(135deg, #ff6b35 0%, #ff4500 100%); color: white; border: none; padding: 12px 30px; border-radius: 25px; cursor: pointer; font-size: 15px; font-weight: bold; display: flex; align-items: center; gap: 8px; transition: transform 0.2s, box-shadow 0.2s; }
-        .add-btn:hover { transform: scale(1.05); box-shadow: 0 5px 15px rgba(255, 107, 53, 0.3); }
+        .btn-catalogo { display: inline-block; padding: 15px 30px; background: white; color: #ff4500; text-decoration: none; border-radius: 30px; font-weight: bold; font-size: 18px; transition: transform 0.2s, box-shadow 0.2s; }
+        .btn-catalogo:hover { transform: scale(1.05); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+
+        /* Especialidades */
+        .container { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
+        .section-title { text-align: center; margin-bottom: 30px; font-size: 28px; color: #333; }
         
-        @media (max-width: 768px) { 
-            .header { padding: 15px 10px; flex-direction: column; gap: 10px; } 
-            .header-right { gap: 5px; justify-content: center; }
-            .card { flex-direction: column; } 
-            .card-image { width: 100%; height: 200px; } 
-            .card-footer { flex-direction: column; gap: 15px; align-items: stretch; } 
-            .add-btn { width: 100%; justify-content: center; } 
-        }
+        .grid-especialidades { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        .card { background: white; border: 1px solid #eee; border-radius: 15px; padding: 20px; text-align: center; transition: box-shadow 0.3s; }
+        .card:hover { box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+        .card-image { width: 100%; height: 200px; object-fit: cover; border-radius: 10px; margin-bottom: 15px; }
+        .card h3 { font-size: 20px; margin-bottom: 10px; }
+        .card p { color: #666; font-size: 14px; margin-bottom: 15px; height: 40px; overflow: hidden; }
+        .card-price { font-size: 22px; font-weight: bold; color: #ff4500; display: block; margin-bottom: 15px; }
     </style>
 </head>
 <body>
 
-    <div id="loader-wrapper">
-        <div class="loader"></div>
-    </div>
+    <div id="loader-wrapper"><div class="loader"></div></div>
 
     <header class="header">
-        <div class="header-left">
-            <div class="header-title">
-                <h1>FREDDY'S PIZZA</h1>
-                <p>Inicio</p>
-            </div>
-        </div>
+        <div class="logo">FREDDY'S PIZZA</div>
         <div class="header-right">
             <a href="contacto.html" class="btn-header">Nosotros</a>
             <a href="Conta.html" class="btn-header">Contacto</a>
-            <a href="catalogo.html" class="btn-header">Catálogo</a>
-            
-            <a href="login.html" id="loginLink" class="cart-btn">👤</a>
-            <a href="carrito.html" class="cart-btn">
-                🛒
-                <span id="cartBadge" class="cart-badge" style="display: none;">0</span>
-            </a>
+            <a href="login.html" class="cart-btn">👤</a>
+            <a href="carrito.html" class="cart-btn">🛒<span id="cartBadge" class="cart-badge" style="display: none;">0</span></a>
         </div>
     </header>
 
-    <div class="subtitle">
-        Selecciona tus productos destacados o ve al catálogo completo
-    </div>
+    <section class="hero">
+        <h1>Las mejores pizzas de la ciudad</h1>
+        <p>Ingredientes frescos, masa artesanal y el sabor que te encanta.</p>
+        <a href="catalogo.html" class="btn-catalogo">Ver Menú Completo</a>
+    </section>
 
     <div class="container">
-        <h2 class="section-title">Especialidades</h2>
-        <div class="list-container">
+        <h2 class="section-title">Nuestras Especialidades</h2>
+        <div class="grid-especialidades">
             <div class="card">
                 <img src="imagenes/pizza_pepe.png" alt="Pepperoni" class="card-image">
-                <div class="card-info">
-                    <div><div class="card-header"><h3>Pepperoni Premium</h3></div><p class="card-description">Salsa de tomate, mozzarella y pepperoni premium</p></div>
-                    <div class="card-footer"><span class="card-price">$21.99</span><button class="add-btn" onclick="addToCart('Pepperoni Premium', 21.99, 'Pizza')">+ Agregar</button></div>
-                </div>
+                <h3>Pepperoni Premium</h3>
+                <p>Salsa de tomate, mozzarella y pepperoni.</p>
+                <span class="card-price">$21.99</span>
             </div>
-             <div class="card">
+            <div class="card">
                 <img src="imagenes/pizza_suprema.png" alt="Suprema" class="card-image">
-                <div class="card-info">
-                    <div><div class="card-header"><h3>Suprema</h3></div><p class="card-description">Salsa de tomate, mozzarella, pepperoni, pimientos y champiñones</p></div>
-                    <div class="card-footer"><span class="card-price">$26.99</span><button class="add-btn" onclick="addToCart('Suprema', 26.99, 'Pizza')">+ Agregar</button></div>
-                </div>
+                <h3>Suprema</h3>
+                <p>Pepperoni, pimientos, cebolla y champiñones.</p>
+                <span class="card-price">$26.99</span>
+            </div>
+            <div class="card">
+                <img src="imagenes/pizza_marg.png" alt="Margherita" class="card-image">
+                <h3>Margherita</h3>
+                <p>Mozzarella fresca, albahaca y aceite de oliva.</p>
+                <span class="card-price">$18.99</span>
             </div>
         </div>
     </div>
 
     <script>
-        // ----------------------------------------------------
-        // LÓGICA DE ROLES Y SEGURIDAD
-        // ----------------------------------------------------
+        // Lógica de roles, loader y carrito se mantiene igual para la funcionalidad global
         (function() {
             const userDataJSON = localStorage.getItem('userPizzaApp');
             if (userDataJSON) {
                 const user = JSON.parse(userDataJSON);
-                if (user.rol === 'admin') {
-                    window.location.href = 'panel-admin.html';
-                } else if (user.rol === 'vendedor') {
-                    window.location.href = 'panel-vendedor.html';
-                }
+                if (user.rol === 'admin') window.location.href = 'panel-admin.html';
+                else if (user.rol === 'vendedor') window.location.href = 'panel-vendedor.html';
             }
         })();
 
-        // ----------------------------------------------------
-        // Loader logic
-        // ----------------------------------------------------
         window.addEventListener('load', function() {
             const loader = document.getElementById('loader-wrapper');
-            setTimeout(() => {
-                loader.classList.add('hidden');
-            }, 500);
+            setTimeout(() => loader.classList.add('hidden'), 500);
         });
 
-        // ----------------------------------------------------
-        // Cart logic
-        // ----------------------------------------------------
-        const CART_KEY = 'pizzaCart';
-
-        function addToCart(name, price, type) {
-            let cart = JSON.parse(localStorage.getItem(CART_KEY)) || {};
-            
-            if (cart[name]) {
-                cart[name].quantity += 1;
-            } else {
-                cart[name] = {
-                    name: name,
-                    price: price,
-                    type: type,
-                    quantity: 1
-                };
-            }
-            
-            localStorage.setItem(CART_KEY, JSON.stringify(cart));
-            updateCartBadge();
-            alert(`¡${name} agregado al carrito!`);
-        }
-
         function updateCartBadge() {
-            let cart = JSON.parse(localStorage.getItem(CART_KEY)) || {};
+            let cart = JSON.parse(localStorage.getItem('pizzaCart')) || {};
             let totalItems = 0;
-            
-            for (let item in cart) {
-                totalItems += cart[item].quantity;
-            }
-            
+            for (let item in cart) totalItems += cart[item].quantity;
             const badge = document.getElementById('cartBadge');
-            if (totalItems > 0) {
-                badge.textContent = totalItems;
-                badge.style.display = 'block';
-            } else {
-                badge.style.display = 'none';
-            }
+            if (totalItems > 0) { badge.textContent = totalItems; badge.style.display = 'block'; }
+            else { badge.style.display = 'none'; }
         }
-
         updateCartBadge();
     </script>
 </body>
