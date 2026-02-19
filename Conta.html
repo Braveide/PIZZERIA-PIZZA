@@ -1,106 +1,242 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-EVDX4YSVLB"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-EVDX4YSVLB');
-    </script>
-    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FREDDY'S PIZZA - formulario </title>
-    
+    <link rel="icon" type="image/x-icon" href="freddy.png">
+    <title>FREDDY'S PIZZA - Menú Completo</title>
     <style>
-        /* --- ESTILOS REUTILIZADOS DEL CATÁLOGO --- */
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Arial', sans-serif; background: #f5f5f5; color: #333; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f9f9f9; color: #333; }
         
-        /* Estilos Header (Mismo diseño) */
-        .header { background: linear-gradient(135deg, #ff6b35 0%, #ff4500 100%); color: white; padding: 20px 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); }
-        .header-left { display: flex; align-items: center; gap: 15px; }
-        .header-title h1 { font-size: 24px; font-weight: bold; }
-        .header-title p { font-size: 14px; opacity: 0.9; margin-top: 2px; }
-        .header-right { display: flex; gap: 15px; align-items: center; }
-        .back-btn { text-decoration: none; color: white; font-weight: bold; padding: 10px 20px; background: rgba(255,255,255,0.2); border-radius: 20px; transition: background 0.3s; }
-        .back-btn:hover { background: rgba(255,255,255,0.3); }
+        /* HEADER ESTILO INDEX (BANNER COMPATIBLE) */
+        .header { 
+            background: #fff; 
+            color: #333; 
+            padding: 15px 30px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05); 
+            position: sticky; 
+            top: 0; 
+            z-index: 1000; 
+        }
+        .logo { font-size: 22px; font-weight: bold; color: #ff4500; text-decoration: none; }
+        
+        .header-right { display: flex; gap: 10px; align-items: center; }
+        
+        /* BOTONES ESTILO ORIGINAL */
+        .btn-header { 
+            text-decoration: none; 
+            color: #333; 
+            font-weight: 600; 
+            padding: 8px 15px; 
+            border-radius: 20px; 
+            transition: background 0.3s; 
+            font-size: 14px; 
+        }
+        .btn-header:hover { background: #f0f0f0; }
+        
+        .cart-btn { 
+            background: #333; 
+            border: none; 
+            color: white; 
+            width: 35px; 
+            height: 35px; 
+            border-radius: 50%; 
+            cursor: pointer; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            text-decoration: none; 
+            position: relative; 
+        }
+        .cart-btn:hover { background: #555; }
+        .cart-badge { 
+            position: absolute; 
+            top: -5px; 
+            right: -5px; 
+            background-color: #ff3d00; 
+            color: white; 
+            border-radius: 50%; 
+            padding: 2px 6px; 
+            font-size: 10px; 
+            font-weight: bold; 
+        }
 
-        /* --- ESTILOS ESPECÍFICOS DEL FORMULARIO --- */
-        .container-contact { max-width: 600px; margin: 50px auto; padding: 30px; background: white; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
-        .contact-title { text-align: center; margin-bottom: 30px; color: #ff4500; }
-        .contact-subtitle { text-align: center; margin-bottom: 30px; color: #666; font-size: 15px; }
+        /* SECCIÓN BANNER (HERO) */
+        .hero-banner { 
+            background: linear-gradient(135deg, #ff6b35 0%, #ff4500 100%); 
+            color: white; 
+            padding: 40px 20px; 
+            text-align: center; 
+        }
+        .hero-banner h1 { font-size: 36px; margin-bottom: 5px; }
+        .hero-banner p { font-size: 16px; opacity: 0.9; }
+
+        /* Contenedor de Productos */
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .section-title { margin: 30px 0 20px 0; color: #333; font-size: 26px; border-left: 5px solid #ff4500; padding-left: 15px; }
         
-        .form-group { margin-bottom: 20px; }
-        .form-group label { display: block; margin-bottom: 8px; font-weight: bold; color: #555; }
-        .form-group input, .form-group textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-family: inherit; }
-        .form-group textarea { resize: vertical; height: 150px; }
+        .grid-container { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+            gap: 20px; 
+        }
         
-        .submit-btn { width: 100%; padding: 15px; background: linear-gradient(135deg, #ff6b35 0%, #ff4500 100%); color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: transform 0.2s; }
-        .submit-btn:hover { transform: scale(1.02); }
+        .card { 
+            background: white; 
+            border-radius: 15px; 
+            padding: 20px; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05); 
+            transition: transform 0.2s; 
+            display: flex; 
+            flex-direction: column; 
+        }
+        .card:hover { transform: translateY(-5px); }
+        .card-image { width: 100%; height: 180px; border-radius: 10px; object-fit: cover; margin-bottom: 15px; }
+        .card-info h3 { font-size: 18px; margin-bottom: 10px; }
+        .card-description { color: #777; font-size: 13px; margin-bottom: 15px; height: 40px; overflow: hidden; }
+        .card-footer { display: flex; justify-content: space-between; align-items: center; margin-top: auto; }
+        .card-price { color: #ff4500; font-size: 20px; font-weight: bold; }
         
-        /* Mensaje de éxito */
-        #successMessage { display: none; background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; padding: 15px; border-radius: 8px; text-align: center; margin-bottom: 20px; }
+        .add-btn { 
+            background: #333; 
+            color: white; 
+            border: none; 
+            padding: 10px 20px; 
+            border-radius: 20px; 
+            cursor: pointer; 
+            font-weight: bold; 
+        }
+        .add-btn:hover { background: #ff4500; }
+
+        /* Botón Volver Arriba */
+        #backToTop { 
+            position: fixed; 
+            bottom: 30px; 
+            right: 30px; 
+            background: #ff4500; 
+            color: white; 
+            border: none; 
+            width: 50px; 
+            height: 50px; 
+            border-radius: 50%; 
+            font-size: 20px; 
+            cursor: pointer; 
+            display: none; 
+            z-index: 1001; 
+        }
     </style>
 </head>
 <body>
 
     <header class="header">
-        <div class="header-left">
-            <div class="header-title">
-                <h1>FREDDY'S PIZZA</h1>
-                <p>Formulario de Contacto</p>
-            </div>
-        </div>
+        <a href="index.html" class="logo">FREDDY'S PIZZA</a>
         <div class="header-right">
-            <a href="index.html" class="back-btn">← Volver al Menú</a>
+            <a href="index.html" class="btn-header">Inicio</a>
+            <a href="login.html" class="cart-btn">👤</a>
+            <a href="carrito.html" class="cart-btn">
+                🛒<span id="cartBadge" class="cart-badge" style="display: none;">0</span>
+            </a>
         </div>
     </header>
 
-    <div class="container-contact">
-        <h2 class="contact-title">¿Tienes alguna duda?</h2>
-        <p class="contact-subtitle">Déjanos tu mensaje y te responderemos lo antes posible.</p>
-        
-        <div id="successMessage">¡Mensaje enviado con éxito! Nos pondremos en contacto pronto.</div>
-        
-        <form id="contactForm">
-            <div class="form-group">
-                <label for="name">Nombre Completo</label>
-                <input type="text" id="name" name="name" required placeholder="Tu nombre">
+    <section class="hero-banner">
+        <h1>Nuestro Menú</h1>
+        <p>Explora todas nuestras deliciosas opciones</p>
+    </section>
+
+    <div class="container">
+        <h2 class="section-title">Pizzas Artesanales</h2>
+        <div class="grid-container" id="pizzas-grid">
             </div>
-            
-            <div class="form-group">
-                <label for="email">Correo Electrónico</label>
-                <input type="email" id="email" name="email" required placeholder="tu@correo.com">
+
+        <h2 class="section-title">Bebidas Refrescantes</h2>
+        <div class="grid-container" id="bebidas-grid">
             </div>
-            
-            <div class="form-group">
-                <label for="message">Mensaje</label>
-                <textarea id="message" name="message" required placeholder="Escribe tu duda o comentario..."></textarea>
-            </div>
-            
-            <button type="submit" class="submit-btn">Enviar Mensaje</button>
-        </form>
     </div>
 
-    <script>
-        document.getElementById('contactForm').addEventListener('submit', function(event) {
-            event.preventDefault(); // Evita que la página se recargue
+    <button id="backToTop" onclick="scrollToTop()">↑</button>
 
-            // Aquí podrías agregar lógica para enviar los datos a un backend
-            
-            const form = event.target;
-            const successMessage = document.getElementById('successMessage');
-            
-            // Ocultar formulario y mostrar mensaje
-            form.style.display = 'none';
-            successMessage.style.display = 'block';
-            
-            // Opcional: limpiar formulario
-            form.reset();
-        });
+    <script>
+        const CART_KEY = 'pizzaCart';
+
+        // Datos de ejemplo (6 pizzas y 6 bebidas)
+        const pizzas = [
+            { name: "Margherita", price: 18.99, desc: "Mozzarella, albahaca y aceite de oliva", img: "imagenes/pizza_marg.png" },
+            { name: "Pepperoni", price: 21.99, desc: "Mozzarella y pepperoni premium", img: "imagenes/pizza_pepe.png" },
+            { name: "Hawaiana", price: 23.99, desc: "Jamón dulce y piña tropical", img: "imagenes/pizza_hawa.png" },
+            { name: "Suprema", price: 26.99, desc: "Pepperoni, pimientos y champiñones", img: "imagenes/pizza_suprema.png" },
+            { name: "Cuatro Quesos", price: 24.99, desc: "Mozzarella, parmesano, gorgonzola y provolone", img: "imagenes/pizza_4q.png" },
+            { name: "BBQ Chicken", price: 25.99, desc: "Pollo a la parrilla y salsa BBQ", img: "imagenes/pizza_bbq.png" }
+        ];
+
+        const bebidas = [
+            { name: "Coca-Cola 1.5L", price: 3.50, desc: "Sabor original", img: "https://carnemart.com/wp-content/uploads/2025/10/wp-image-2050.png" },
+            { name: "Agua Mineral 1L", price: 2.00, desc: "Agua purificada", img: "https://resources.coca-colaentuhogar.com/media/catalog/product/c/i/ciemin-natu-nor-pet-600ml-6pz.png" },
+            { name: "Sprite 1.5L", price: 3.50, desc: "Lima-limón", img: "https://example.com/sprite.png" },
+            { name: "Fanta 1.5L", price: 3.50, desc: "Naranja refrescante", img: "https://example.com/fanta.png" },
+            { name: "Jugo de Manzana", price: 2.50, desc: "100% natural", img: "https://example.com/jugo.png" },
+            { name: "Té Frío", price: 2.75, desc: "Limón o Durazno", img: "https://example.com/te.png" }
+        ];
+
+        function renderProducts() {
+            const pGrid = document.getElementById('pizzas-grid');
+            const bGrid = document.getElementById('bebidas-grid');
+
+            pizzas.forEach(p => {
+                pGrid.innerHTML += createCard(p, 'Pizza');
+            });
+            bebidas.forEach(b => {
+                bGrid.innerHTML += createCard(b, 'Bebida');
+            });
+        }
+
+        function createCard(item, type) {
+            return `
+                <div class="card">
+                    <img src="${item.img}" alt="${item.name}" class="card-image ${type === 'Bebida' ? 'drink-image' : ''}">
+                    <div class="card-info">
+                        <h3>${item.name}</h3>
+                        <p class="card-description">${item.desc}</p>
+                    </div>
+                    <div class="card-footer">
+                        <span class="card-price">$${item.price.toFixed(2)}</span>
+                        <button class="add-btn" onclick="addToCart('${item.name}', ${item.price}, '${type}')">Agregar</button>
+                    </div>
+                </div>`;
+        }
+
+        function addToCart(name, price, type) {
+            let cart = JSON.parse(localStorage.getItem(CART_KEY)) || {};
+            cart[name] = cart[name] ? {...cart[name], quantity: cart[name].quantity + 1} : {name, price, type, quantity: 1};
+            localStorage.setItem(CART_KEY, JSON.stringify(cart));
+            updateCartBadge();
+            alert(`¡${name} agregado!`);
+        }
+
+        function updateCartBadge() {
+            let cart = JSON.parse(localStorage.getItem(CART_KEY)) || {};
+            let total = Object.values(cart).reduce((acc, item) => acc + item.quantity, 0);
+            const badge = document.getElementById('cartBadge');
+            badge.textContent = total;
+            badge.style.display = total > 0 ? 'block' : 'none';
+        }
+
+        window.onscroll = function() {
+            const btn = document.getElementById("backToTop");
+            btn.style.display = (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) ? "block" : "none";
+        };
+
+        function scrollToTop() {
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+
+        renderProducts();
+        updateCartBadge();
     </script>
 </body>
-
 </html>
+
