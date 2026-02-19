@@ -11,13 +11,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/x-icon" href="freddy.png">
-    <title>FREDDY'S PIZZA - Inicio</title>
+    <title>FREDDY'S PIZZA - Menú</title>
     <style>
         /* RESET Y BASE */
         * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #fff; color: #333; }
         
-        /* LOADER RÁPIDO */
         #loader-wrapper { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #fff; display: flex; justify-content: center; align-items: center; z-index: 9999; transition: opacity 0.3s ease, visibility 0.3s; }
         .loader { border: 8px solid #f3f3f3; border-top: 8px solid #ff3d00; border-radius: 50%; width: 60px; height: 60px; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
@@ -30,55 +29,32 @@
         .logo-text { font-size: 22px; font-weight: bold; color: #ff4500; }
         .header-right { display: flex; gap: 10px; align-items: center; }
         
-        .btn-header { text-decoration: none; color: #333; font-weight: 600; padding: 8px 15px; border-radius: 20px; transition: background 0.3s; font-size: 14px; }
-        .btn-header:hover { background: #f0f0f0; }
+        .cart-btn { background: #ff4500; border: none; color: white; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; text-decoration: none; position: relative; }
         
-        .cart-btn { background: #ff4500; border: none; color: white; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; text-decoration: none; position: relative; transition: background 0.3s; overflow: hidden; }
-        .cart-btn:hover { background: #e63e00; }
-        .cart-badge { position: absolute; top: -5px; right: -5px; background-color: #333; color: white; border-radius: 50%; padding: 3px 7px; font-size: 10px; border: 1px solid white; }
-
-        /* BANNER */
-        .hero { 
-            background: #ff4500 url('imagenes/baner.jpg') repeat center; 
-            padding: 100px 20px; 
-            text-align: center;
-            color: white;
-            box-shadow: inset 0 0 100px rgba(0,0,0,0.2);
-        }
-        .hero h1 { font-size: 48px; margin-bottom: 10px; text-shadow: 2px 2px 4px rgba(0,0,0,0.4); }
-        .hero p { font-size: 18px; margin-bottom: 25px; opacity: 0.9; text-shadow: 1px 1px 2px rgba(0,0,0,0.4); }
-        
-        .btn-catalogo { display: inline-block; padding: 15px 35px; background: white; color: #ff4500; text-decoration: none; border-radius: 30px; font-weight: bold; font-size: 18px; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        .btn-catalogo:hover { transform: scale(1.05); box-shadow: 0 6px 15px rgba(0,0,0,0.2); }
+        /* PESTAÑAS (TABS) */
+        .tabs-container { display: flex; justify-content: center; gap: 15px; margin: 40px 0 20px; }
+        .tab-btn { padding: 12px 25px; border: 2px solid #ff4500; background: white; color: #ff4500; font-weight: bold; border-radius: 30px; cursor: pointer; transition: all 0.3s; }
+        .tab-btn.active { background: #ff4500; color: white; }
+        .tab-btn:hover { background: #ff4500; color: white; }
 
         /* ESPECIALIDADES */
-        .container { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
-        .section-title { text-align: center; margin-bottom: 30px; font-size: 28px; color: #333; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .grid-especialidades { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
         
-        .grid-especialidades { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
-            gap: 20px; 
-        }
-        
+        /* TARJETAS - Animación de aparición */
         .card { 
-            background: white; 
-            border-radius: 20px; 
-            overflow: hidden; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08); 
-            text-align: center;
-            padding-bottom: 25px;
-            border: 1px solid #eee;
-            transition: transform 0.3s;
+            background: white; border-radius: 20px; overflow: hidden; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08); text-align: center;
+            padding-bottom: 25px; border: 1px solid #eee; transition: 0.3s;
+            display: block; /* Por defecto se ven */
         }
-        .card:hover { transform: translateY(-5px); }
+        .card.hidden { display: none; } /* Clase para ocultar */
+
         .card-image { width: 100%; height: 200px; object-fit: cover; }
-        .card h3 { font-size: 20px; margin: 15px 0 5px; color: #333; }
-        .card p { color: #666; font-size: 14px; padding: 0 15px; margin-bottom: 10px; height: 40px; overflow: hidden; }
-        .card-price { font-size: 22px; font-weight: bold; color: #ff4500; display: block; }
+        .card-price { font-size: 22px; font-weight: bold; color: #ff4500; }
 
         /* DROPDOWN USUARIO */
-        .user-dropdown { display: none; position: absolute; top: 55px; right: 0; background: white; border-radius: 15px; box-shadow: 0 8px 30px rgba(0,0,0,0.15); width: 240px; padding: 20px; z-index: 2000; text-align: center; border: 1px solid #eee; }
+        .user-dropdown { display: none; position: absolute; top: 55px; right: 0; background: white; border-radius: 15px; box-shadow: 0 8px 30px rgba(0,0,0,0.15); width: 240px; padding: 20px; z-index: 2000; text-align: center; }
         .user-dropdown.active { display: block; }
         .user-dropdown img { width: 70px; height: 70px; border-radius: 50%; object-fit: cover; margin-bottom: 10px; border: 3px solid #ff4500; }
     </style>
@@ -93,122 +69,100 @@
             <span class="logo-text">FREDDY'S PIZZA</span>
         </a>
         <div class="header-right">
-            <a href="contacto.html" class="btn-header">Nosotros</a>
-            <a href="Conta.html" class="btn-header">Contacto</a>
-            
             <div style="position: relative;" id="userMenuContainer">
                 <a href="login.html" class="cart-btn" id="userBtn">👤</a>
                 <div class="user-dropdown" id="userDropdown">
                     <img id="userImg" src="https://via.placeholder.com/70" alt="Perfil">
                     <h4 id="userName">Cargando...</h4>
-                    <p id="userEmail" style="font-size:12px; color:#777; margin-bottom: 10px;">correo@ejemplo.com</p>
+                    <p id="userEmail" style="font-size:12px; color:#777;">correo@ejemplo.com</p>
                     <hr style="margin:10px 0; border:0; border-top:1px solid #eee;">
-                    <a href="perfil_cliente.html" id="panelLink" style="display:block; text-decoration:none; color:#333; padding:8px;">Mi Perfil</a>
-                    <button onclick="cerrarSesion()" style="border:none; background:none; color:#d93025; font-weight:bold; cursor:pointer; width: 100%; padding-top: 10px;">Cerrar Sesión</button>
+                    <button onclick="cerrarSesion()" style="border:none; background:none; color:#d93025; font-weight:bold; cursor:pointer;">Cerrar Sesión</button>
                 </div>
             </div>
-
             <a href="carrito.html" class="cart-btn">🛒<span id="cartBadge" class="cart-badge" style="display: none;">0</span></a>
         </div>
     </header>
 
-    <section class="hero">
-        <h1>Las mejores pizzas de la ciudad</h1>
-        <p>Ingredientes frescos, masa artesanal y el sabor que te encanta.</p>
-        <a href="catalogo.html" class="btn-catalogo">Ver Menú Completo</a>
-    </section>
-
     <div class="container">
-        <h2 class="section-title">Nuestras Especialidades</h2>
-        <div class="grid-especialidades">
-            <div class="card">
-                <img src="imagenes/pizza_pepe.png" class="card-image" alt="Pepperoni">
+        <div class="tabs-container">
+            <button class="tab-btn active" onclick="filtrar('todas')">Todas</button>
+            <button class="tab-btn" onclick="filtrar('pizzas')">Pizzas</button>
+            <button class="tab-btn" onclick="filtrar('bebidas')">Bebidas</button>
+            <button class="tab-btn" onclick="filtrar('promos')">Promociones</button>
+        </div>
+
+        <div class="grid-especialidades" id="menu-grid">
+            <div class="card" data-categoria="pizzas">
+                <img src="imagenes/pizza_pepe.png" class="card-image">
                 <h3>Pepperoni Premium</h3>
-                <p>Salsa de tomate, mozzarella y pepperoni.</p>
+                <p>Salsa de tomate y mozzarella.</p>
                 <span class="card-price">$21.99</span>
             </div>
-            <div class="card">
-                <img src="imagenes/pizza_suprema.png" class="card-image" alt="Suprema">
-                <h3>Suprema</h3>
-                <p>Pepperoni, pimientos, cebolla y champiñones.</p>
-                <span class="card-price">$26.99</span>
+
+            <div class="card" data-categoria="bebidas">
+                <img src="imagenes/cerveza.jpg" class="card-image">
+                <h3>Cerveza Fría</h3>
+                <p>La compañía perfecta.</p>
+                <span class="card-price">$5.00</span>
             </div>
-            <div class="card">
-                <img src="imagenes/pizza_marg.png" class="card-image" alt="Margherita">
-                <h3>Margherita</h3>
-                <p>Mozzarella fresca, albahaca y aceite de oliva.</p>
-                <span class="card-price">$18.99</span>
+
+            <div class="card" data-categoria="promos">
+                <img src="imagenes/bbq.jpg" class="card-image">
+                <h3>Paquete Familiar</h3>
+                <p>2 Pizzas + Bebida grande.</p>
+                <span class="card-price">$45.00</span>
             </div>
         </div>
     </div>
 
     <script>
+        // FUNCIÓN PARA FILTRAR PESTAÑAS
+        function filtrar(categoria) {
+            // Actualizar botones
+            const botones = document.querySelectorAll('.tab-btn');
+            botones.forEach(btn => btn.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+
+            // Filtrar tarjetas
+            const tarjetas = document.querySelectorAll('.card');
+            tarjetas.forEach(card => {
+                if (categoria === 'todas') {
+                    card.classList.remove('hidden');
+                } else {
+                    if (card.getAttribute('data-categoria') === categoria) {
+                        card.classList.remove('hidden');
+                    } else {
+                        card.classList.add('hidden');
+                    }
+                }
+            });
+        }
+
+        // LÓGICA DE USUARIO (Mantenemos lo de las fotos .jpeg)
         (function initApp() {
             const userDataJSON = localStorage.getItem('userPizzaApp');
             if (userDataJSON) {
                 let user = JSON.parse(userDataJSON);
-                
-                // --- RUTA FINAL CORREGIDA ---
-                // Si el nombre es "admin" y el formato es JPEG, la ruta es imagenes/admin.jpeg
-                if (user.rol === 'admin') {
-                    user.picture = 'imagenes/admin.jpeg'; 
-                } else if (user.rol === 'vendedor') {
-                    user.picture = 'imagenes/vendor.jpeg';
-                }
+                if (user.rol === 'admin') user.picture = 'imagenes/admin.jpeg';
+                else if (user.rol === 'vendedor') user.picture = 'imagenes/vendor.jpeg';
 
                 const userBtn = document.getElementById('userBtn');
-                const userDropdown = document.getElementById('userDropdown');
-                const userImgElement = document.getElementById('userImg');
-                
-                userBtn.href = "javascript:void(0)";
-                userBtn.onclick = (e) => {
-                    e.preventDefault();
-                    userDropdown.classList.toggle('active');
-                };
-
-                document.getElementById('userName').textContent = user.name || (user.rol === 'admin' ? "Administrador" : "Vendedor");
-                document.getElementById('userEmail').textContent = user.email || "";
-
                 if (user.picture) {
-                    // Imagen del menú desplegable
-                    userImgElement.src = user.picture;
-                    // Imagen del círculo pequeño en el header
+                    document.getElementById('userImg').src = user.picture;
                     userBtn.innerHTML = `<img src="${user.picture}" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">`;
                 }
+                document.getElementById('userName').textContent = user.name || user.rol;
             }
         })();
 
-        window.addEventListener('load', function() {
-            const loader = document.getElementById('loader-wrapper');
-            setTimeout(() => { loader.classList.add('hidden'); }, 200);
+        window.addEventListener('load', () => {
+            setTimeout(() => document.getElementById('loader-wrapper').classList.add('hidden'), 200);
         });
-
-        function updateCartBadge() {
-            let cart = JSON.parse(localStorage.getItem('pizzaCart')) || {};
-            let totalItems = 0;
-            for (let item in cart) totalItems += cart[item].quantity;
-            const badge = document.getElementById('cartBadge');
-            if (totalItems > 0) { 
-                badge.textContent = totalItems; 
-                badge.style.display = 'block'; 
-            } else { 
-                badge.style.display = 'none'; 
-            }
-        }
-        updateCartBadge();
 
         function cerrarSesion() {
             localStorage.removeItem('userPizzaApp');
             window.location.reload();
         }
-
-        window.addEventListener('click', (e) => {
-            const container = document.getElementById('userMenuContainer');
-            const dropdown = document.getElementById('userDropdown');
-            if (container && !container.contains(e.target)) {
-                dropdown.classList.remove('active');
-            }
-        });
     </script>
 </body>
 </html>
