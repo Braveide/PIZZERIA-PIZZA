@@ -5,74 +5,165 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/x-icon" href="freddy.png">
     <title>FREDDY'S PIZZA - Menú</title>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap" rel="stylesheet">
     <style>
         /* ESTILOS BASE */
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f9f9f9; color: #333; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #fdf2e9; color: #333; }
         
-        /* HEADER */
-        .header { background: linear-gradient(135deg, #ff6b35 0%, #ff4500 100%); color: white; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); position: sticky; top: 0; z-index: 1000; }
-        .header-title h1 { font-size: 22px; }
-        .header-right { display: flex; gap: 10px; align-items: center; }
-        .btn-header { text-decoration: none; color: white; font-weight: bold; padding: 8px 15px; background: rgba(255,255,255,0.2); border-radius: 20px; font-size: 13px; }
-        
-        .cart-btn { background: rgba(255, 255, 255, 0.2); border: none; color: white; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; position: relative; text-decoration: none; }
-        .cart-badge { position: absolute; top: -5px; right: -5px; background-color: #fff; color: #ff3d00; border-radius: 50%; padding: 2px 6px; font-size: 10px; font-weight: bold; }
+        /* HEADER CON BANNER Y LOGO A LA IZQUIERDA */
+        .header { 
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('imagenes/baner.jpg') center/cover no-repeat;
+            padding: 45px 30px; 
+            color: white; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            position: sticky; 
+            top: 0; 
+            z-index: 1000; 
+        }
 
-        /* SISTEMA DE PESTAÑAS (TABS) */
+        /* DIVISOR DE CUADROS */
+        .header::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 20px;
+            background-image: 
+                linear-gradient(45deg, #fff 25%, transparent 25%), 
+                linear-gradient(-45deg, #fff 25%, transparent 25%),
+                linear-gradient(45deg, transparent 75%, #fff 75%),
+                linear-gradient(-45deg, transparent 75%, #fff 75%);
+            background-size: 20px 20px;
+            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+            background-color: #000;
+        }
+
+        .header-title h1 { 
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 28px; 
+            text-transform: uppercase;
+            text-shadow: 3px 3px 0px #000;
+            letter-spacing: 1px;
+        }
+
+        .header-right { display: flex; gap: 15px; align-items: center; }
+
+        /* BOTONES BLANCOS CON CONTORNO NEGRO */
+        .btn-header { 
+            text-decoration: none; 
+            color: #000; 
+            font-weight: bold; 
+            padding: 10px 20px; 
+            background: #fff; 
+            border: 2.5px solid #000;
+            border-radius: 25px; 
+            font-size: 14px; 
+            transition: 0.3s;
+            box-shadow: 3px 3px 0px #000;
+        }
+        .btn-header:hover { 
+            background: #ff6b00; 
+            color: white; 
+            transform: translateY(-2px);
+            box-shadow: 1px 1px 0px #000;
+        }
+        
+        .cart-btn { 
+            background: #fff; 
+            border: 2.5px solid #000;
+            color: #000; 
+            width: 45px; 
+            height: 45px; 
+            border-radius: 50%; 
+            cursor: pointer; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            position: relative; 
+            text-decoration: none; 
+            font-size: 20px;
+            box-shadow: 3px 3px 0px #000;
+            transition: 0.3s;
+        }
+        .cart-btn:hover { background: #ff6b00; transform: scale(1.1); }
+        .cart-badge { position: absolute; top: -5px; right: -5px; background-color: #ff3d00; color: #fff; border: 2px solid #000; border-radius: 50%; padding: 2px 6px; font-size: 10px; font-weight: bold; }
+
+        /* PESTAÑAS (TABS) ESTILO BOTÓN BLANCO */
         .tabs-container { 
             display: flex; 
             justify-content: center; 
-            background: white; 
-            padding: 15px; 
-            position: sticky; 
-            top: 70px; 
-            z-index: 999; 
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            gap: 10px;
+            background: transparent; 
+            padding: 30px 15px; 
+            gap: 15px;
         }
         .tab-btn { 
-            padding: 10px 20px; 
-            border: 2px solid #ff4500; 
+            padding: 12px 25px; 
+            border: 2.5px solid #000; 
             background: white; 
-            color: #ff4500; 
-            font-weight: bold; 
-            border-radius: 25px; 
+            color: #000; 
+            font-weight: 900; 
+            border-radius: 50px; 
             cursor: pointer; 
             transition: 0.3s;
-            font-size: 14px;
+            font-size: 15px;
+            box-shadow: 4px 4px 0px #000;
+            text-transform: uppercase;
         }
-        .tab-btn.active { background: #ff4500; color: white; }
+        .tab-btn:hover { background: #ff6b00; color: white; transform: translateY(-3px); }
+        .tab-btn.active { background: #ff6b00; color: white; box-shadow: 2px 2px 0px #000; transform: translateY(2px); }
 
-        /* CONTENEDOR DE PRODUCTOS */
+        /* CONTENEDOR Y TARJETAS */
         .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
-        .tab-content { display: none; } /* Oculto por defecto */
-        .tab-content.active { display: block; } /* Solo se ve el activo */
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
 
         .grid-container { 
             display: grid; 
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
-            gap: 20px; 
-            margin-top: 20px;
+            gap: 25px; 
         }
         
-        /* TARJETAS */
-        .card { background: white; border-radius: 15px; padding: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); display: flex; flex-direction: column; transition: 0.3s; }
-        .card:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        .card-image { width: 100%; height: 180px; border-radius: 10px; object-fit: cover; margin-bottom: 15px; }
-        .drink-image { object-fit: contain; background-color: #f8f8f8; }
+        .card { 
+            background: white; 
+            border-radius: 20px; 
+            padding: 0; 
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05); 
+            display: flex; 
+            flex-direction: column; 
+            transition: 0.3s; 
+            border: 2.5px solid #000; /* Borde negro unificado */
+            overflow: hidden;
+            box-shadow: 5px 5px 0px rgba(0,0,0,0.1); /* Sombra suave pero definida */
+        }
+        .card:hover { transform: translateY(-10px); border-color: #ff6b00; box-shadow: 8px 8px 0px rgba(255,107,0,0.2); }
+        .card-image { width: 100%; height: 200px; object-fit: cover; border-bottom: 2px solid #000; }
         
-        .card-info h3 { font-size: 18px; margin-bottom: 5px; }
-        .card-description { color: #777; font-size: 13px; margin-bottom: 15px; height: 40px; }
-        .card-footer { display: flex; justify-content: space-between; align-items: center; margin-top: auto; }
-        .card-price { color: #ff4500; font-size: 20px; font-weight: bold; }
+        .card-info { padding: 20px; }
+        .card-info h3 { font-size: 20px; margin-bottom: 8px; font-weight: 800; text-transform: uppercase; }
+        .card-description { color: #666; font-size: 14px; margin-bottom: 15px; height: 40px; }
         
-        .add-btn { background: #333; color: white; border: none; padding: 10px 20px; border-radius: 20px; cursor: pointer; font-weight: bold; }
-        .add-btn:hover { background: #ff4500; }
+        .card-footer { display: flex; justify-content: space-between; align-items: center; padding: 0 20px 20px; margin-top: auto; }
+        .card-price { color: #ff6b00; font-size: 24px; font-weight: 900; text-shadow: 1px 1px 0px #000; }
+        
+        .add-btn { 
+            background: #fff; /* Botones de agregar ahora son blancos con borde negro */
+            color: #000; 
+            border: 2px solid #000; 
+            padding: 10px 20px; 
+            border-radius: 12px; 
+            cursor: pointer; 
+            font-weight: bold; 
+            transition: 0.3s;
+            box-shadow: 3px 3px 0px #000;
+        }
+        .add-btn:hover { background: #ff6b00; color: white; transform: scale(1.05); box-shadow: 1px 1px 0px #000; }
     </style>
 </head>
 <body>
-
     <header class="header">
         <div class="header-title">
             <h1>FREDDY'S PIZZA</h1>
@@ -95,11 +186,9 @@
         <div id="pizzas-tab" class="tab-content active">
             <div class="grid-container" id="pizzas-container"></div>
         </div>
-
         <div id="bebidas-tab" class="tab-content">
             <div class="grid-container" id="bebidas-container"></div>
         </div>
-
         <div id="promos-tab" class="tab-content">
             <div class="grid-container" id="promos-container">
                 <div class="card">
@@ -119,28 +208,21 @@
 
     <script>
         const CART_KEY = 'pizzaCart';
-
         const pizzas = [
             { name: "Margherita", price: 18.99, desc: "Mozzarella fresca, albahaca", img: "imagenes/pizza_marg.png" },
             { name: "Pepperoni", price: 21.99, desc: "Salsa de tomate y pepperoni", img: "imagenes/pizza_pepe.png" },
             { name: "Hawaiana", price: 23.99, desc: "Jamón dulce y piña tropical", img: "imagenes/pizza_hawa.png" },
             { name: "Suprema", price: 26.99, desc: "Pepperoni y vegetales frescos", img: "imagenes/pizza_suprema.png" }
         ];
-
         const bebidas = [
             { name: "Coca-Cola 1.5L", price: 3.50, desc: "Sabor original", img: "https://carnemart.com/wp-content/uploads/2025/10/wp-image-2050.png" },
             { name: "Sprite 1.5L", price: 3.50, desc: "Limón-Lima", img: "imagenes/sprite.png" },
             { name: "Cerveza Artesanal", price: 4.50, desc: "Solo adultos", img: "imagenes/cerveza.png" }
         ];
 
-        // FUNCIÓN PARA CAMBIAR ENTRE PESTAÑAS
         function switchTab(tabId) {
-            // Ocultar todos los contenidos
             document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-            // Desactivar todos los botones
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            
-            // Mostrar el elegido
             document.getElementById(tabId).classList.add('active');
             event.currentTarget.classList.add('active');
         }
@@ -159,7 +241,7 @@
 
             document.getElementById('bebidas-container').innerHTML = bebidas.map(b => `
                 <div class="card">
-                    <img src="${b.img}" class="card-image drink-image">
+                    <img src="${b.img}" class="card-image drink-image" style="object-fit: contain; background: #f8f8f8;">
                     <div class="card-info"><h3>${b.name}</h3><p class="card-description">${b.desc}</p></div>
                     <div class="card-footer">
                         <span class="card-price">$${b.price.toFixed(2)}</span>

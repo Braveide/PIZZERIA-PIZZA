@@ -5,12 +5,76 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FREDDY'S PIZZA - Tu Carrito</title>
     <style>
+        /* RESET Y BASE */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #fdf2e9; min-height: 100vh; }
         
-        .header { background: linear-gradient(90deg, #ff6b00 0%, #ff3d00 100%); padding: 20px 30px; color: white; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); display: flex; align-items: center; gap: 15px; position: sticky; top: 0; z-index: 1000; }
-        .back-btn { background: rgba(255,255,255,0.2); border: none; color: white; font-size: 20px; cursor: pointer; padding: 8px 12px; border-radius: 50%; display: flex; align-items: center; transition: all 0.2s ease; text-decoration: none; }
+        /* HEADER ESTILO INDEX ALINEADO A LA IZQUIERDA */
+        .header { 
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('imagenes/baner.jpg') center/cover no-repeat;
+            padding: 45px 20px; 
+            color: white; 
+            display: flex; 
+            align-items: center; 
+            justify-content: flex-start; 
+            position: relative; 
+            z-index: 10;
+        }
+
+        /* DIVISOR DE CUADROS (ESTILO FREDDY'S) */
+        .header::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 20px;
+            background-image: 
+                linear-gradient(45deg, #fff 25%, transparent 25%), 
+                linear-gradient(-45deg, #fff 25%, transparent 25%),
+                linear-gradient(45deg, transparent 75%, #fff 75%),
+                linear-gradient(-45deg, transparent 75%, #fff 75%);
+            background-size: 20px 20px;
+            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+            background-color: #1a1a1a;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .back-btn { 
+            background: #fff; 
+            border: 2px solid #1a1a1a; 
+            color: #1a1a1a; 
+            font-size: 20px; 
+            cursor: pointer; 
+            width: 42px;
+            height: 42px;
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            transition: all 0.2s ease; 
+            text-decoration: none; 
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        .back-btn:hover { transform: scale(1.1); background: #f0f0f0; }
+
+        .logo-text-cart {
+            font-size: 26px;
+            font-weight: 900;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.6);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
         
+        /* CONTENIDO DEL CARRITO */
         #emptyCart { display: none; flex-direction: column; align-items: center; justify-content: center; padding: 100px 20px; text-align: center; }
         .cart-icon-big { font-size: 80px; margin-bottom: 20px; }
         .catalog-btn { background: #ff6b00; color: white; padding: 15px 30px; border-radius: 50px; text-decoration: none; font-weight: bold; margin-top: 20px; box-shadow: 0 4px 10px rgba(255,107,0,0.3); }
@@ -27,13 +91,14 @@
         .qty-controls { display: flex; align-items: center; gap: 12px; background: #f8f9fa; padding: 8px; border-radius: 12px; }
         .qty-btn { width: 30px; height: 30px; border: none; background: white; border-radius: 8px; cursor: pointer; font-weight: bold; }
 
+        /* SECCIÓN DE PAGO */
         .payment-section { max-width: 700px; margin: 20px auto; padding: 0 20px; }
         .payment-card-box { background: white; border-radius: 20px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        .payment-option { display: flex; align-items: center; gap: 15px; padding: 15px; border: 2px solid #f0f0f0; border-radius: 12px; margin-bottom: 5px; cursor: pointer; transition: 0.3s; }
+        .payment-option { display: flex; align-items: center; gap: 15px; padding: 15px; border: 2px solid #f0f0f0; border-radius: 12px; margin-bottom: 10px; cursor: pointer; transition: 0.3s; }
         .payment-option.active { border-color: #ff6b00; background: #fff9f5; }
         
-        .api-container { display: none; padding: 15px; border-radius: 12px; margin-bottom: 10px; }
-        .card-input { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 8px; border: 1px solid #ddd; }
+        .api-container { display: none; padding: 15px; border-radius: 12px; margin-bottom: 10px; background: #f9f9f9; }
+        .card-input { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 8px; border: 1px solid #ddd; font-size: 14px; }
 
         .summary-card { background: white; border-radius: 20px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); max-width: 700px; margin: 20px auto 50px; }
         .checkout-btn { width: 100%; padding: 18px; background: linear-gradient(90deg, #ff6b00 0%, #ff3d00 100%); color: white; border: none; border-radius: 15px; font-size: 18px; font-weight: 700; cursor: pointer; margin-top: 20px; }
@@ -41,13 +106,16 @@
 </head>
 <body>
     <header class="header">
-        <a href="index.html" class="back-btn">←</a>
-        <div class="header-content"><h1>FREDDY'S PIZZA</h1></div>
+        <div class="header-content">
+            <a href="index.html" class="back-btn">←</a>
+            <h1 class="logo-text-cart">FREDDY'S PIZZA</h1>
+        </div>
     </header>
 
     <div id="emptyCart">
         <div class="cart-icon-big">🍕</div>
         <h2>Tu carrito está vacío</h2>
+        <p>¡Agrega algo delicioso para continuar!</p>
         <a href="catalogo.html" class="catalog-btn">Ir al Catálogo</a>
     </div>
 
@@ -57,17 +125,17 @@
         <form id="orderForm" onsubmit="confirmOrder(event)">
             <div class="payment-section">
                 <div class="payment-card-box">
-                    <h3 style="margin-bottom:15px;">Método de Pago</h3>
+                    <h3 style="margin-bottom:15px; color: #2d3436;">Método de Pago</h3>
                     
                     <div class="payment-option active" onclick="setPay(this, 'cash')">
-                        <span>💵</span><div><b>Efectivo</b><p style="font-size:12px;">Paga al recibir en casa</p></div>
+                        <span>💵</span><div><b>Efectivo</b><p style="font-size:12px; color:#636e72;">Paga al recibir en casa</p></div>
                     </div>
 
                     <div class="payment-option" onclick="setPay(this, 'card')">
-                        <span>💳</span><div><b>Tarjeta</b><p style="font-size:12px;">Débito o Crédito</p></div>
+                        <span>💳</span><div><b>Tarjeta</b><p style="font-size:12px; color:#636e72;">Débito o Crédito</p></div>
                     </div>
                     <div id="box-card" class="api-container">
-                        <input type="text" id="numT" class="card-input" placeholder="Número de Tarjeta" pattern="\d{16}">
+                        <input type="text" id="numT" class="card-input" placeholder="Número de Tarjeta (16 dígitos)" maxlength="16">
                         <div style="display:flex; gap:10px;">
                             <input type="text" id="expT" class="card-input" placeholder="MM/AA">
                             <input type="text" id="cvvT" class="card-input" placeholder="CVV" maxlength="3">
@@ -75,11 +143,11 @@
                     </div>
 
                     <div class="payment-option" onclick="setPay(this, 'paypal')">
-                        <span>💙</span><div><b>PayPal</b><p style="font-size:12px;">Paga de forma segura</p></div>
+                        <span>💙</span><div><b>PayPal</b><p style="font-size:12px; color:#636e72;">Paga de forma segura</p></div>
                     </div>
 
                     <div class="payment-option" onclick="setPay(this, 'mercadopago')">
-                        <span>🤝</span><div><b>Mercado Pago</b><p style="font-size:12px;">Paga con tu saldo o tarjeta</p></div>
+                        <span>🤝</span><div><b>Mercado Pago</b><p style="font-size:12px; color:#636e72;">Usa tu saldo o cuenta</p></div>
                     </div>
                 </div>
             </div>
@@ -100,11 +168,13 @@
         function updateCart() {
             const cart = JSON.parse(localStorage.getItem(CART_KEY)) || {};
             const items = Object.values(cart);
+            
             if (items.length === 0) {
                 document.getElementById('emptyCart').style.display = 'flex';
                 document.getElementById('cartContent').style.display = 'none';
                 return;
             }
+            
             document.getElementById('emptyCart').style.display = 'none';
             document.getElementById('cartContent').style.display = 'block';
 
@@ -124,7 +194,7 @@
             `).join('');
 
             const subtotal = items.reduce((s, i) => s + (i.price * i.quantity), 0);
-            document.getElementById('finalTotal').textContent = `$${(subtotal + 50).toFixed(2)}`;
+            document.getElementById('finalTotal').textContent = `$${(subtotal).toFixed(2)}`;
         }
 
         function changeQty(name, delta) {
@@ -140,12 +210,10 @@
         function setPay(el, method) {
             document.querySelectorAll('.payment-option').forEach(o => o.classList.remove('active'));
             document.getElementById('box-card').style.display = 'none';
-            document.getElementById('numT').required = false;
             el.classList.add('active');
             currentMethod = method;
             if (method === 'card') {
                 document.getElementById('box-card').style.display = 'block';
-                document.getElementById('numT').required = true;
             }
         }
 
@@ -153,15 +221,15 @@
             e.preventDefault();
             
             if(currentMethod === 'paypal') {
-                window.location.href = "https://www.paypal.com/checkout"; // Aquí iría tu link de cobro
+                window.location.href = "https://www.paypal.com/checkout";
                 return;
             }
             if(currentMethod === 'mercadopago') {
-                window.location.href = "https://www.mercadopago.com.mx/checkout"; // Aquí iría tu link de cobro
+                window.location.href = "https://www.mercadopago.com.mx/checkout";
                 return;
             }
 
-            alert("¡Pedido realizado con éxito!");
+            alert("🍕 ¡Gracias por tu compra en Freddy's Pizza! Tu pedido está en camino.");
             localStorage.removeItem(CART_KEY);
             window.location.href = 'index.html';
         }
