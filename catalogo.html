@@ -6,12 +6,12 @@
     <link rel="icon" type="image/x-icon" href="freddy.png">
     <title>FREDDY'S PIZZA - Menú</title>
     <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        /* ESTILOS BASE */
+        /* MANTENGO TUS ESTILOS ORIGINALES */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #fdf2e9; color: #333; }
         
-        /* HEADER CON BANNER Y LOGO A LA IZQUIERDA */
         .header { 
             background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('imagenes/baner.jpg') center/cover no-repeat;
             padding: 45px 30px; 
@@ -24,7 +24,6 @@
             z-index: 1000; 
         }
 
-        /* DIVISOR DE CUADROS */
         .header::after {
             content: "";
             position: absolute;
@@ -52,7 +51,6 @@
 
         .header-right { display: flex; gap: 15px; align-items: center; }
 
-        /* BOTONES BLANCOS CON CONTORNO NEGRO */
         .btn-header { 
             text-decoration: none; 
             color: #000; 
@@ -92,7 +90,6 @@
         .cart-btn:hover { background: #ff6b00; transform: scale(1.1); }
         .cart-badge { position: absolute; top: -5px; right: -5px; background-color: #ff3d00; color: #fff; border: 2px solid #000; border-radius: 50%; padding: 2px 6px; font-size: 10px; font-weight: bold; }
 
-        /* PESTAÑAS (TABS) ESTILO BOTÓN BLANCO */
         .tabs-container { 
             display: flex; 
             justify-content: center; 
@@ -116,11 +113,7 @@
         .tab-btn:hover { background: #ff6b00; color: white; transform: translateY(-3px); }
         .tab-btn.active { background: #ff6b00; color: white; box-shadow: 2px 2px 0px #000; transform: translateY(2px); }
 
-        /* CONTENEDOR Y TARJETAS */
         .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
-
         .grid-container { 
             display: grid; 
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
@@ -135,9 +128,9 @@
             display: flex; 
             flex-direction: column; 
             transition: 0.3s; 
-            border: 2.5px solid #000; /* Borde negro unificado */
+            border: 2.5px solid #000; 
             overflow: hidden;
-            box-shadow: 5px 5px 0px rgba(0,0,0,0.1); /* Sombra suave pero definida */
+            box-shadow: 5px 5px 0px rgba(0,0,0,0.1); 
         }
         .card:hover { transform: translateY(-10px); border-color: #ff6b00; box-shadow: 8px 8px 0px rgba(255,107,0,0.2); }
         .card-image { width: 100%; height: 200px; object-fit: cover; border-bottom: 2px solid #000; }
@@ -150,7 +143,7 @@
         .card-price { color: #ff6b00; font-size: 24px; font-weight: 900; text-shadow: 1px 1px 0px #000; }
         
         .add-btn { 
-            background: #fff; /* Botones de agregar ahora son blancos con borde negro */
+            background: #fff; 
             color: #000; 
             border: 2px solid #000; 
             padding: 10px 20px; 
@@ -177,80 +170,60 @@
     </header>
 
     <div class="tabs-container">
-        <button class="tab-btn active" onclick="switchTab('pizzas-tab')">🍕 Pizzas</button>
-        <button class="tab-btn" onclick="switchTab('bebidas-tab')">🥤 Bebidas</button>
-        <button class="tab-btn" onclick="switchTab('promos-tab')">🎁 Promos</button>
+        <button class="tab-btn active" onclick="cargarCategoria('pizzas')">🍕 Pizzas</button>
+        <button class="tab-btn" onclick="cargarCategoria('bebidas')">🥤 Bebidas</button>
+        <button class="tab-btn" onclick="cargarCategoria('promos')">🎁 Promos</button>
     </div>
 
     <div class="container">
-        <div id="pizzas-tab" class="tab-content active">
-            <div class="grid-container" id="pizzas-container"></div>
-        </div>
-        <div id="bebidas-tab" class="tab-content">
-            <div class="grid-container" id="bebidas-container"></div>
-        </div>
-        <div id="promos-tab" class="tab-content">
-            <div class="grid-container" id="promos-container">
-                <div class="card">
-                    <img src="imagenes/bbq.png" class="card-image">
-                    <div class="card-info">
-                        <h3>Paquete Pareja</h3>
-                        <p class="card-description">2 Pizzas medianas + 2 Bebidas.</p>
-                    </div>
-                    <div class="card-footer">
-                        <span class="card-price">$35.00</span>
-                        <button class="add-btn" onclick="addToCart('Paquete Pareja', 35)">Agregar</button>
-                    </div>
-                </div>
+        <div class="grid-container" id="productos-render">
             </div>
-        </div>
     </div>
 
     <script>
+        // 2. CONFIGURACIÓN DE TU SUPABASE
+        const SUPABASE_URL = 'https://vndfmcxlifcwzpjbphoy.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZuZGZtY3hsaWZjd3pwamJwaG95Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3OTc3MDIsImV4cCI6MjA4NzM3MzcwMn0.OkQ6aSZsHkyLMgfT-x0w3beJ3Ey95smEujmhT7ZfjuY';
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
         const CART_KEY = 'pizzaCart';
-        const pizzas = [
-            { name: "Margherita", price: 18.99, desc: "Mozzarella fresca, albahaca", img: "imagenes/pizza_marg.png" },
-            { name: "Pepperoni", price: 21.99, desc: "Salsa de tomate y pepperoni", img: "imagenes/pizza_pepe.png" },
-            { name: "Hawaiana", price: 23.99, desc: "Jamón dulce y piña tropical", img: "imagenes/pizza_hawa.png" },
-            { name: "Suprema", price: 26.99, desc: "Pepperoni y vegetales frescos", img: "imagenes/pizza_suprema.png" }
-        ];
-        const bebidas = [
-            { name: "Coca-Cola 1.5L", price: 3.50, desc: "Sabor original", img: "https://carnemart.com/wp-content/uploads/2025/10/wp-image-2050.png" },
-            { name: "Sprite 1.5L", price: 3.50, desc: "Limón-Lima", img: "imagenes/sprite.png" },
-            { name: "Cerveza Artesanal", price: 4.50, desc: "Solo adultos", img: "imagenes/cerveza.png" }
-        ];
 
-        function switchTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+        // 3. FUNCIÓN PARA CARGAR DESDE LA DB
+        async function cargarCategoria(categoria) {
+            // Estética de las pestañas
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active');
-            event.currentTarget.classList.add('active');
-        }
+            if (event) event.currentTarget.classList.add('active');
 
-        function render() {
-            document.getElementById('pizzas-container').innerHTML = pizzas.map(p => `
+            // Consultamos la tabla "productos" filtrando por la categoría
+            const { data: productos, error } = await supabaseClient
+                .from('productos')
+                .select('*')
+                .eq('categoria', categoria);
+
+            if (error) {
+                console.error("Error cargando productos:", error);
+                return;
+            }
+
+            const container = document.getElementById('productos-render');
+            
+            // Dibujamos las tarjetas con tu diseño original
+            container.innerHTML = productos.map(p => `
                 <div class="card">
-                    <img src="${p.img}" class="card-image">
-                    <div class="card-info"><h3>${p.name}</h3><p class="card-description">${p.desc}</p></div>
+                    <img src="${p.imagen_url}" class="card-image" style="${categoria === 'bebidas' ? 'object-fit: contain; background: #f8f8f8;' : ''}">
+                    <div class="card-info">
+                        <h3>${p.nombre}</h3>
+                        <p class="card-description">${p.descripcion}</p>
+                    </div>
                     <div class="card-footer">
-                        <span class="card-price">$${p.price.toFixed(2)}</span>
-                        <button class="add-btn" onclick="addToCart('${p.name}', ${p.price})">Agregar</button>
+                        <span class="card-price">$${p.precio.toFixed(2)}</span>
+                        <button class="add-btn" onclick="addToCart('${p.nombre}', ${p.precio})">Agregar</button>
                     </div>
                 </div>
             `).join('');
-
-            document.getElementById('bebidas-container').innerHTML = bebidas.map(b => `
-                <div class="card">
-                    <img src="${b.img}" class="card-image drink-image" style="object-fit: contain; background: #f8f8f8;">
-                    <div class="card-info"><h3>${b.name}</h3><p class="card-description">${b.desc}</p></div>
-                    <div class="card-footer">
-                        <span class="card-price">$${b.price.toFixed(2)}</span>
-                        <button class="add-btn" onclick="addToCart('${b.name}', ${b.price})">Agregar</button>
-                    </div>
-                </div>
-            `).join('');
         }
 
+        // Lógica del Carrito (Mantenida de tu código)
         function addToCart(name, price) {
             let cart = JSON.parse(localStorage.getItem(CART_KEY)) || {};
             cart[name] = cart[name] ? {...cart[name], quantity: cart[name].quantity + 1} : {name, price, quantity: 1};
@@ -267,8 +240,11 @@
             badge.textContent = total;
         }
 
-        render();
-        updateCartBadge();
+        // Al iniciar, cargamos la categoría 'pizzas'
+        window.onload = () => {
+            cargarCategoria('pizzas');
+            updateCartBadge();
+        };
     </script>
 </body>
 </html>
