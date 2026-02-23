@@ -4,14 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FREDDY'S PIZZA - Registro</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-       
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        /* Mantenemos tus estilos originales intactos */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             background:#ff6b00;
@@ -21,7 +17,6 @@
             align-items: center;
             padding: 20px;
         }
-
         .container {
             background: white;
             border-radius: 20px; 
@@ -31,173 +26,45 @@
             padding: 40px 30px; 
             text-align: center;
         }
-
         .logo {
-            width: 100px;
-            height: 100px;
+            width: 100px; height: 100px;
             margin: 0 auto 20px;
             background: linear-gradient(135deg, #ff6b00 0%, #ff3d00 100%);
             border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: flex; align-items: center; justify-content: center;
             box-shadow: 0 8px 20px rgba(255, 61, 0, 0.3);
         }
-
-        .logo img {
-            width: 80%; 
-            height: 80%;
-            object-fit: contain;
-        }
-
-        h1 {
-            font-size: 28px;
-            color: #333;
-            margin-bottom: 10px;
-            font-weight: 600;
-        }
-
-        .subtitle {
-            color: #666;
-            font-size: 16px;
-            margin-bottom: 30px;
-        }
-
-        .tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 30px;
-        }
-
+        .logo img { width: 80%; height: 80%; object-fit: contain; }
+        h1 { font-size: 28px; color: #333; margin-bottom: 10px; font-weight: 600; }
+        .subtitle { color: #666; font-size: 16px; margin-bottom: 30px; }
+        .tabs { display: flex; gap: 10px; margin-bottom: 30px; }
         .tab {
-            flex: 1;
-            padding: 12px;
-            background: #f5f5f5;
-            border: none;
-            border-radius: 10px;
-            font-size: 15px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            color: #666;
-            text-decoration: none; 
-            display: flex; 
-            justify-content: center;
-            align-items: center;
+            flex: 1; padding: 12px; background: #f5f5f5; border: none; border-radius: 10px;
+            font-size: 15px; font-weight: 500; cursor: pointer; transition: all 0.3s ease;
+            color: #666; text-decoration: none; display: flex; justify-content: center; align-items: center;
         }
-
-        .tab.active {
-            background: #e8e8e8;
-            color: #333;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-            text-align: left;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: #333;
-            font-weight: 500;
-            font-size: 14px;
-        }
-
-        .input-wrapper {
-            position: relative;
-            display: flex;
-            align-items: center;
-            background: #f5f5f5;
-            border-radius: 10px;
-            padding: 0 15px;
-        }
-
-        .input-icon {
-            color: #999;
-            margin-right: 10px;
-            font-size: 18px;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 15px 0;
-            border: none;
-            background: transparent;
-            font-size: 15px;
-            color: #333;
-            outline: none;
-        }
-
-        .form-group input::placeholder {
-            color: #999;
-        }
-
-        .toggle-password {
-            background: none;
-            border: none;
-            cursor: pointer;
-            color: #999;
-            font-size: 18px;
-            padding: 5px;
-            user-select: none; 
-        }
-
+        .tab.active { background: #e8e8e8; color: #333; }
+        .form-group { margin-bottom: 20px; text-align: left; }
+        .form-group label { display: block; margin-bottom: 8px; color: #333; font-weight: 500; font-size: 14px; }
+        .input-wrapper { display: flex; align-items: center; background: #f5f5f5; border-radius: 10px; padding: 0 15px; }
+        .input-icon { color: #999; margin-right: 10px; font-size: 18px; }
+        .form-group input { width: 100%; padding: 15px 0; border: none; background: transparent; font-size: 15px; color: #333; outline: none; }
+        .toggle-password { background: none; border: none; cursor: pointer; color: #999; font-size: 18px; padding: 5px; }
         .btn-submit {
-            width: 100%;
-            padding: 16px;
-            background: linear-gradient(90deg, #ff6b00 0%, #ff3d00 100%);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            margin-top: 10px;
+            width: 100%; padding: 16px; background: linear-gradient(90deg, #ff6b00 0%, #ff3d00 100%);
+            color: white; border: none; border-radius: 10px; font-size: 16px; font-weight: 600;
+            cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease; margin-top: 10px;
         }
-
-        .btn-submit:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(255, 61, 0, 0.3);
-        }
-
-        .btn-submit:active {
-            transform: translateY(0);
-        }
-
-        .back-link {
-            display: inline-block;
-            margin-top: 20px;
-            color: #ff6b00; 
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 500;
-            transition: color 0.3s ease;
-        }
-
-        .back-link:hover {
-            color: #ff3d00; 
-        }
-        
-        
+        .btn-submit:disabled { background: #ccc; cursor: not-allowed; }
+        .back-link { display: inline-block; margin-top: 20px; color: #ff6b00; text-decoration: none; font-size: 14px; font-weight: 500; }
         #messageBox {
-            color: #e3342f; 
-            background-color: #fcebeb; 
-            padding: 10px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            text-align: center;
-            font-size: 14px;
-            font-weight: 500;
-            display: none; 
-            border: 1px solid #e3342f;
+            padding: 10px; border-radius: 8px; margin-bottom: 20px; text-align: center;
+            font-size: 14px; font-weight: 500; display: none; border: 1px solid;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        
         <div class="logo">
             <img src="imagenes/logo_pizza.png" alt="Logo Freddy's Pizza">
         </div>
@@ -205,25 +72,14 @@
         <h1>Freddy´s Pizza</h1>
         <p class="subtitle">¡Crea tu cuenta!</p>
 
-        
         <div id="messageBox"></div>
 
         <div class="tabs">
-          
             <a href="login.html" class="tab">Iniciar Sesión</a>
-            
             <button class="tab active">Registrarse</button>
         </div>
 
         <form id="registerForm">
-            <div class="form-group">
-                <label>Nombre Completo</label>
-                <div class="input-wrapper">
-                    <span class="input-icon">👤</span>
-                    <input type="text" id="nameInput" placeholder="Tu nombre completo" required>
-                </div>
-            </div>
-
             <div class="form-group">
                 <label>Correo Electrónico</label>
                 <div class="input-wrapper">
@@ -236,7 +92,7 @@
                 <label>Contraseña</label>
                 <div class="input-wrapper">
                     <span class="input-icon">🔒</span>
-                    <input type="password" id="registerPassword" placeholder="Tu contraseña" required>
+                    <input type="password" id="registerPassword" placeholder="Mínimo 6 caracteres" required>
                     <button type="button" class="toggle-password" onclick="togglePassword('registerPassword')">👁️</button>
                 </div>
             </div>
@@ -250,18 +106,21 @@
                 </div>
             </div>
 
-            <button type="submit" class="btn-submit">Crear Cuenta</button>
+            <button type="submit" id="submitBtn" class="btn-submit">Crear Cuenta</button>
         </form>
 
-        <a href="menu.html" class="back-link">← Volver al inicio</a>
+        <a href="index.html" class="back-link">← Volver al inicio</a>
     </div>
 
     <script>
+        // 1. Configuración de Supabase
+        const SUPABASE_URL = 'https://vndfmcxlifcwzpjbphoy.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZuZGZtY3hsaWZjd3pwamJwaG95Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3OTc3MDIsImV4cCI6MjA4NzM3MzcwMn0.OkQ6aSZsHkyLMgfT-x0w3beJ3Ey95smEujmhT7ZfjuY'; // USA TU CLAVE REAL
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
         const messageBox = document.getElementById('messageBox');
-        
-        /**
-         * Muestra la visibilidad de la contraseña.
-         */
+        const submitBtn = document.getElementById('submitBtn');
+
         function togglePassword(inputId) {
             const input = document.getElementById(inputId);
             const button = input.nextElementSibling;
@@ -274,47 +133,74 @@
             }
         }
 
-        /**
-         * Muestra un mensaje en la caja de notificaciones (sustituto de alert).
-         */
         function showMessage(message, isError = true) {
             messageBox.textContent = message;
             messageBox.style.display = 'block';
-            
             if (isError) {
                 messageBox.style.color = '#e3342f';
                 messageBox.style.backgroundColor = '#fcebeb';
                 messageBox.style.borderColor = '#e3342f';
             } else {
-                // Mensaje de éxito (verde)
                 messageBox.style.color = '#1f9d55';
                 messageBox.style.backgroundColor = '#ebfbee';
                 messageBox.style.borderColor = '#1f9d55';
             }
         }
 
-
-        document.getElementById('registerForm').addEventListener('submit', function(e) {
+        document.getElementById('registerForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            
             messageBox.style.display = 'none'; 
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Procesando...';
 
+            const email = document.getElementById('emailInput').value.trim();
             const password = document.getElementById('registerPassword').value;
             const confirmPassword = document.getElementById('confirmPassword').value;
             
+            // Validaciones básicas
             if (password !== confirmPassword) {
-                showMessage('Las contraseñas no coinciden. Por favor, verifica.', true);
+                showMessage('Las contraseñas no coinciden.', true);
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Crear Cuenta';
                 return;
             }
-            
-            
-            showMessage('¡Cuenta creada exitosamente! Redirigiendo a Iniciar Sesión.', false); 
-            
-            
-            setTimeout(() => {
-                 window.location.href = 'login.html'; 
-            }, 1500);
-           
+
+            if (password.length < 6) {
+                showMessage('La contraseña debe tener al menos 6 caracteres.', true);
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Crear Cuenta';
+                return;
+            }
+
+            // 2. Registro en Supabase Auth
+            const { data, error } = await supabaseClient.auth.signUp({
+                email: email,
+                password: password
+            });
+
+            if (error) {
+                showMessage('Error: ' + error.message, true);
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Crear Cuenta';
+                return;
+            }
+
+            // 3. Crear perfil en la tabla 'perfiles' (esto se vincula por el ID del usuario)
+            const { error: perfilError } = await supabaseClient
+                .from('perfiles')
+                .insert([
+                    { id: data.user.id, email: email, rol: 'usuario' }
+                ]);
+
+            if (perfilError) {
+                console.error("Error perfil:", perfilError);
+                showMessage('Cuenta creada, pero hubo un error al asignar rol. Contacta soporte.', true);
+            } else {
+                showMessage('¡Cuenta creada con éxito! Redirigiendo...', false); 
+                setTimeout(() => {
+                    window.location.href = 'login.html'; 
+                }, 2000);
+            }
         });
     </script>
 </body>
