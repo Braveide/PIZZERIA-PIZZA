@@ -38,26 +38,15 @@
             align-items: center; 
             justify-content: center; 
         }
-        .logo-container img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-        }
+        .logo-container img { width: 100%; height: 100%; object-fit: contain; }
 
         h1 { font-size: 28px; color: #333; margin-bottom: 10px; font-weight: 600; }
         .subtitle { color: #666; font-size: 16px; margin-bottom: 30px; }
         
         .tabs { display: flex; gap: 10px; margin-bottom: 30px; }
         .tab { 
-            flex: 1; 
-            padding: 12px; 
-            background: #f5f5f5; 
-            border: 2px solid #000; 
-            border-radius: 10px; 
-            font-size: 15px; 
-            font-weight: bold; 
-            cursor: pointer; 
-            color: #666; 
+            flex: 1; padding: 12px; background: #f5f5f5; border: 2px solid #000; 
+            border-radius: 10px; font-size: 15px; font-weight: bold; cursor: pointer; color: #666; 
         }
         .tab.active { background: #e8e8e8; color: #000; border-color: #000; }
 
@@ -65,45 +54,26 @@
         .form-group label { display: block; margin-bottom: 8px; color: #333; font-weight: bold; font-size: 14px; }
         
         .input-wrapper { 
-            display: flex; 
-            align-items: center; 
-            background: #fff; 
-            border: 2px solid #000; 
-            border-radius: 10px; 
-            padding: 0 15px; 
+            display: flex; align-items: center; background: #fff; 
+            border: 2px solid #000; border-radius: 10px; padding: 0 15px; 
         }
         .form-group input { width: 100%; padding: 12px 0; border: none; outline: none; font-size: 15px; }
 
         .btn-submit { 
-            width: 100%; 
-            padding: 16px; 
-            background: #ff6b00; 
-            color: white; 
-            border: 3px solid #000; 
-            border-radius: 10px; 
-            font-size: 16px; 
-            font-weight: bold; 
-            cursor: pointer; 
-            text-transform: uppercase;
-            box-shadow: 4px 4px 0px #000;
-            transition: 0.2s;
+            width: 100%; padding: 16px; background: #ff6b00; color: white; 
+            border: 3px solid #000; border-radius: 10px; font-size: 16px; 
+            font-weight: bold; cursor: pointer; text-transform: uppercase;
+            box-shadow: 4px 4px 0px #000; transition: 0.2s;
         }
         .btn-submit:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0px #000; }
 
-        .back-link { display: inline-block; margin-top: 20px; color: #ff6b00; text-decoration: none; font-weight: bold; font-size: 14px; }
-        .separator { display: flex; align-items: center; text-align: center; margin: 25px 0 15px; font-weight: bold; }
-        .separator::before, .separator::after { content: ''; flex: 1; border-bottom: 2px solid #000; }
-        
         #errorMessage {
-            color: #d32f2f;
-            background: #ffebee;
-            border: 2px solid #d32f2f;
-            padding: 10px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            display: none;
-            font-weight: bold;
+            color: #d32f2f; background: #ffebee; border: 2px solid #d32f2f;
+            padding: 10px; border-radius: 10px; margin-bottom: 20px;
+            display: none; font-weight: bold;
         }
+
+        .back-link { display: inline-block; margin-top: 20px; color: #ff6b00; text-decoration: none; font-weight: bold; font-size: 14px; }
     </style>
 </head>
 <body>
@@ -141,16 +111,10 @@
             <button type="submit" id="submitBtn" class="btn-submit">Entrar Ahora</button>
         </form>
 
-        <div class="separator">o</div>
-        
-        <div id="g_id_onload" data-client_id="TU_GOOGLE_ID" data-callback="handleCredentialResponse"></div>
-        <div class="g_id_signin" data-type="standard" style="display: flex; justify-content: center;"></div>
-
         <a href="catalogo.html" class="back-link">← Volver al Catálogo</a>
     </div>
 
     <script>
-        // 1. Configuración de Supabase
         const SUPABASE_URL = 'https://vndfmcxlifcwzpjbphoy.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZuZGZtY3hsaWZjd3pwamJwaG95Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3OTc3MDIsImV4cCI6MjA4NzM3MzcwMn0.OkQ6aSZsHkyLMgfT-x0w3beJ3Ey95smEujmhT7ZfjuY'; 
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -163,12 +127,11 @@
             const password = document.getElementById('passwordInput').value;
             const errorDiv = document.getElementById('errorMessage');
 
-            // Bloquear botón y limpiar errores
             btn.disabled = true;
             btn.innerText = "VERIFICANDO...";
             errorDiv.style.display = 'none';
 
-            // 2. Intento de Login
+            // 1. Intento de Login en Auth
             const { data, error } = await _supabase.auth.signInWithPassword({
                 email: email,
                 password: password,
@@ -182,22 +145,27 @@
                 return;
             }
 
-            // 3. Consultar el rol en la tabla 'perfiles'
+            console.log("Login exitoso. ID de usuario:", data.user.id);
+
+            // 2. Consultar el ROL en la tabla 'perfiles'
             const { data: perfil, error: perfilError } = await _supabase
                 .from('perfiles')
                 .select('rol')
                 .eq('id', data.user.id)
                 .single();
 
-            // 4. Redirección inteligente
+            // 3. Verificación de seguridad y Redirección
             if (perfilError || !perfil) {
-                // Si no hay perfil en la tabla, se asume usuario básico
+                console.error("Error buscando perfil:", perfilError);
+                alert("AVISO: Tu usuario no existe en la tabla 'perfiles'. Serás enviado como cliente.");
                 window.location.href = 'catalogo.html';
             } else {
-                const rol = perfil.rol.toLowerCase().trim(); // Limpieza de datos
-                
+                const rol = perfil.rol.toLowerCase().trim(); 
+                console.log("Rol encontrado en base de datos:", rol);
+
                 if (rol === 'admin') {
-                    window.location.href = 'panelA.html'; // Tu panel CRUD
+                    console.log("Redirigiendo a panelA.html...");
+                    window.location.href = 'panelA.html'; // <--- CORREGIDO CON MAYÚSCULA
                 } else if (rol === 'vendedor') {
                     window.location.href = 'panel_empleado.html';
                 } else {
@@ -205,10 +173,6 @@
                 }
             }
         });
-
-        function handleCredentialResponse(response) {
-            console.log("Sesión con Google intentada");
-        }
     </script>
 </body>
 </html>
