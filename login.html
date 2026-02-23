@@ -4,15 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FREDDY'S PIZZA - Iniciar Sesión</title>
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="estilos.css">
     <style>
-        /* ESTILOS LIMPIOS Y CON MARCO */
+        /* ESTILOS ORIGINALES MANTENIDOS */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body { 
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
-            background: #ffffff; /* Fondo totalmente blanco */
+            background: #ffffff; 
             min-height: 100vh; 
             display: flex; 
             justify-content: center; 
@@ -20,16 +20,15 @@
             padding: 20px; 
         }
 
-        /* CONTENEDOR CON MARCO NEGRO SÓLIDO */
         .container { 
             background: white; 
-            border: 4px solid #000000; /* El marco negro que pediste */
+            border: 4px solid #000000; 
             border-radius: 20px; 
             max-width: 450px; 
             width: 100%; 
             padding: 40px 30px; 
             text-align: center; 
-            box-shadow: 10px 10px 0px rgba(0, 0, 0, 0.05); /* Sombra sutil */
+            box-shadow: 10px 10px 0px rgba(0, 0, 0, 0.05); 
         }
         
         .logo-container { 
@@ -49,7 +48,6 @@
         h1 { font-size: 28px; color: #333; margin-bottom: 10px; font-weight: 600; }
         .subtitle { color: #666; font-size: 16px; margin-bottom: 30px; }
         
-        /* PESTAÑAS CON BORDE */
         .tabs { display: flex; gap: 10px; margin-bottom: 30px; }
         .tab { 
             flex: 1; 
@@ -77,7 +75,6 @@
         }
         .form-group input { width: 100%; padding: 12px 0; border: none; outline: none; font-size: 15px; }
 
-        /* BOTÓN NARANJA CON BORDE NEGRO */
         .btn-submit { 
             width: 100%; 
             padding: 16px; 
@@ -97,6 +94,17 @@
         .back-link { display: inline-block; margin-top: 20px; color: #ff6b00; text-decoration: none; font-weight: bold; font-size: 14px; }
         .separator { display: flex; align-items: center; text-align: center; margin: 25px 0 15px; font-weight: bold; }
         .separator::before, .separator::after { content: ''; flex: 1; border-bottom: 2px solid #000; }
+        
+        #errorMessage {
+            color: #d32f2f;
+            background: #ffebee;
+            border: 2px solid #d32f2f;
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: none;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -107,7 +115,7 @@
         </div>
         
         <h1>Freddy´s Pizza</h1>
-        <p class="subtitle">¡Bienvenido!</p>
+        <p class="subtitle">¡Bienvenido de nuevo!</p>
     
         <div id="errorMessage"></div>
 
@@ -120,15 +128,15 @@
 
         <form id="loginForm">
             <div class="form-group">
-                <label>Usuario (Email Demo)</label>
+                <label>Correo Electrónico</label>
                 <div class="input-wrapper">
-                    <input type="text" id="usernameInput" placeholder="Ingresa Tu Correo" required>
+                    <input type="email" id="emailInput" placeholder="tu@correo.com" required>
                 </div>
             </div>
             <div class="form-group">
                 <label>Contraseña</label>
                 <div class="input-wrapper">
-                    <input type="password" id="passwordInput" placeholder="Ingresa Tu Contraseña" required>
+                    <input type="password" id="passwordInput" placeholder="Tu contraseña segura" required>
                 </div>
             </div>
             <button type="submit" class="btn-submit">Entrar Ahora</button>
@@ -136,23 +144,66 @@
 
         <div class="separator">o</div>
         
-        <div id="g_id_onload" data-client_id="304677210854-6t97pu7evthct109hqvs80b4ejmuavtq.apps.googleusercontent.com" data-callback="handleCredentialResponse"></div>
+        <div id="g_id_onload" data-client_id="TU_GOOGLE_ID" data-callback="handleCredentialResponse"></div>
         <div class="g_id_signin" data-type="standard" style="display: flex; justify-content: center;"></div>
 
-        <a href="index.html" class="back-link">← Volver al Catálogo</a>
+        <a href="catalogo.html" class="back-link">← Volver al Catálogo</a>
     </div>
 
     <script>
-        document.getElementById('loginForm').addEventListener('submit', function(event) {
+        // 1. Configuración de Supabase (Sustituye con tus credenciales reales)
+        const SUPABASE_URL = 'https://vndfmcxlifcwzpjbphoy.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZuZGZtY3hsaWZjd3pwamJwaG95Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3OTc3MDIsImV4cCI6MjA4NzM3MzcwMn0.OkQ6aSZsHkyLMgfT-x0w3beJ3Ey95smEujmhT7ZfjuY'; // La misma que usas en el catálogo
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        document.getElementById('loginForm').addEventListener('submit', async function(event) {
             event.preventDefault();
-            const email = document.getElementById('usernameInput').value.trim();
-            if (email === 'admin@demo.com') window.location.href = 'panelA.html';
-            else if (email === 'vendor@demo.com') window.location.href = 'panel_empleado.html';
-            else window.location.href = 'index.html';
+            
+            const email = document.getElementById('emailInput').value.trim();
+            const password = document.getElementById('passwordInput').value;
+            const errorDiv = document.getElementById('errorMessage');
+
+            // Limpiar errores previos
+            errorDiv.style.display = 'none';
+
+            // 2. Intentar Login real en Supabase
+            const { data, error } = await supabaseClient.auth.signInWithPassword({
+                email: email,
+                password: password,
+            });
+
+            if (error) {
+                errorDiv.innerText = "❌ " + error.message;
+                errorDiv.style.display = 'block';
+                return;
+            }
+
+            // 3. Obtener el rol desde la tabla 'perfiles'
+            const { data: perfil, error: perfilError } = await supabaseClient
+                .from('perfiles')
+                .select('rol')
+                .eq('id', data.user.id)
+                .single();
+
+            if (perfilError || !perfil) {
+                // Si no tiene perfil, lo mandamos al catálogo como usuario común
+                window.location.href = 'catalogo.html';
+                return;
+            }
+
+            // 4. Redirección por roles según la DB
+            if (perfil.rol === 'admin') {
+                window.location.href = 'panelA.html';
+            } else if (perfil.rol === 'vendedor') {
+                window.location.href = 'panel_empleado.html';
+            } else {
+                window.location.href = 'catalogo.html';
+            }
         });
 
         function handleCredentialResponse(response) {
-            window.location.href = 'index.html';
+            // Lógica para Google (opcional)
+            console.log("Sesión con Google intentada");
         }
     </script>
 </body>
