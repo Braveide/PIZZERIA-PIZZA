@@ -6,6 +6,7 @@
     <title>FREDDY'S PIZZA - Registro</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
+        /* Tu estilo original naranja */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: sans-serif; background:#ff6b00; min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; }
         .container { background: white; border-radius: 20px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3); max-width: 450px; width: 100%; padding: 40px 30px; text-align: center; }
@@ -14,13 +15,13 @@
         h1 { font-size: 28px; color: #333; margin-bottom: 10px; }
         .subtitle { color: #666; margin-bottom: 30px; }
         .tabs { display: flex; gap: 10px; margin-bottom: 30px; }
-        .tab { flex: 1; padding: 12px; background: #f5f5f5; border: none; border-radius: 10px; text-decoration: none; color: #666; font-weight: 500; }
+        .tab { flex: 1; padding: 12px; background: #f5f5f5; border: none; border-radius: 10px; text-decoration: none; color: #666; font-weight: 500; display: flex; justify-content: center; align-items: center; }
         .tab.active { background: #e8e8e8; color: #333; }
         .form-group { margin-bottom: 20px; text-align: left; }
         .input-wrapper { display: flex; align-items: center; background: #f5f5f5; border-radius: 10px; padding: 0 15px; }
-        input { width: 100%; padding: 15px 0; border: none; background: transparent; outline: none; }
-        .btn-submit { width: 100%; padding: 16px; background: linear-gradient(90deg, #ff6b00 0%, #ff3d00 100%); color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; }
-        #messageBox { padding: 10px; border-radius: 8px; margin-bottom: 20px; display: none; border: 1px solid; }
+        input { width: 100%; padding: 15px 0; border: none; background: transparent; outline: none; font-size: 15px; }
+        .btn-submit { width: 100%; padding: 16px; background: linear-gradient(90deg, #ff6b00 0%, #ff3d00 100%); color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 16px; }
+        #messageBox { padding: 10px; border-radius: 8px; margin-bottom: 20px; display: none; border: 1px solid; font-size: 14px; }
     </style>
 </head>
 <body>
@@ -28,69 +29,92 @@
         <div class="logo"><img src="imagenes/logo_pizza.png"></div>
         <h1>Freddy´s Pizza</h1>
         <p class="subtitle">¡Crea tu cuenta!</p>
+
         <div id="messageBox"></div>
+
         <div class="tabs">
             <a href="login.html" class="tab">Iniciar Sesión</a>
             <button class="tab active">Registrarse</button>
         </div>
+
         <form id="registerForm">
             <div class="form-group">
                 <label>Correo Electrónico</label>
-                <div class="input-wrapper"><input type="email" id="emailInput" required></div>
+                <div class="input-wrapper"><input type="email" id="emailInput" placeholder="tu@email.com" required></div>
             </div>
             <div class="form-group">
                 <label>Contraseña</label>
-                <div class="input-wrapper"><input type="password" id="registerPassword" required></div>
+                <div class="input-wrapper"><input type="password" id="registerPassword" placeholder="******" required></div>
             </div>
             <div class="form-group">
                 <label>Confirmar Contraseña</label>
-                <div class="input-wrapper"><input type="password" id="confirmPassword" required></div>
+                <div class="input-wrapper"><input type="password" id="confirmPassword" placeholder="******" required></div>
             </div>
             <button type="submit" id="submitBtn" class="btn-submit">Crear Cuenta</button>
         </form>
     </div>
 
     <script>
+        // CONFIGURACIÓN DE TU PROYECTO
         const SUPABASE_URL = 'https://vndfmcxlifcwzpjbphoy.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZuZGZtY3hsaWZjd3pwamJwaG95Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3OTc3MDIsImV4cCI6MjA4NzM3MzcwMn0.OkQ6aSZsHkyLMgfT-x0w3beJ3Ey95smEujmhT7ZfjuY'; 
-        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        document.getElementById('registerForm').addEventListener('submit', async function(e) {
+        const form = document.getElementById('registerForm');
+        const msg = document.getElementById('messageBox');
+        const btn = document.getElementById('submitBtn');
+
+        form.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const btn = document.getElementById('submitBtn');
             btn.disabled = true;
+            btn.textContent = 'Procesando...';
 
             const email = document.getElementById('emailInput').value;
             const password = document.getElementById('registerPassword').value;
+            const confirm = document.getElementById('confirmPassword').value;
 
-            // 1. Registro en Auth
-            const { data, error } = await supabaseClient.auth.signUp({ email, password });
-
-            if (error) {
-                showMessage(error.message, true);
-                btn.disabled = false;
+            if (password !== confirm) {
+                showMsg('Las contraseñas no coinciden', true);
+                resetBtn();
                 return;
             }
 
-            // 2. Inserción automática en tabla perfiles
-            const { error: perfilError } = await supabaseClient
-                .from('perfiles')
-                .insert([{ id: data.user.id, email: email, rol: 'usuario' }]);
+            // 1. Crear usuario en Auth
+            const { data, error } = await _supabase.auth.signUp({ email, password });
 
-            if (perfilError) {
-                showMessage('Error al asignar rol automático.', true);
-            } else {
-                showMessage('¡Cuenta creada! Redirigiendo...', false);
-                setTimeout(() => window.location.href = 'login.html', 2000);
+            if (error) {
+                showMsg(error.message, true);
+                resetBtn();
+                return;
+            }
+
+            // 2. Insertar rol automático en la tabla 'perfiles'
+            if (data.user) {
+                const { error: perfilErr } = await _supabase
+                    .from('perfiles')
+                    .insert([{ id: data.user.id, email: email, rol: 'usuario' }]);
+
+                if (perfilErr) {
+                    showMsg('Cuenta creada, pero hubo un error al asignar rol automático.', true);
+                    console.error(perfilErr);
+                } else {
+                    showMsg('¡Registro exitoso! Redirigiendo al login...', false);
+                    setTimeout(() => window.location.href = 'login.html', 2000);
+                }
             }
         });
 
-        function showMessage(m, isErr) {
-            const box = document.getElementById('messageBox');
-            box.textContent = m;
-            box.style.display = 'block';
-            box.style.backgroundColor = isErr ? '#fcebeb' : '#ebfbee';
-            box.style.color = isErr ? '#e3342f' : '#1f9d55';
+        function showMsg(txt, isErr) {
+            msg.textContent = txt;
+            msg.style.display = 'block';
+            msg.style.backgroundColor = isErr ? '#fcebeb' : '#ebfbee';
+            msg.style.color = isErr ? '#e3342f' : '#1f9d55';
+            msg.style.borderColor = isErr ? '#e3342f' : '#1f9d55';
+        }
+
+        function resetBtn() {
+            btn.disabled = false;
+            btn.textContent = 'Crear Cuenta';
         }
     </script>
 </body>
