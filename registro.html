@@ -55,67 +55,94 @@
     </div>
 
     <script>
-        // CONFIGURACIÓN DE TU PROYECTO
-        const SUPABASE_URL = 'https://vndfmcxlifcwzpjbphoy.supabase.co';
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZuZGZtY3hsaWZjd3pwamJwaG95Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3OTc3MDIsImV4cCI6MjA4NzM3MzcwMn0.OkQ6aSZsHkyLMgfT-x0w3beJ3Ey95smEujmhT7ZfjuY'; 
-        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+       // CONFIGURACIÓN DE TU PROYECTO
+const SUPABASE_URL = 'https://vndfmcxlifcwzpjbphoy.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZuZGZtY3hsaWZjd3pwamJwaG95Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3OTc3MDIsImV4cCI6MjA4NzM3MzcwMn0.OkQ6aSZsHkyLMgfT-x0w3beJ3Ey95smEujmhT7ZfjuY'; 
+const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        const form = document.getElementById('registerForm');
-        const msg = document.getElementById('messageBox');
-        const btn = document.getElementById('submitBtn');
+const form = document.getElementById('registerForm');
+const msg = document.getElementById('messageBox');
+const btn = document.getElementById('submitBtn');
 
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            btn.disabled = true;
-            btn.textContent = 'Procesando...';
+form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    btn.disabled = true;
+    btn.textContent = 'Procesando...';
+    msg.style.display = 'none';
 
-            const email = document.getElementById('emailInput').value;
-            const password = document.getElementById('registerPassword').value;
-            const confirm = document.getElementById('confirmPassword').value;
+    const email = document.getElementById('emailInput').value.trim();
+    const password = document.getElementById('registerPassword').value;
+    const confirm = document.getElementById('confirmPassword').value;
 
-            if (password !== confirm) {
-                showMsg('Las contraseñas no coinciden', true);
-                resetBtn();
-                return;
-            }
+    // Validación básica de contraseñas
+    if (password !== confirm) {
+        showMsg('Las contraseñas no coinciden', true);
+        resetBtn();
+        return;
+    }
 
-            // 1. Crear usuario en Auth
-            const { data, error } = await _supabase.auth.signUp({ email, password });
+    if (password.length < 6) {
+        showMsg('La contraseña debe tener al menos 6 caracteres', true);
+        resetBtn();
+        return;
+    }
 
-            if (error) {
-                showMsg(error.message, true);
-                resetBtn();
-                return;
-            }
-
-            // 2. Insertar rol automático en la tabla 'perfiles'
-            if (data.user) {
-                const { error: perfilErr } = await _supabase
-                    .from('perfiles')
-                    .insert([{ id: data.user.id, email: email, rol: 'usuario' }]);
-
-                if (perfilErr) {
-                    showMsg('Cuenta creada, pero hubo un error al asignar rol automático.', true);
-                    console.error(perfilErr);
-                } else {
-                    showMsg('¡Registro exitoso! Redirigiendo al login...', false);
-                    setTimeout(() => window.location.href = 'login.html', 2000);
-                }
-            }
-        });
-
-        function showMsg(txt, isErr) {
-            msg.textContent = txt;
-            msg.style.display = 'block';
-            msg.style.backgroundColor = isErr ? '#fcebeb' : '#ebfbee';
-            msg.style.color = isErr ? '#e3342f' : '#1f9d55';
-            msg.style.borderColor = isErr ? '#e3342f' : '#1f9d55';
+    // 1. Crear usuario en Auth (Llavecita)
+    const { data, error } = await _supabase.auth.signUp({ 
+        email, 
+        password,
+        options: {
+            // Esto asegura que el usuario se loguee de inmediato si no hay confirmación por email activa
+            data: { rol: 'usuario' } 
         }
+    });
 
-        function resetBtn() {
-            btn.disabled = false;
-            btn.textContent = 'Crear Cuenta';
+    if (error) {
+        console.error("Error en Auth:", error);
+        showMsg("Error de registro: " + error.message, true);
+        resetBtn();
+        return;
+    }
+
+    // 2. Insertar en la tabla 'perfiles' (Base de datos)
+    if (data.user) {
+        console.log("Usuario creado en Auth con ID:", data.user.id);
+        
+        const { error: perfilErr } = await _supabase
+            .from('perfiles')
+            .insert([{ 
+                id: data.user.id, 
+                email: email, 
+                rol: 'usuario' 
+            }]);
+
+        if (perfilErr) {
+            console.error("Error en tabla perfiles:", perfilErr);
+            // Si falla aquí, el usuario existe en Auth pero no en la tabla
+            showMsg('Usuario creado, pero hubo un problema técnico con tu perfil. Por favor, avisa al administrador.', true);
+            resetBtn();
+        } else {
+            showMsg('¡Cuenta creada con éxito! Redirigiendo...', false);
+            setTimeout(() => window.location.href = 'login.html', 2000);
         }
+    } else {
+        showMsg('Revisa tu correo para confirmar la cuenta (si tienes activada la confirmación).', false);
+        resetBtn();
+    }
+});
+
+function showMsg(txt, isErr) {
+    msg.textContent = txt;
+    msg.style.display = 'block';
+    msg.style.backgroundColor = isErr ? '#fcebeb' : '#ebfbee';
+    msg.style.color = isErr ? '#e3342f' : '#1f9d55';
+    msg.style.borderColor = isErr ? '#e3342f' : '#1f9d55';
+}
+
+function resetBtn() {
+    btn.disabled = false;
+    btn.textContent = 'Crear Cuenta';
+}
     </script>
 </body>
 </html>
