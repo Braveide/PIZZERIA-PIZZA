@@ -6,202 +6,92 @@
     <title>FREDDY'S PIZZA - Registro</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        /* Mantenemos tus estilos originales intactos */
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background:#ff6b00;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-        .container {
-            background: white;
-            border-radius: 20px; 
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            max-width: 450px; 
-            width: 100%;
-            padding: 40px 30px; 
-            text-align: center;
-        }
-        .logo {
-            width: 100px; height: 100px;
-            margin: 0 auto 20px;
-            background: linear-gradient(135deg, #ff6b00 0%, #ff3d00 100%);
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 8px 20px rgba(255, 61, 0, 0.3);
-        }
-        .logo img { width: 80%; height: 80%; object-fit: contain; }
-        h1 { font-size: 28px; color: #333; margin-bottom: 10px; font-weight: 600; }
-        .subtitle { color: #666; font-size: 16px; margin-bottom: 30px; }
+        body { font-family: sans-serif; background:#ff6b00; min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; }
+        .container { background: white; border-radius: 20px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3); max-width: 450px; width: 100%; padding: 40px 30px; text-align: center; }
+        .logo { width: 100px; height: 100px; margin: 0 auto 20px; background: linear-gradient(135deg, #ff6b00 0%, #ff3d00 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .logo img { width: 80%; }
+        h1 { font-size: 28px; color: #333; margin-bottom: 10px; }
+        .subtitle { color: #666; margin-bottom: 30px; }
         .tabs { display: flex; gap: 10px; margin-bottom: 30px; }
-        .tab {
-            flex: 1; padding: 12px; background: #f5f5f5; border: none; border-radius: 10px;
-            font-size: 15px; font-weight: 500; cursor: pointer; transition: all 0.3s ease;
-            color: #666; text-decoration: none; display: flex; justify-content: center; align-items: center;
-        }
+        .tab { flex: 1; padding: 12px; background: #f5f5f5; border: none; border-radius: 10px; text-decoration: none; color: #666; font-weight: 500; }
         .tab.active { background: #e8e8e8; color: #333; }
         .form-group { margin-bottom: 20px; text-align: left; }
-        .form-group label { display: block; margin-bottom: 8px; color: #333; font-weight: 500; font-size: 14px; }
         .input-wrapper { display: flex; align-items: center; background: #f5f5f5; border-radius: 10px; padding: 0 15px; }
-        .input-icon { color: #999; margin-right: 10px; font-size: 18px; }
-        .form-group input { width: 100%; padding: 15px 0; border: none; background: transparent; font-size: 15px; color: #333; outline: none; }
-        .toggle-password { background: none; border: none; cursor: pointer; color: #999; font-size: 18px; padding: 5px; }
-        .btn-submit {
-            width: 100%; padding: 16px; background: linear-gradient(90deg, #ff6b00 0%, #ff3d00 100%);
-            color: white; border: none; border-radius: 10px; font-size: 16px; font-weight: 600;
-            cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease; margin-top: 10px;
-        }
-        .btn-submit:disabled { background: #ccc; cursor: not-allowed; }
-        .back-link { display: inline-block; margin-top: 20px; color: #ff6b00; text-decoration: none; font-size: 14px; font-weight: 500; }
-        #messageBox {
-            padding: 10px; border-radius: 8px; margin-bottom: 20px; text-align: center;
-            font-size: 14px; font-weight: 500; display: none; border: 1px solid;
-        }
+        input { width: 100%; padding: 15px 0; border: none; background: transparent; outline: none; }
+        .btn-submit { width: 100%; padding: 16px; background: linear-gradient(90deg, #ff6b00 0%, #ff3d00 100%); color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; }
+        #messageBox { padding: 10px; border-radius: 8px; margin-bottom: 20px; display: none; border: 1px solid; }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="logo">
-            <img src="imagenes/logo_pizza.png" alt="Logo Freddy's Pizza">
-        </div>
-
+        <div class="logo"><img src="imagenes/logo_pizza.png"></div>
         <h1>Freddy´s Pizza</h1>
         <p class="subtitle">¡Crea tu cuenta!</p>
-
         <div id="messageBox"></div>
-
         <div class="tabs">
             <a href="login.html" class="tab">Iniciar Sesión</a>
             <button class="tab active">Registrarse</button>
         </div>
-
         <form id="registerForm">
             <div class="form-group">
                 <label>Correo Electrónico</label>
-                <div class="input-wrapper">
-                    <span class="input-icon">📧</span>
-                    <input type="email" id="emailInput" placeholder="tu@email.com" required>
-                </div>
+                <div class="input-wrapper"><input type="email" id="emailInput" required></div>
             </div>
-
             <div class="form-group">
                 <label>Contraseña</label>
-                <div class="input-wrapper">
-                    <span class="input-icon">🔒</span>
-                    <input type="password" id="registerPassword" placeholder="Mínimo 6 caracteres" required>
-                    <button type="button" class="toggle-password" onclick="togglePassword('registerPassword')">👁️</button>
-                </div>
+                <div class="input-wrapper"><input type="password" id="registerPassword" required></div>
             </div>
-
             <div class="form-group">
                 <label>Confirmar Contraseña</label>
-                <div class="input-wrapper">
-                    <span class="input-icon">🔒</span>
-                    <input type="password" id="confirmPassword" placeholder="Confirma tu contraseña" required>
-                    <button type="button" class="toggle-password" onclick="togglePassword('confirmPassword')">👁️</button>
-                </div>
+                <div class="input-wrapper"><input type="password" id="confirmPassword" required></div>
             </div>
-
             <button type="submit" id="submitBtn" class="btn-submit">Crear Cuenta</button>
         </form>
-
-        <a href="index.html" class="back-link">← Volver al inicio</a>
     </div>
 
     <script>
-        // 1. Configuración de Supabase
         const SUPABASE_URL = 'https://vndfmcxlifcwzpjbphoy.supabase.co';
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZuZGZtY3hsaWZjd3pwamJwaG95Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3OTc3MDIsImV4cCI6MjA4NzM3MzcwMn0.OkQ6aSZsHkyLMgfT-x0w3beJ3Ey95smEujmhT7ZfjuY'; // USA TU CLAVE REAL
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZuZGZtY3hsaWZjd3pwamJwaG95Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3OTc3MDIsImV4cCI6MjA4NzM3MzcwMn0.OkQ6aSZsHkyLMgfT-x0w3beJ3Ey95smEujmhT7ZfjuY'; 
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-        const messageBox = document.getElementById('messageBox');
-        const submitBtn = document.getElementById('submitBtn');
-
-        function togglePassword(inputId) {
-            const input = document.getElementById(inputId);
-            const button = input.nextElementSibling;
-            if (input.type === 'password') {
-                input.type = 'text';
-                button.textContent = "🙈";
-            } else {
-                input.type = 'password';
-                button.textContent = "👁️";
-            }
-        }
-
-        function showMessage(message, isError = true) {
-            messageBox.textContent = message;
-            messageBox.style.display = 'block';
-            if (isError) {
-                messageBox.style.color = '#e3342f';
-                messageBox.style.backgroundColor = '#fcebeb';
-                messageBox.style.borderColor = '#e3342f';
-            } else {
-                messageBox.style.color = '#1f9d55';
-                messageBox.style.backgroundColor = '#ebfbee';
-                messageBox.style.borderColor = '#1f9d55';
-            }
-        }
 
         document.getElementById('registerForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            messageBox.style.display = 'none'; 
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'Procesando...';
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true;
 
-            const email = document.getElementById('emailInput').value.trim();
+            const email = document.getElementById('emailInput').value;
             const password = document.getElementById('registerPassword').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
-            
-            // Validaciones básicas
-            if (password !== confirmPassword) {
-                showMessage('Las contraseñas no coinciden.', true);
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'Crear Cuenta';
-                return;
-            }
 
-            if (password.length < 6) {
-                showMessage('La contraseña debe tener al menos 6 caracteres.', true);
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'Crear Cuenta';
-                return;
-            }
-
-            // 2. Registro en Supabase Auth
-            const { data, error } = await supabaseClient.auth.signUp({
-                email: email,
-                password: password
-            });
+            // 1. Registro en Auth
+            const { data, error } = await supabaseClient.auth.signUp({ email, password });
 
             if (error) {
-                showMessage('Error: ' + error.message, true);
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'Crear Cuenta';
+                showMessage(error.message, true);
+                btn.disabled = false;
                 return;
             }
 
-            // 3. Crear perfil en la tabla 'perfiles' (esto se vincula por el ID del usuario)
+            // 2. Inserción automática en tabla perfiles
             const { error: perfilError } = await supabaseClient
                 .from('perfiles')
-                .insert([
-                    { id: data.user.id, email: email, rol: 'usuario' }
-                ]);
+                .insert([{ id: data.user.id, email: email, rol: 'usuario' }]);
 
             if (perfilError) {
-                console.error("Error perfil:", perfilError);
-                showMessage('Cuenta creada, pero hubo un error al asignar rol. Contacta soporte.', true);
+                showMessage('Error al asignar rol automático.', true);
             } else {
-                showMessage('¡Cuenta creada con éxito! Redirigiendo...', false); 
-                setTimeout(() => {
-                    window.location.href = 'login.html'; 
-                }, 2000);
+                showMessage('¡Cuenta creada! Redirigiendo...', false);
+                setTimeout(() => window.location.href = 'login.html', 2000);
             }
         });
+
+        function showMessage(m, isErr) {
+            const box = document.getElementById('messageBox');
+            box.textContent = m;
+            box.style.display = 'block';
+            box.style.backgroundColor = isErr ? '#fcebeb' : '#ebfbee';
+            box.style.color = isErr ? '#e3342f' : '#1f9d55';
+        }
     </script>
 </body>
 </html>
