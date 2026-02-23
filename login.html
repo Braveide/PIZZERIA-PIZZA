@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FREDDY'S PIZZA - Iniciar Sesión</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <link rel="stylesheet" href="estilos.css">
     <style>
         /* ESTILOS ORIGINALES MANTENIDOS */
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -139,7 +138,7 @@
                     <input type="password" id="passwordInput" placeholder="Tu contraseña segura" required>
                 </div>
             </div>
-            <button type="submit" class="btn-submit">Entrar Ahora</button>
+            <button type="submit" id="submitBtn" class="btn-submit">Entrar Ahora</button>
         </form>
 
         <div class="separator">o</div>
@@ -151,23 +150,26 @@
     </div>
 
     <script>
-        // 1. Configuración de Supabase (Sustituye con tus credenciales reales)
+        // 1. Configuración de Supabase
         const SUPABASE_URL = 'https://vndfmcxlifcwzpjbphoy.supabase.co';
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZuZGZtY3hsaWZjd3pwamJwaG95Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3OTc3MDIsImV4cCI6MjA4NzM3MzcwMn0.OkQ6aSZsHkyLMgfT-x0w3beJ3Ey95smEujmhT7ZfjuY'; // La misma que usas en el catálogo
-        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZuZGZtY3hsaWZjd3pwamJwaG95Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3OTc3MDIsImV4cCI6MjA4NzM3MzcwMn0.OkQ6aSZsHkyLMgfT-x0w3beJ3Ey95smEujmhT7ZfjuY'; 
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         document.getElementById('loginForm').addEventListener('submit', async function(event) {
             event.preventDefault();
             
+            const btn = document.getElementById('submitBtn');
             const email = document.getElementById('emailInput').value.trim();
             const password = document.getElementById('passwordInput').value;
             const errorDiv = document.getElementById('errorMessage');
 
-            // Limpiar errores previos
+            // Bloquear botón y limpiar errores
+            btn.disabled = true;
+            btn.innerText = "VERIFICANDO...";
             errorDiv.style.display = 'none';
 
-            // 2. Intentar Login real en Supabase
-            const { data, error } = await supabaseClient.auth.signInWithPassword({
+            // 2. Intento de Login
+            const { data, error } = await _supabase.auth.signInWithPassword({
                 email: email,
                 password: password,
             });
@@ -175,34 +177,36 @@
             if (error) {
                 errorDiv.innerText = "❌ " + error.message;
                 errorDiv.style.display = 'block';
+                btn.disabled = false;
+                btn.innerText = "ENTRAR AHORA";
                 return;
             }
 
-            // 3. Obtener el rol desde la tabla 'perfiles'
-            const { data: perfil, error: perfilError } = await supabaseClient
+            // 3. Consultar el rol en la tabla 'perfiles'
+            const { data: perfil, error: perfilError } = await _supabase
                 .from('perfiles')
                 .select('rol')
                 .eq('id', data.user.id)
                 .single();
 
+            // 4. Redirección inteligente
             if (perfilError || !perfil) {
-                // Si no tiene perfil, lo mandamos al catálogo como usuario común
+                // Si no hay perfil en la tabla, se asume usuario básico
                 window.location.href = 'catalogo.html';
-                return;
-            }
-
-            // 4. Redirección por roles según la DB
-            if (perfil.rol === 'admin') {
-                window.location.href = 'panelA.html';
-            } else if (perfil.rol === 'vendedor') {
-                window.location.href = 'panel_empleado.html';
             } else {
-                window.location.href = 'catalogo.html';
+                const rol = perfil.rol.toLowerCase().trim(); // Limpieza de datos
+                
+                if (rol === 'admin') {
+                    window.location.href = 'panelA.html'; // Tu panel CRUD
+                } else if (rol === 'vendedor') {
+                    window.location.href = 'panel_empleado.html';
+                } else {
+                    window.location.href = 'catalogo.html';
+                }
             }
         });
 
         function handleCredentialResponse(response) {
-            // Lógica para Google (opcional)
             console.log("Sesión con Google intentada");
         }
     </script>
