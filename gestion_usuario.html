@@ -3,188 +3,262 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FREDDY'S PIZZA - Gestión</title>
+    <title>FREDDY'S PIZZA - Administración Total</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root { --primary: #a855f7; --dark: #1e293b; --light-bg: #f8fafc; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
         body { background: var(--light-bg); color: var(--dark); }
 
-        /* Header */
-        .header { background: var(--dark); padding: 15px 30px; color: white; display: flex; justify-content: space-between; align-items: center; }
-        .back-btn { text-decoration: none; color: white; font-size: 24px; }
+        /* Header Estilizado */
+        .header { background: var(--dark); padding: 15px 30px; color: white; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .back-btn { text-decoration: none; color: white; font-size: 24px; padding: 5px 10px; border-radius: 8px; transition: 0.3s; }
+        .back-btn:hover { background: rgba(255,255,255,0.1); }
 
-        .main-content { max-width: 900px; margin: 40px auto; padding: 0 20px; }
+        .main-content { max-width: 950px; margin: 40px auto; padding: 0 20px; }
 
-        /* Buscador Estilo "Raro" y Pro */
-        .search-group { position: relative; margin-bottom: 35px; }
-        .search-input { 
-            width: 100%; padding: 18px 25px 18px 55px; 
-            border: none; border-radius: 20px; font-size: 16px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05); transition: 0.3s;
-        }
-        .search-input:focus { outline: none; box-shadow: 0 10px 25px rgba(168, 85, 247, 0.2); transform: translateY(-2px); }
-        .search-icon { position: absolute; left: 22px; top: 50%; transform: translateY(-50%); font-size: 20px; color: var(--primary); }
-
-        /* Botón Nuevo */
-        .btn-new { background: var(--primary); color: white; border: none; padding: 14px 28px; border-radius: 15px; font-weight: bold; cursor: pointer; float: right; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(168, 85, 247, 0.3); }
-
-        /* Tarjetas */
-        .user-card { background: white; border-radius: 20px; padding: 20px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border: 1px solid #f1f5f9; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
-        .user-info h3 { font-size: 18px; margin-bottom: 5px; }
-        .user-info p { font-size: 14px; color: #64748b; }
+        /* Controles Superiores */
+        .top-bar { display: flex; gap: 15px; margin-bottom: 30px; align-items: center; flex-wrap: wrap; }
         
-        .tag { padding: 4px 12px; border-radius: 8px; font-size: 11px; font-weight: bold; text-transform: uppercase; margin-top: 5px; display: inline-block; }
+        .search-group { position: relative; flex: 2; min-width: 250px; }
+        .search-input { 
+            width: 100%; padding: 16px 20px 16px 50px; 
+            border: none; border-radius: 18px; font-size: 16px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05); transition: 0.3s;
+        }
+        .search-input:focus { outline: none; box-shadow: 0 8px 20px rgba(168, 85, 247, 0.2); }
+        .search-icon { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); font-size: 20px; color: var(--primary); }
+
+        .filter-select {
+            flex: 1; padding: 16px; border: none; border-radius: 18px;
+            background: white; box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+            font-weight: 600; cursor: pointer; outline: none;
+        }
+
+        .btn-new { 
+            background: var(--primary); color: white; border: none; padding: 16px 30px; 
+            border-radius: 18px; font-weight: bold; cursor: pointer;
+            box-shadow: 0 6px 15px rgba(168, 85, 247, 0.3); transition: 0.3s;
+        }
+        .btn-new:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(168, 85, 247, 0.4); }
+
+        /* Lista de Usuarios */
+        .user-card { 
+            background: white; border-radius: 22px; padding: 25px; 
+            display: flex; justify-content: space-between; align-items: center; 
+            margin-bottom: 18px; border: 1px solid #f1f5f9; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02); transition: 0.3s;
+        }
+        .user-card:hover { transform: scale(1.01); border-color: var(--primary); }
+
+        .user-info h3 { font-size: 19px; color: #0f172a; margin-bottom: 4px; }
+        .user-info p { font-size: 14px; color: #64748b; margin: 3px 0; }
+        
+        .tag { padding: 5px 14px; border-radius: 10px; font-size: 11px; font-weight: 800; text-transform: uppercase; margin-top: 10px; display: inline-block; }
         .tag-admin { background: #fee2e2; color: #ef4444; }
+        .tag-vendedor { background: #fef3c7; color: #d97706; }
         .tag-usuario { background: #f1f5f9; color: #475569; }
 
-        .actions { display: flex; gap: 10px; }
-        .btn-action { width: 40px; height: 40px; border-radius: 12px; border: none; cursor: pointer; transition: 0.2s; }
+        .actions { display: flex; gap: 12px; }
+        .btn-action { width: 45px; height: 45px; border-radius: 14px; border: none; cursor: pointer; transition: 0.2s; font-size: 20px; display: flex; align-items: center; justify-content: center; }
         .edit { background: #eff6ff; color: #3b82f6; }
         .delete { background: #fef2f2; color: #ef4444; }
+        .btn-action:hover { filter: brightness(0.9); transform: rotate(3deg); }
 
-        /* Modal */
-        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: none; justify-content: center; align-items: center; backdrop-filter: blur(5px); z-index: 1000; }
-        .modal-content { background: white; padding: 40px; border-radius: 30px; width: 100%; max-width: 450px; }
-        .modal input, .modal select { width: 100%; padding: 15px; margin: 10px 0; border: 1px solid #e2e8f0; border-radius: 12px; }
-        .btn-save { background: var(--primary); color: white; width: 100%; padding: 15px; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        /* Modal Moderno */
+        .modal { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.7); display: none; justify-content: center; align-items: center; backdrop-filter: blur(8px); z-index: 1000; }
+        .modal-content { background: white; padding: 40px; border-radius: 30px; width: 95%; max-width: 450px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); }
+        .modal h2 { margin-bottom: 25px; font-size: 24px; text-align: center; }
+        .modal input, .modal select { width: 100%; padding: 15px; margin: 10px 0; border: 1px solid #e2e8f0; border-radius: 14px; font-size: 16px; transition: 0.3s; }
+        .modal input:focus { border-color: var(--primary); outline: none; }
+        .btn-save { background: var(--primary); color: white; width: 100%; padding: 16px; border: none; border-radius: 14px; font-weight: bold; cursor: pointer; margin-top: 20px; font-size: 17px; }
     </style>
 </head>
 <body>
 
     <header class="header">
         <a href="panelA.html" class="back-btn">←</a>
-        <h1>Freddy's Admin</h1>
+        <h1>Freddy's Admin 🍕</h1>
         <div style="width: 40px;"></div>
     </header>
 
     <main class="main-content">
-        <button class="btn-new" onclick="openModal()">+ Nuevo Usuario</button>
-        <div style="clear: both;"></div>
+        <div class="top-bar">
+            <div class="search-group">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="searchInput" class="search-input" placeholder="Buscar por nombre, email o celular..." onkeyup="render()">
+            </div>
+            
+            <select id="roleFilter" class="filter-select" onchange="render()">
+                <option value="todos">Filtrar: Todos</option>
+                <option value="admin">Administradores</option>
+                <option value="vendedor">Vendedores</option>
+                <option value="usuario">Usuarios</option>
+            </select>
 
-        <div class="search-group">
-            <span class="search-icon">🔍</span>
-            <input type="text" id="searchInput" class="search-input" placeholder="Buscar por nombre, email o teléfono..." onkeyup="render()">
+            <button class="btn-new" onclick="openModal()">+ Nuevo Usuario</button>
         </div>
 
-        <div id="userList"></div>
+        <div id="userList">
+            </div>
     </main>
 
     <div id="userModal" class="modal">
         <div class="modal-content">
-            <h2 id="modalTitle" style="margin-bottom: 20px;">Usuario</h2>
+            <h2 id="modalTitle">Nuevo Registro</h2>
             <form id="userForm">
                 <input type="hidden" id="userId">
-                <input type="text" id="userName" placeholder="Nombre Completo" required>
-                <input type="email" id="userEmail" placeholder="Email" required>
+                <input type="text" id="userName" placeholder="Nombre completo" required>
+                <input type="email" id="userEmail" placeholder="Correo electrónico" required>
+                
                 <div id="passArea">
-                    <input type="password" id="userPass" placeholder="Contraseña">
+                    <input type="password" id="userPass" placeholder="Contraseña (mín. 6 caracteres)">
                 </div>
-                <input type="text" id="userPhone" placeholder="Teléfono">
+
+                <input type="text" id="userPhone" placeholder="Teléfono / Celular">
+                
+                <label style="font-size: 13px; color: #64748b; margin-left: 5px;">Rol de acceso:</label>
                 <select id="userRole">
-                    <option value="usuario">Usuario</option>
-                    <option value="vendedor">Vendedor</option>
+                    <option value="usuario">Usuario Estándar</option>
+                    <option value="vendedor">Vendedor / Staff</option>
                     <option value="admin">Administrador</option>
                 </select>
-                <button type="submit" class="btn-save">Guardar Datos</button>
-                <button type="button" onclick="closeModal()" style="width:100%; background:none; border:none; color:#94a3b8; margin-top:15px; cursor:pointer;">Cancelar</button>
+
+                <button type="submit" class="btn-save">Guardar Cambios</button>
+                <button type="button" onclick="closeModal()" style="width:100%; background:none; border:none; color:#94a3b8; margin-top:15px; cursor:pointer; font-weight: 600;">Cancelar</button>
             </form>
         </div>
     </div>
 
     <script>
+        // CONFIGURACIÓN SUPABASE
         const SUPABASE_URL = 'https://vndfmcxlifcwzpjbphoy.supabase.co';
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZuZGZtY3hsaWZjd3pwamJwaG95Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3OTc3MDIsImV4cCI6MjA4NzM3MzcwMn0.OkQ6aSZsHkyLMgfT-x0w3beJ3Ey95smEujmhT7ZfjuY'; // USA TU KEY REAL AQUÍ
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZuZGZtY3hsaWZjd3pwamJwaG95Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3OTc3MDIsImV4cCI6MjA4NzM3MzcwMn0.OkQ6aSZsHkyLMgfT-x0w3beJ3Ey95smEujmhT7ZfjuY'; 
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        let users = [];
+        let allUsers = [];
 
+        // CARGAR USUARIOS DESDE LA TABLA PERFILES
         async function load() {
-            const { data, error } = await _supabase.from('perfiles').select('*');
-            if (error) return;
-            users = data;
+            const { data, error } = await _supabase.from('perfiles').select('*').order('created_at', { ascending: false });
+            if (error) {
+                console.error("Error cargando:", error.message);
+                return;
+            }
+            allUsers = data;
             render();
         }
 
+        // RENDERIZAR LISTA CON FILTROS
         function render() {
             const list = document.getElementById('userList');
             const term = document.getElementById('searchInput').value.toLowerCase();
+            const filter = document.getElementById('roleFilter').value;
             list.innerHTML = '';
 
-            users.filter(u => 
-                (u.nombre || '').toLowerCase().includes(term) || 
-                u.email.toLowerCase().includes(term)
-            ).forEach(u => {
+            const filtered = allUsers.filter(u => {
+                const matchesSearch = (u.nombre || '').toLowerCase().includes(term) || u.email.toLowerCase().includes(term) || (u.telefono || '').includes(term);
+                const matchesRole = filter === 'todos' || u.rol === filter;
+                return matchesSearch && matchesRole;
+            });
+
+            if (filtered.length === 0) {
+                list.innerHTML = '<p style="text-align:center; color:#94a3b8; margin-top:40px;">No se encontraron resultados.</p>';
+                return;
+            }
+
+            filtered.forEach(u => {
                 list.innerHTML += `
                     <div class="user-card">
                         <div class="user-info">
-                            <h3>${u.nombre || 'Sin nombre'}</h3>
-                            <p>${u.email}</p>
-                            <p>📞 ${u.telefono || 'No hay teléfono'}</p>
+                            <h3>${u.nombre || 'Sin nombre asignado'}</h3>
+                            <p>✉️ ${u.email}</p>
+                            <p>📱 ${u.telefono || 'Sin teléfono'}</p>
                             <span class="tag tag-${u.rol}">${u.rol}</span>
                         </div>
                         <div class="actions">
-                            <button class="btn-action edit" onclick="editUser('${u.id}')">✏️</button>
-                            <button class="btn-action delete" onclick="deleteUser('${u.id}')">🗑️</button>
+                            <button class="btn-action edit" title="Editar" onclick="editUser('${u.id}')">✏️</button>
+                            <button class="btn-action delete" title="Borrar de raíz" onclick="deleteUser('${u.id}')">🗑️</button>
                         </div>
                     </div>
                 `;
             });
         }
 
+        // LÓGICA DEL MODAL
         function openModal(edit = false) {
             document.getElementById('userForm').reset();
             document.getElementById('userId').value = '';
             document.getElementById('passArea').style.display = edit ? 'none' : 'block';
+            document.getElementById('modalTitle').innerText = edit ? "Actualizar Administrador" : "Registrar Nuevo Usuario";
             document.getElementById('userModal').style.display = 'flex';
         }
 
         function closeModal() { document.getElementById('userModal').style.display = 'none'; }
 
+        // EDITAR USUARIO (Carga datos al modal)
         function editUser(id) {
-            const u = users.find(user => user.id === id);
+            const u = allUsers.find(user => user.id === id);
+            if (!u) return;
             openModal(true);
             document.getElementById('userId').value = u.id;
             document.getElementById('userName').value = u.nombre || '';
             document.getElementById('userEmail').value = u.email;
             document.getElementById('userPhone').value = u.telefono || '';
             document.getElementById('userRole').value = u.rol;
-            document.getElementById('modalTitle').innerText = "Editar Perfil";
         }
 
+        // GUARDAR O CREAR
         document.getElementById('userForm').onsubmit = async (e) => {
             e.preventDefault();
             const id = document.getElementById('userId').value;
             const payload = {
                 nombre: document.getElementById('userName').value,
                 rol: document.getElementById('userRole').value,
-                telefono: document.getElementById('userPhone').value
+                telefono: document.getElementById('userPhone').value,
+                email: document.getElementById('userEmail').value
             };
 
             if (id) {
-                // EDITAR: Solo actualiza la tabla perfiles
-                await _supabase.from('perfiles').update(payload).eq('id', id);
+                // ACTUALIZAR PERFIL (Forzamos actualización de nombre aunque ya tenga)
+                const { error } = await _supabase.from('perfiles').update(payload).eq('id', id);
+                if (error) alert("Error al editar: " + error.message);
+                else alert("¡Usuario actualizado correctamente!");
             } else {
-                // CREAR: Registra en Auth (La función SQL se encarga de Perfiles)
-                const email = document.getElementById('userEmail').value;
+                // CREAR NUEVO (AUTH + TRIGGER)
                 const password = document.getElementById('userPass').value;
+                if (password.length < 6) return alert("La contraseña debe tener al menos 6 caracteres");
+
                 const { error } = await _supabase.auth.signUp({
-                    email, password,
+                    email: payload.email,
+                    password: password,
                     options: { data: payload }
                 });
-                if (error) alert(error.message);
+
+                if (error) alert("Error al crear: " + error.message);
+                else alert("¡Usuario creado exitosamente!");
             }
+            
             closeModal();
-            load();
+            setTimeout(load, 1000); // Recarga después de 1 segundo para dar tiempo al servidor
         };
 
+        // BORRADO TOTAL (Llama a la función RPC de Supabase)
         async function deleteUser(id) {
-            if (confirm('¿Borrar este usuario?')) {
-                await _supabase.from('perfiles').delete().eq('id', id);
-                load();
+            if (confirm('⚠️ ¿ESTÁS SEGURO? Esta acción borrará al usuario de la Autenticación y de la tabla de perfiles permanentemente.')) {
+                // Ejecutamos la función que creamos en el SQL Editor
+                const { error } = await _supabase.rpc('admin_delete_user', { target_user_id: id });
+                
+                if (error) {
+                    alert("Error al borrar: Asegúrate de haber creado la función RPC 'admin_delete_user' en Supabase.");
+                } else {
+                    alert("Usuario eliminado de todo el sistema.");
+                    load();
+                }
             }
         }
 
+        // Carga inicial
         load();
     </script>
 </body>
