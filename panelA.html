@@ -44,9 +44,16 @@
         .card-text h3 { color: #333; font-size: 18px; }
         .card-text p { color: #666; font-size: 13px; }
 
+        /* SECCIÓN CRUD Y FILTROS */
         .crud-section { background: white; padding: 25px; border-radius: 12px; margin-top: 30px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px; }
         
+        /* Botones de Filtro */
+        .filter-container { display: flex; gap: 10px; margin-bottom: 20px; background: #f1f5f9; padding: 10px; border-radius: 10px; width: fit-content; }
+        .btn-filter { border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 600; background: white; color: #64748b; transition: 0.2s; border: 1px solid #e2e8f0; }
+        .btn-filter:hover { background: #e2e8f0; }
+        .btn-filter.active { background: #1e293b; color: white; border-color: #1e293b; }
+
         table { width: 100%; border-collapse: collapse; }
         th, td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; }
         th { font-family: 'Archivo Black', sans-serif; text-transform: uppercase; font-size: 11px; color: #1e293b; }
@@ -55,7 +62,6 @@
         .btn-edit { color: #3b82f6; cursor: pointer; background: none; border: none; font-size: 18px; margin-right: 10px; }
         .btn-delete { color: #ef4444; cursor: pointer; background: none; border: none; font-size: 18px; }
 
-        /* Estilo para las etiquetas de categoría en la tabla */
         .badge { padding: 4px 8px; border-radius: 4px; font-size: 10px; font-weight: bold; text-transform: uppercase; }
         .badge-pizzas { background: #ffedd5; color: #9a3412; }
         .badge-bebidas { background: #dcfce7; color: #166534; }
@@ -104,9 +110,17 @@
 
         <div class="crud-section">
             <div class="section-header">
-                <h2>🍕 Gestión de Productos (Menú)</h2>
-                <button class="btn-add" onclick="openProductModal()">+ Agregar Producto</button>
+                <h2>🍔 Catálogo del Menú</h2>
+                <button class="btn-add" onclick="openProductModal()">+ Agregar Nuevo</button>
             </div>
+
+            <div class="filter-container">
+                <button class="btn-filter active" onclick="filterTable(this, 'todos')">Mostrar Todo</button>
+                <button class="btn-filter" onclick="filterTable(this, 'pizzas')">🍕 Pizzas</button>
+                <button class="btn-filter" onclick="filterTable(this, 'bebidas')">🥤 Bebidas</button>
+                <button class="btn-filter" onclick="filterTable(this, 'promos')">🎁 Promos</button>
+            </div>
+
             <table>
                 <thead>
                     <tr>
@@ -134,14 +148,14 @@
                 <option value="promos">Promos / Paquetes</option>
             </select>
 
-            <input type="text" id="pName" placeholder="Nombre (ej. Pizza Hawaina)">
+            <input type="text" id="pName" placeholder="Nombre del producto">
             <input type="number" step="0.01" id="pPrice" placeholder="Precio ($)">
-            <input type="text" id="pDesc" placeholder="Descripción corta">
-            <input type="text" id="pImg" placeholder="URL de la imagen (Supabase Storage o Web)">
+            <input type="text" id="pDesc" placeholder="Descripción">
+            <input type="text" id="pImg" placeholder="URL de la imagen">
             
             <div class="modal-actions">
-                <button onclick="closeModal()" style="padding: 10px; cursor:pointer; background:none; border:1px solid #ccc; border-radius:6px;">Cancelar</button>
-                <button class="btn-add" onclick="saveProduct()">Guardar Cambios</button>
+                <button onclick="closeModal()" style="padding: 10px; cursor:pointer;">Cancelar</button>
+                <button class="btn-add" onclick="saveProduct()">Guardar</button>
             </div>
         </div>
     </div>
@@ -151,13 +165,23 @@
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZuZGZtY3hsaWZjd3pwamJwaG95Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3OTc3MDIsImV4cCI6MjA4NzM3MzcwMn0.OkQ6aSZsHkyLMgfT-x0w3beJ3Ey95smEujmhT7ZfjuY'; 
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
+        let currentFilter = 'todos';
+
         document.addEventListener('DOMContentLoaded', () => {
             loadProducts();
         });
 
-        // --- CARGAR PRODUCTOS ---
-        async function loadProducts() {
-            const { data, error } = await _supabase.from('productos').select('*').order('categoria', { ascending: true });
+        // --- FUNCIÓN DE CARGA CON FILTRO ---
+        async function loadProducts(categoria = 'todos') {
+            currentFilter = categoria;
+            let query = _supabase.from('productos').select('*');
+
+            if (categoria !== 'todos') {
+                query = query.eq('categoria', categoria);
+            }
+
+            const { data, error } = await query.order('nombre', { ascending: true });
+            
             if (error) return console.error(error);
             
             const tbody = document.getElementById('productTableBody');
@@ -175,7 +199,16 @@
             `).join('');
         }
 
-        // --- GUARDAR O ACTUALIZAR ---
+        // --- MANEJO DE BOTONES DE FILTRO ---
+        function filterTable(btn, categoria) {
+            // Quitar clase active de todos
+            document.querySelectorAll('.btn-filter').forEach(b => b.classList.remove('active'));
+            // Poner active al clicado
+            btn.classList.add('active');
+            // Cargar datos
+            loadProducts(categoria);
+        }
+
         async function saveProduct() {
             const id = document.getElementById('editProductId').value;
             const productData = {
@@ -193,18 +226,16 @@
             }
             
             closeModal();
-            loadProducts();
+            loadProducts(currentFilter); // Recarga respetando el filtro actual
         }
 
-        // --- ELIMINAR ---
         async function deleteProduct(id) {
-            if(confirm('¿Seguro que quieres eliminar este producto del menú?')) {
+            if(confirm('¿Eliminar producto?')) {
                 await _supabase.from('productos').delete().eq('id', id);
-                loadProducts();
+                loadProducts(currentFilter);
             }
         }
 
-        // --- MODALES ---
         function openProductModal() {
             document.getElementById('editProductId').value = "";
             document.getElementById('pName').value = "";
