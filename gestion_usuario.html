@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FREDDY'S PIZZA - Gestión de Usuarios</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         /* Estilos Generales y Reset */
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -13,9 +14,7 @@
             color: #1e293b;
         }
 
-        /* ------------------------------------ */
         /* HEADER */
-        /* ------------------------------------ */
         .header {
             background: #1e293b;
             padding: 15px 30px;
@@ -56,9 +55,7 @@
         }
         .logout-btn:hover { background: #ef4444; border-color: #ef4444; }
 
-        /* ------------------------------------ */
         /* CONTENEDOR PRINCIPAL */
-        /* ------------------------------------ */
         .main-content {
             max-width: 900px;
             margin: 40px auto;
@@ -123,9 +120,7 @@
             color: #94a3b8;
         }
 
-        /* ------------------------------------ */
         /* LISTA DE USUARIOS */
-        /* ------------------------------------ */
         .user-list {
             display: grid;
             gap: 16px;
@@ -153,6 +148,7 @@
         .user-stats {
             display: flex;
             gap: 15px;
+            flex-wrap: wrap;
         }
 
         .stat-tag {
@@ -187,9 +183,7 @@
         .delete-btn { background: #fef2f2; color: #ef4444; }
         .delete-btn:hover { background: #ef4444; color: white; }
 
-        /* ------------------------------------ */
         /* MODAL */
-        /* ------------------------------------ */
         .modal-overlay {
             position: fixed;
             inset: 0;
@@ -320,7 +314,7 @@
                 <div class="form-row">
                     <div>
                         <label>Teléfono</label>
-                        <input type="tel" id="modalPhone" placeholder="55 1234 5678" required>
+                        <input type="tel" id="modalPhone" placeholder="5512345678" required>
                     </div>
                     <div>
                         <label>Contraseña</label>
@@ -337,27 +331,31 @@
     </div>
 
     <script>
-        // Simulación de base de datos con LocalStorage
-        const STORAGE_KEY = 'freddys_users';
+        // 2. CONFIGURACIÓN SUPABASE (Reemplaza con tus datos reales)
+        const SUPABASE_URL = 'https://vndfmcxlifcwzpjbphoy.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZuZGZtY3hsaWZjd3pwamJwaG95Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3OTc3MDIsImV4cCI6MjA4NzM3MzcwMn0.OkQ6aSZsHkyLMgfT-x0w3beJ3Ey95smEujmhT7ZfjuY';
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
         let users = [];
 
-        function init() {
-            const data = localStorage.getItem(STORAGE_KEY);
-            if (data) {
-                users = JSON.parse(data);
-            } else {
-                // Datos iniciales de ejemplo
-                users = [
-                    { id: 1, name: 'María González', email: 'maria.g@mail.com', phone: '55 1234 5678', orders: 5, registered: '10/02/2024' },
-                    { id: 2, name: 'Carlos Ruiz', email: 'cruiz@mail.com', phone: '55 9876 5432', orders: 12, registered: '15/02/2024' }
-                ];
-                save();
-            }
-            render();
+        // Inicializar carga de datos
+        async function init() {
+            await fetchUsers();
         }
 
-        function save() {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(users));
+        // Obtener usuarios de la tabla 'perfiles'
+        async function fetchUsers() {
+            const { data, error } = await _supabase
+                .from('perfiles')
+                .select('*')
+                .order('created_at', { ascending: false });
+
+            if (error) {
+                console.error('Error fetching users:', error);
+                return;
+            }
+            users = data;
+            render();
         }
 
         function render(dataToRender = users) {
@@ -366,7 +364,7 @@
 
             if (dataToRender.length === 0) {
                 list.innerHTML = `<div style="text-align:center; padding:40px; color:#94a3b8;">
-                    <p>No se encontraron usuarios que coincidan con la búsqueda.</p>
+                    <p>No hay usuarios registrados o no coinciden con la búsqueda.</p>
                 </div>`;
                 return;
             }
@@ -376,35 +374,34 @@
                 card.className = 'user-card';
                 card.innerHTML = `
                     <div class="user-info">
-                        <h3>${user.name}</h3>
+                        <h3>${user.nombre || 'Sin nombre'}</h3>
                         <span class="email">${user.email}</span>
                         <div class="user-stats">
-                            <span class="stat-tag">📞 ${user.phone}</span>
-                            <span class="stat-tag">🍕 ${user.orders} pedidos</span>
-                            <span class="stat-tag">📅 ${user.registered}</span>
+                            <span class="stat-tag">📞 ${user.telefono || 'S/T'}</span>
+                            <span class="stat-tag">🛡️ ${user.rol || 'usuario'}</span>
+                            <span class="stat-tag">📅 ${new Date(user.created_at).toLocaleDateString()}</span>
                         </div>
                     </div>
                     <div class="user-actions">
-                        <button class="action-btn edit-btn" onclick="editUser(${user.id})" title="Editar">✏️</button>
-                        <button class="action-btn delete-btn" onclick="deleteUser(${user.id})" title="Eliminar">🗑️</button>
+                        <button class="action-btn edit-btn" onclick="editUser('${user.id}')" title="Editar">✏️</button>
+                        <button class="action-btn delete-btn" onclick="deleteUser('${user.id}')" title="Eliminar">🗑️</button>
                     </div>
                 `;
                 list.appendChild(card);
             });
         }
 
-        // Lógica del buscador
+        // Lógica del buscador local sobre los datos ya traídos
         function filterUsers() {
             const term = document.getElementById('searchInput').value.toLowerCase();
             const filtered = users.filter(u => 
-                u.name.toLowerCase().includes(term) || 
+                (u.nombre && u.nombre.toLowerCase().includes(term)) || 
                 u.email.toLowerCase().includes(term) ||
-                u.phone.includes(term)
+                (u.telefono && u.telefono.includes(term))
             );
             render(filtered);
         }
 
-        // CRUD
         function openUserModal(user = null) {
             const form = document.getElementById('userForm');
             form.reset();
@@ -415,12 +412,11 @@
             if (user) {
                 document.getElementById('modalTitle').innerText = 'Editar Usuario';
                 document.getElementById('user_id').value = user.id;
-                document.getElementById('modalName').value = user.name;
+                document.getElementById('modalName').value = user.nombre;
                 document.getElementById('modalEmail').value = user.email;
-                document.getElementById('modalPhone').value = user.phone;
+                document.getElementById('modalPhone').value = user.telefono;
                 document.getElementById('modalPassword').required = false;
             }
-
             document.getElementById('userModal').style.display = 'flex';
         }
 
@@ -428,49 +424,56 @@
             document.getElementById('userModal').style.display = 'none';
         }
 
-        document.getElementById('userForm').onsubmit = function(e) {
+        // Acción de Guardar (Crear o Editar)
+        document.getElementById('userForm').onsubmit = async function(e) {
             e.preventDefault();
             const id = document.getElementById('user_id').value;
-            const name = document.getElementById('modalName').value;
+            const nombre = document.getElementById('modalName').value;
             const email = document.getElementById('modalEmail').value;
-            const phone = document.getElementById('modalPhone').value;
+            const telefono = document.getElementById('modalPhone').value;
+
+            const userData = { nombre, email, telefono, rol: 'usuario' };
 
             if (id) {
-                const idx = users.findIndex(u => u.id == id);
-                users[idx] = { ...users[idx], name, email, phone };
+                // Modo Edición
+                const { error } = await _supabase
+                    .from('perfiles')
+                    .update(userData)
+                    .eq('id', id);
+                if (error) alert("Error al actualizar: " + error.message);
             } else {
-                const newUser = {
-                    id: Date.now(),
-                    name, email, phone,
-                    orders: 0,
-                    registered: new Date().toLocaleDateString('es-MX')
-                };
-                users.push(newUser);
+                // Modo Nuevo (Supabase insert)
+                const { error } = await _supabase
+                    .from('perfiles')
+                    .insert([userData]);
+                if (error) alert("Error al crear: " + error.message);
             }
 
-            save();
-            render();
             closeModal();
+            await fetchUsers(); // Recargar lista
         };
 
-        function deleteUser(id) {
-            if (confirm('¿Estás seguro de eliminar este usuario?')) {
-                users = users.filter(u => u.id !== id);
-                save();
-                render();
+        async function deleteUser(id) {
+            if (confirm('¿Estás seguro de eliminar este usuario de la base de datos?')) {
+                const { error } = await _supabase
+                    .from('perfiles')
+                    .delete()
+                    .eq('id', id);
+                
+                if (error) alert("Error al eliminar: " + error.message);
+                else await fetchUsers();
             }
         }
 
         function editUser(id) {
             const user = users.find(u => u.id === id);
-            openUserModal(user);
+            if(user) openUserModal(user);
         }
 
         function cerrarSesion() {
             window.location.href = 'login.html';
         }
 
-        // Iniciar
         init();
     </script>
 </body>
