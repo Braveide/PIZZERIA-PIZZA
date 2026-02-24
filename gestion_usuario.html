@@ -6,41 +6,74 @@
     <title>FREDDY'S PIZZA - Gestión de Usuarios</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        /* Estilos modernos basados en tu diseño */
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', Roboto, sans-serif; background: #f8fafc; color: #1e293b; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f8fafc; color: #1e293b; }
         
-        .header { background: #1e293b; padding: 15px 30px; color: white; display: flex; justify-content: space-between; align-items: center; }
-        .back-btn { text-decoration: none; color: white; font-size: 20px; }
-        .logout-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 8px 16px; border-radius: 6px; cursor: pointer; }
+        /* Header */
+        .header { background: #1e293b; padding: 15px 30px; color: white; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .back-btn { text-decoration: none; color: white; font-size: 24px; padding: 5px 10px; border-radius: 6px; }
+        .logout-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 8px 16px; border-radius: 6px; cursor: pointer; transition: 0.3s; }
+        .logout-btn:hover { background: #ef4444; border: 1px solid #ef4444; }
 
         .main-content { max-width: 900px; margin: 40px auto; padding: 0 20px; }
-        .section-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 30px; }
-        
-        .new-user-btn { background: #a855f7; color: white; border: none; padding: 12px 24px; border-radius: 10px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 12px rgba(168, 85, 247, 0.3); }
 
-        .search-box input { width: 100%; padding: 15px; border: 1px solid #e2e8f0; border-radius: 12px; margin-bottom: 25px; }
+        /* Encabezado de Sección */
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .section-header h2 { font-size: 28px; color: #0f172a; }
+        .new-user-btn { background: #a855f7; color: white; border: none; padding: 12px 24px; border-radius: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 12px rgba(168, 85, 247, 0.3); transition: 0.3s; }
+        .new-user-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(168, 85, 247, 0.4); }
 
+        /* BUSCADOR ESTILIZADO */
+        .search-container { position: relative; margin-bottom: 30px; }
+        .search-input { 
+            width: 100%; 
+            padding: 16px 20px 16px 50px; 
+            border: 2px solid #e2e8f0; 
+            border-radius: 15px; 
+            font-size: 16px; 
+            background: white; 
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+        }
+        .search-input:focus { 
+            outline: none; 
+            border-color: #a855f7; 
+            box-shadow: 0 0 0 4px rgba(168, 85, 247, 0.1); 
+        }
+        .search-icon { 
+            position: absolute; 
+            left: 18px; 
+            top: 50%; 
+            transform: translateY(-50%); 
+            font-size: 20px; 
+            color: #94a3b8; 
+        }
+
+        /* Lista de Usuarios */
         .user-list { display: grid; gap: 16px; }
-        .user-card { background: white; border-radius: 16px; padding: 20px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #e2e8f0; }
+        .user-card { background: white; border-radius: 16px; padding: 20px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #e2e8f0; transition: 0.3s; }
+        .user-card:hover { border-color: #cbd5e1; transform: scale(1.01); }
         
-        .user-info h3 { font-size: 18px; color: #1e293b; }
+        .user-info h3 { font-size: 18px; color: #1e293b; margin-bottom: 4px; }
         .email { color: #64748b; font-size: 14px; display: block; margin-bottom: 8px; }
         
-        .tag { padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 600; text-transform: capitalize; }
+        .tag { padding: 4px 12px; border-radius: 8px; font-size: 12px; font-weight: 600; text-transform: uppercase; }
         .tag-admin { background: #fee2e2; color: #ef4444; }
         .tag-vendedor { background: #fef3c7; color: #d97706; }
         .tag-usuario { background: #f1f5f9; color: #475569; }
 
-        .action-btn { width: 35px; height: 35px; border-radius: 8px; border: none; cursor: pointer; margin-left: 5px; }
+        .action-btn { width: 40px; height: 40px; border-radius: 10px; border: none; cursor: pointer; margin-left: 8px; transition: 0.2s; }
         .edit-btn { background: #eff6ff; color: #3b82f6; }
         .delete-btn { background: #fef2f2; color: #ef4444; }
+        .action-btn:hover { filter: brightness(0.9); }
 
         /* Modal */
-        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: none; justify-content: center; align-items: center; backdrop-filter: blur(4px); }
-        .modal-content { background: white; padding: 30px; border-radius: 20px; width: 100%; max-width: 400px; }
-        .modal input, .modal select { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; }
-        .btn-save { background: #a855f7; color: white; width: 100%; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .modal { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); display: none; justify-content: center; align-items: center; backdrop-filter: blur(4px); z-index: 100; }
+        .modal-content { background: white; padding: 35px; border-radius: 24px; width: 100%; max-width: 450px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
+        .modal h2 { margin-bottom: 20px; text-align: center; }
+        .modal input, .modal select { width: 100%; padding: 14px; margin: 10px 0; border: 1px solid #e2e8f0; border-radius: 12px; font-size: 15px; }
+        .modal input:focus { border-color: #a855f7; outline: none; }
+        .btn-save { background: #a855f7; color: white; width: 100%; padding: 14px; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; margin-top: 15px; font-size: 16px; }
     </style>
 </head>
 <body>
@@ -57,12 +90,15 @@
         <div class="section-header">
             <div>
                 <h2>Gestión de Usuarios</h2>
-                <p style="color: #64748b;">Administra cuentas y roles del sistema</p>
+                <p style="color: #64748b;">Control total de perfiles y accesos</p>
             </div>
             <button class="new-user-btn" onclick="openModal()">+ Nuevo Usuario</button>
         </div>
 
-        <input type="text" id="searchInput" placeholder="Buscar por nombre o email..." onkeyup="render()">
+        <div class="search-container">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="searchInput" class="search-input" placeholder="Buscar por nombre, email o teléfono..." onkeyup="render()">
+        </div>
 
         <div id="userList" class="user-list">
             </div>
@@ -76,23 +112,24 @@
                 <input type="text" id="userName" placeholder="Nombre Completo" required>
                 <input type="email" id="userEmail" placeholder="Correo Electrónico" required>
                 <div id="passWrapper">
-                    <input type="password" id="userPass" placeholder="Contraseña (mín. 6 caracteres)">
+                    <input type="password" id="userPass" placeholder="Contraseña segura (mín. 6)">
                 </div>
-                <input type="text" id="userPhone" placeholder="Teléfono">
+                <input type="text" id="userPhone" placeholder="Teléfono (ej. 5626213069)">
                 <select id="userRole">
                     <option value="usuario">Usuario</option>
                     <option value="vendedor">Vendedor</option>
                     <option value="admin">Administrador</option>
                 </select>
                 <button type="submit" class="btn-save">Guardar Cambios</button>
-                <button type="button" onclick="closeModal()" style="background:none; border:none; color:gray; width:100%; margin-top:10px; cursor:pointer;">Cancelar</button>
+                <button type="button" onclick="closeModal()" style="background:none; border:none; color:#94a3b8; width:100%; margin-top:15px; cursor:pointer; font-weight: 500;">Cancelar</button>
             </form>
         </div>
     </div>
 
     <script>
+        // TU URL Y KEY (Asegúrate de que sean las correctas)
         const SUPABASE_URL = 'https://vndfmcxlifcwzpjbphoy.supabase.co';
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZuZGZtY3hsaWZjd3pwamJwaG95Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3OTc3MDIsImV4cCI6MjA4NzM3MzcwMn0.OkQ6aSZsHkyLMgfT-x0w3beJ3Ey95smEujmhT7ZfjuY'; // Reemplaza con tu key
+        const SUPABASE_KEY = 'TU_KEY_ANON_PUBLICA'; 
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         let allUsers = [];
@@ -111,8 +148,14 @@
 
             const filtered = allUsers.filter(u => 
                 (u.nombre || '').toLowerCase().includes(search) || 
-                u.email.toLowerCase().includes(search)
+                u.email.toLowerCase().includes(search) ||
+                (u.telefono || '').includes(search)
             );
+
+            if (filtered.length === 0) {
+                container.innerHTML = '<p style="text-align:center; color:#94a3b8; margin-top:20px;">No se encontraron usuarios.</p>';
+                return;
+            }
 
             filtered.forEach(user => {
                 const roleClass = `tag-${user.rol}`;
@@ -122,11 +165,11 @@
                             <h3>${user.nombre || 'Usuario sin nombre'}</h3>
                             <span class="email">${user.email}</span>
                             <span class="tag ${roleClass}">${user.rol}</span>
-                            <span style="font-size: 12px; color: #94a3b8; margin-left: 10px;">📞 ${user.telefono || 'Sin tel.'}</span>
+                            <span style="font-size: 13px; color: #94a3b8; margin-left: 10px;">📞 ${user.telefono || 'Sin registro'}</span>
                         </div>
-                        <div>
-                            <button class="action-btn edit-btn" onclick="editUser('${user.id}')">✏️</button>
-                            <button class="action-btn delete-btn" onclick="deleteUser('${user.id}')">🗑️</button>
+                        <div style="display:flex;">
+                            <button class="action-btn edit-btn" title="Editar" onclick="editUser('${user.id}')">✏️</button>
+                            <button class="action-btn delete-btn" title="Borrar" onclick="deleteUser('${user.id}')">🗑️</button>
                         </div>
                     </div>
                 `;
@@ -136,7 +179,7 @@
         function openModal(isEdit = false) {
             document.getElementById('userForm').reset();
             document.getElementById('userId').value = '';
-            document.getElementById('modalTitle').innerText = isEdit ? 'Editar Usuario' : 'Nuevo Usuario';
+            document.getElementById('modalTitle').innerText = isEdit ? 'Editar Perfil' : 'Nuevo Registro';
             document.getElementById('passWrapper').style.display = isEdit ? 'none' : 'block';
             document.getElementById('userModal').style.display = 'flex';
         }
@@ -162,24 +205,22 @@
             const telefono = document.getElementById('userPhone').value;
 
             if (id) {
-                // Actualizar perfil existente
                 await _supabase.from('perfiles').update({ nombre, rol, telefono }).eq('id', id);
             } else {
-                // Crear nuevo usuario en AUTH
                 const password = document.getElementById('userPass').value;
                 const { data, error } = await _supabase.auth.signUp({
                     email, password, 
                     options: { data: { nombre, rol, telefono } }
                 });
-                if (error) return alert(error.message);
-                alert('Usuario creado. Debe confirmar su correo (o puedes desactivar la confirmación en Supabase Auth Settings).');
+                if (error) return alert("Error: " + error.message);
+                alert('¡Usuario creado con éxito!');
             }
             closeModal();
             loadUsers();
         };
 
         async function deleteUser(id) {
-            if (confirm('¿Eliminar este usuario definitivamente?')) {
+            if (confirm('¿Eliminar definitivamente?')) {
                 await _supabase.from('perfiles').delete().eq('id', id);
                 loadUsers();
             }
