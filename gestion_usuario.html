@@ -6,263 +6,20 @@
     <title>FREDDY'S PIZZA - Gestión de Usuarios</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        /* Estilos Generales y Reset */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { 
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; 
-            background: #f8fafc; 
-            color: #1e293b;
-        }
-
-        /* HEADER */
-        .header {
-            background: #1e293b;
-            padding: 15px 30px;
-            color: white;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .back-btn {
-            text-decoration: none;
-            color: white;
-            font-size: 24px;
-            padding: 5px 10px;
-            border-radius: 6px;
-            transition: background 0.3s;
-        }
-
-        .back-btn:hover { background: rgba(255, 255, 255, 0.1); }
-
-        .logout-btn { 
-            background: rgba(255,255,255,0.1); 
-            border: 1px solid rgba(255,255,255,0.2); 
-            color: white; 
-            padding: 8px 16px; 
-            border-radius: 6px; 
-            font-size: 14px; 
-            cursor: pointer; 
-            text-decoration: none; 
-            transition: all 0.3s; 
-        }
-        .logout-btn:hover { background: #ef4444; border-color: #ef4444; }
-
-        /* CONTENEDOR PRINCIPAL */
-        .main-content {
-            max-width: 900px;
-            margin: 40px auto;
-            padding: 0 20px;
-        }
-
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            margin-bottom: 30px;
-        }
-
-        .title-group h2 { font-size: 28px; color: #0f172a; }
-        .title-group p { color: #64748b; font-size: 14px; margin-top: 4px; }
-
-        .new-user-btn {
-            background: #a855f7;
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 10px;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.3s;
-            box-shadow: 0 4px 12px rgba(168, 85, 247, 0.3);
-        }
-
-        .new-user-btn:hover {
-            background: #9333ea;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(168, 85, 247, 0.4);
-        }
-
-        /* Barra de Búsqueda */
-        .search-box {
-            position: relative;
-            margin-bottom: 25px;
-        }
-
-        .search-box input {
-            width: 100%;
-            padding: 15px 15px 15px 45px;
-            border: 1px solid #e2e8f0;
-            border-radius: 12px;
-            font-size: 16px;
-            outline: none;
-            transition: border-color 0.3s;
-            background: white;
-        }
-
-        .search-box input:focus { border-color: #a855f7; box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.1); }
-
-        .search-icon {
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #94a3b8;
-        }
-
-        /* LISTA DE USUARIOS */
-        .user-list {
-            display: grid;
-            gap: 16px;
-        }
-
-        .user-card {
-            background: white;
-            border-radius: 16px;
-            padding: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border: 1px solid #e2e8f0;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        .user-card:hover {
-            transform: scale(1.01);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
-        }
-
-        .user-info h3 { font-size: 18px; margin-bottom: 4px; color: #1e293b; }
-        .user-info .email { color: #64748b; font-size: 14px; margin-bottom: 12px; display: block; }
-
-        .user-stats {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-
-        .stat-tag {
-            background: #f1f5f9;
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-size: 12px;
-            color: #475569;
-            font-weight: 500;
-        }
-
-        .user-actions {
-            display: flex;
-            gap: 8px;
-        }
-
-        .action-btn {
-            width: 40px;
-            height: 40px;
-            border-radius: 8px;
-            border: none;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s;
-        }
-
-        .edit-btn { background: #eff6ff; color: #3b82f6; }
-        .edit-btn:hover { background: #3b82f6; color: white; }
-
-        .delete-btn { background: #fef2f2; color: #ef4444; }
-        .delete-btn:hover { background: #ef4444; color: white; }
-
-        /* MODAL */
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(15, 23, 42, 0.5);
-            backdrop-filter: blur(4px);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-
-        .modal-content {
-            background: white;
-            width: 90%;
-            max-width: 450px;
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-            animation: modalPop 0.3s ease-out;
-        }
-
-        @keyframes modalPop {
-            from { opacity: 0; transform: translateY(20px) scale(0.95); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
-        }
-
-        .modal-header {
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .modal-form label {
-            display: block;
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 6px;
-            color: #475569;
-        }
-
-        .modal-form input {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #e2e8f0;
-            border-radius: 10px;
-            margin-bottom: 15px;
-            font-size: 15px;
-        }
-
-        .modal-form input:focus {
-            outline: none;
-            border-color: #a855f7;
-            box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.1);
-        }
-
-        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-
-        .btn-group {
+        /* ... Mantén tus estilos anteriores ... */
+        .filter-container {
             display: flex;
             gap: 10px;
-            margin-top: 20px;
+            margin-bottom: 20px;
         }
-
-        .btn-group button {
-            flex: 1;
-            padding: 12px;
-            border-radius: 10px;
-            font-weight: 600;
-            cursor: pointer;
-            border: none;
-            transition: all 0.2s;
+        .filter-select {
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            background: white;
+            outline: none;
         }
-
-        .btn-save { background: #a855f7; color: white; }
-        .btn-save:hover { background: #9333ea; }
-        .btn-cancel { background: #f1f5f9; color: #64748b; }
-        .btn-cancel:hover { background: #e2e8f0; }
-
+        .role-vendedor { background: #fef3c7; color: #92400e; } /* Estilo para vendedores */
     </style>
 </head>
 <body>
@@ -279,79 +36,49 @@
         <div class="section-header">
             <div class="title-group">
                 <h2>Gestión de Usuarios</h2>
-                <p>Administra la base de datos de tus clientes</p>
+                <p>Administra la base de datos de tus clientes y empleados</p>
             </div>
             <button class="new-user-btn" onclick="openUserModal()">
                 <span>+</span> Nuevo Usuario
             </button>
         </div>
 
-        <div class="search-box">
-            <span class="search-icon">🔍</span>
-            <input type="text" id="searchInput" placeholder="Buscar por nombre, email o teléfono..." onkeyup="filterUsers()">
+        <div class="filter-container">
+            <div class="search-box" style="flex: 1; margin-bottom: 0;">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="searchInput" placeholder="Buscar por nombre, email..." onkeyup="filterUsers()">
+            </div>
+            <select id="roleFilter" class="filter-select" onchange="filterUsers()">
+                <option value="all">Todos los Roles</option>
+                <option value="admin">Administradores</option>
+                <option value="usuario">Usuarios</option>
+                <option value="vendedor">Vendedores</option>
+            </select>
         </div>
 
         <div id="userList" class="user-list">
             </div>
     </main>
 
-    <div id="userModal" class="modal-overlay">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 id="modalTitle">Nuevo Usuario</h3>
-                <button onclick="closeModal()" style="background:none; border:none; font-size:20px; cursor:pointer;">&times;</button>
-            </div>
-            
-            <form id="userForm" class="modal-form">
-                <input type="hidden" id="user_id">
-                
-                <label>Nombre Completo</label>
-                <input type="text" id="modalName" placeholder="Ej. Juan Pérez" required>
-
-                <label>Correo Electrónico</label>
-                <input type="email" id="modalEmail" placeholder="juan@ejemplo.com" required>
-
-                <div class="form-row">
-                    <div>
-                        <label>Teléfono</label>
-                        <input type="tel" id="modalPhone" placeholder="5512345678" required>
-                    </div>
-                    <div>
-                        <label>Contraseña</label>
-                        <input type="password" id="modalPassword" placeholder="••••••••">
-                    </div>
-                </div>
-                
-                <div class="btn-group">
-                    <button type="button" class="btn-cancel" onclick="closeModal()">Cancelar</button>
-                    <button type="submit" class="btn-save" id="modalSubmitBtn">Guardar Usuario</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
     <script>
-        // 2. CONFIGURACIÓN SUPABASE (Reemplaza con tus datos reales)
         const SUPABASE_URL = 'https://vndfmcxlifcwzpjbphoy.supabase.co';
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZuZGZtY3hsaWZjd3pwamJwaG95Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3OTc3MDIsImV4cCI6MjA4NzM3MzcwMn0.OkQ6aSZsHkyLMgfT-x0w3beJ3Ey95smEujmhT7ZfjuY';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'; // Tu clave actual
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         let users = [];
 
-        // Inicializar carga de datos
         async function init() {
             await fetchUsers();
         }
 
-        // Obtener usuarios de la tabla 'perfiles'
         async function fetchUsers() {
+            // Eliminamos .order('created_at') porque no existe esa columna en tu captura
             const { data, error } = await _supabase
                 .from('perfiles')
-                .select('*')
-                .order('created_at', { ascending: false });
+                .select('*');
 
             if (error) {
-                console.error('Error fetching users:', error);
+                console.error('Error:', error.message);
                 return;
             }
             users = data;
@@ -363,116 +90,48 @@
             list.innerHTML = '';
 
             if (dataToRender.length === 0) {
-                list.innerHTML = `<div style="text-align:center; padding:40px; color:#94a3b8;">
-                    <p>No hay usuarios registrados o no coinciden con la búsqueda.</p>
-                </div>`;
+                list.innerHTML = `<p style="text-align:center; padding:20px; color:#94a3b8;">No se encontraron resultados.</p>`;
                 return;
             }
 
             dataToRender.forEach(user => {
                 const card = document.createElement('div');
                 card.className = 'user-card';
+                // Usamos los nombres exactos de tu tabla: nombre, email, rol, telefono
                 card.innerHTML = `
                     <div class="user-info">
-                        <h3>${user.nombre || 'Sin nombre'}</h3>
+                        <h3 style="color: ${user.color || '#1e293b'}">${user.nombre || 'Usuario sin nombre'}</h3>
                         <span class="email">${user.email}</span>
                         <div class="user-stats">
-                            <span class="stat-tag">📞 ${user.telefono || 'S/T'}</span>
-                            <span class="stat-tag">🛡️ ${user.rol || 'usuario'}</span>
-                            <span class="stat-tag">📅 ${new Date(user.created_at).toLocaleDateString()}</span>
+                            <span class="stat-tag">📞 ${user.telefono || 'Sin Teléfono'}</span>
+                            <span class="stat-tag ${user.rol === 'vendedor' ? 'role-vendedor' : ''}">🛡️ ${user.rol || 'usuario'}</span>
+                            <span class="stat-tag">🆔 ${user.id.substring(0,8)}...</span>
                         </div>
                     </div>
                     <div class="user-actions">
-                        <button class="action-btn edit-btn" onclick="editUser('${user.id}')" title="Editar">✏️</button>
-                        <button class="action-btn delete-btn" onclick="deleteUser('${user.id}')" title="Eliminar">🗑️</button>
+                        <button class="action-btn edit-btn" onclick="editUser('${user.id}')">✏️</button>
+                        <button class="action-btn delete-btn" onclick="deleteUser('${user.id}')">🗑️</button>
                     </div>
                 `;
                 list.appendChild(card);
             });
         }
 
-        // Lógica del buscador local sobre los datos ya traídos
         function filterUsers() {
             const term = document.getElementById('searchInput').value.toLowerCase();
-            const filtered = users.filter(u => 
-                (u.nombre && u.nombre.toLowerCase().includes(term)) || 
-                u.email.toLowerCase().includes(term) ||
-                (u.telefono && u.telefono.includes(term))
-            );
+            const role = document.getElementById('roleFilter').value;
+
+            const filtered = users.filter(u => {
+                const matchesSearch = (u.nombre && u.nombre.toLowerCase().includes(term)) || 
+                                     u.email.toLowerCase().includes(term);
+                const matchesRole = (role === 'all' || u.rol === role);
+                
+                return matchesSearch && matchesRole;
+            });
             render(filtered);
         }
 
-        function openUserModal(user = null) {
-            const form = document.getElementById('userForm');
-            form.reset();
-            document.getElementById('user_id').value = '';
-            document.getElementById('modalTitle').innerText = 'Nuevo Usuario';
-            document.getElementById('modalPassword').required = true;
-
-            if (user) {
-                document.getElementById('modalTitle').innerText = 'Editar Usuario';
-                document.getElementById('user_id').value = user.id;
-                document.getElementById('modalName').value = user.nombre;
-                document.getElementById('modalEmail').value = user.email;
-                document.getElementById('modalPhone').value = user.telefono;
-                document.getElementById('modalPassword').required = false;
-            }
-            document.getElementById('userModal').style.display = 'flex';
-        }
-
-        function closeModal() {
-            document.getElementById('userModal').style.display = 'none';
-        }
-
-        // Acción de Guardar (Crear o Editar)
-        document.getElementById('userForm').onsubmit = async function(e) {
-            e.preventDefault();
-            const id = document.getElementById('user_id').value;
-            const nombre = document.getElementById('modalName').value;
-            const email = document.getElementById('modalEmail').value;
-            const telefono = document.getElementById('modalPhone').value;
-
-            const userData = { nombre, email, telefono, rol: 'usuario' };
-
-            if (id) {
-                // Modo Edición
-                const { error } = await _supabase
-                    .from('perfiles')
-                    .update(userData)
-                    .eq('id', id);
-                if (error) alert("Error al actualizar: " + error.message);
-            } else {
-                // Modo Nuevo (Supabase insert)
-                const { error } = await _supabase
-                    .from('perfiles')
-                    .insert([userData]);
-                if (error) alert("Error al crear: " + error.message);
-            }
-
-            closeModal();
-            await fetchUsers(); // Recargar lista
-        };
-
-        async function deleteUser(id) {
-            if (confirm('¿Estás seguro de eliminar este usuario de la base de datos?')) {
-                const { error } = await _supabase
-                    .from('perfiles')
-                    .delete()
-                    .eq('id', id);
-                
-                if (error) alert("Error al eliminar: " + error.message);
-                else await fetchUsers();
-            }
-        }
-
-        function editUser(id) {
-            const user = users.find(u => u.id === id);
-            if(user) openUserModal(user);
-        }
-
-        function cerrarSesion() {
-            window.location.href = 'login.html';
-        }
+        // ... Mantener funciones de abrir/cerrar modal y eliminar ...
 
         init();
     </script>
