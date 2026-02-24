@@ -6,47 +6,83 @@
     <title>FREDDY'S PIZZA - Iniciar Sesión</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        /* ESTILOS ORIGINALES MANTENIDOS */
+        /* RESET Y BASE */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body { 
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
-            background: #ffffff; 
+            background-color: #222; 
+            background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('imagenes/fondolog.jpg'); 
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
             min-height: 100vh; 
             display: flex; 
             justify-content: center; 
             align-items: center; 
             padding: 20px; 
+            overflow-x: hidden;
+            overflow-y: auto;
+            position: relative;
         }
 
+        /* --- EFECTO DE PIZZAS LLVIENDO --- */
+        .pizza-rain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none; 
+            z-index: 0;
+        }
+
+        .pizza-drop {
+            position: absolute;
+            opacity: 0.85;
+            filter: drop-shadow(3px 3px 8px rgba(0,0,0,0.4));
+            animation: fall linear forwards;
+            will-change: transform;
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(-150px) rotate(0deg); opacity: 0; }
+            15% { opacity: 0.85; }
+            85% { opacity: 0.85; }
+            100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* --- CONTENEDOR PRINCIPAL --- */
         .container { 
             background: white; 
             border: 4px solid #000000; 
             border-radius: 20px; 
             max-width: 450px; 
             width: 100%; 
-            padding: 40px 30px; 
+            padding: clamp(25px, 8vw, 40px); 
             text-align: center; 
-            box-shadow: 10px 10px 0px rgba(0, 0, 0, 0.05); 
+            box-shadow: 10px 10px 0px rgba(0, 0, 0, 0.2); 
+            position: relative;
+            z-index: 10; 
+            margin: auto;
         }
-        
+
         .logo-container { 
-            width: 110px; 
-            height: 110px; 
+            width: clamp(80px, 20vw, 110px); 
+            height: clamp(80px, 20vw, 110px); 
             margin: 0 auto 20px; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
+            display: flex; align-items: center; justify-content: center; 
         }
         .logo-container img { width: 100%; height: 100%; object-fit: contain; }
 
-        h1 { font-size: 28px; color: #333; margin-bottom: 10px; font-weight: 600; }
+        h1 { font-size: clamp(22px, 5vw, 28px); color: #333; margin-bottom: 10px; font-weight: 700; }
         .subtitle { color: #666; font-size: 16px; margin-bottom: 30px; }
         
         .tabs { display: flex; gap: 10px; margin-bottom: 30px; }
         .tab { 
             flex: 1; padding: 12px; background: #f5f5f5; border: 2px solid #000; 
-            border-radius: 10px; font-size: 15px; font-weight: bold; cursor: pointer; color: #666; 
+            border-radius: 10px; font-size: 14px; font-weight: bold; cursor: pointer; color: #666; 
+            text-align: center; text-decoration: none;
         }
         .tab.active { background: #e8e8e8; color: #000; border-color: #000; }
 
@@ -57,7 +93,10 @@
             display: flex; align-items: center; background: #fff; 
             border: 2px solid #000; border-radius: 10px; padding: 0 15px; 
         }
-        .form-group input { width: 100%; padding: 12px 0; border: none; outline: none; font-size: 15px; }
+        .form-group input { 
+            width: 100%; padding: 12px 0; border: none; outline: none; 
+            font-size: 16px; background: transparent;
+        }
 
         .btn-submit { 
             width: 100%; padding: 16px; background: #ff6b00; color: white; 
@@ -66,25 +105,32 @@
             box-shadow: 4px 4px 0px #000; transition: 0.2s;
         }
         .btn-submit:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0px #000; }
+        .btn-submit:disabled { background: #ccc; cursor: not-allowed; }
 
         #errorMessage {
             color: #d32f2f; background: #ffebee; border: 2px solid #d32f2f;
             padding: 10px; border-radius: 10px; margin-bottom: 20px;
-            display: none; font-weight: bold;
+            display: none; font-weight: bold; font-size: 14px;
         }
 
         .back-link { display: inline-block; margin-top: 20px; color: #ff6b00; text-decoration: none; font-weight: bold; font-size: 14px; }
+
+        @media (max-width: 400px) {
+            .container { padding: 20px; }
+        }
     </style>
 </head>
 <body>
 
+    <div class="pizza-rain" id="pizzaRain"></div>
+
     <div class="container">
         <div class="logo-container">
-            <img src="imagenes/logotipo.png" alt="Freddy's Pizza Logo">
+            <img src="imagenes/logofred.png" alt="Freddy's Pizza Logo">
         </div>
         
         <h1>Freddy´s Pizza</h1>
-        <p class="subtitle">¡Bienvenido de nuevo!</p>
+        <p class="subtitle">¡El mejor sabor ahora más cerca!</p>
     
         <div id="errorMessage"></div>
 
@@ -105,7 +151,7 @@
             <div class="form-group">
                 <label>Contraseña</label>
                 <div class="input-wrapper">
-                    <input type="password" id="passwordInput" placeholder="Tu contraseña segura" required>
+                    <input type="password" id="passwordInput" placeholder="******" required>
                 </div>
             </div>
             <button type="submit" id="submitBtn" class="btn-submit">Entrar Ahora</button>
@@ -115,6 +161,26 @@
     </div>
 
     <script>
+        // --- EFECTO DE LLUVIA ---
+        function createPizza() {
+            const rainContainer = document.getElementById('pizzaRain');
+            if(!rainContainer) return;
+            const pizza = document.createElement('img');
+            const imageType = Math.random() > 0.5 ? 'caida.png' : 'caida2.png';
+            pizza.src = `imagenes/${imageType}`; 
+            pizza.classList.add('pizza-drop');
+            pizza.style.left = Math.random() * 100 + "vw";
+            const duration = Math.random() * 8 + 9;
+            pizza.style.animationDuration = duration + "s";
+            const size = Math.random() * 50 + 44;
+            pizza.style.width = size + "px";
+            pizza.style.transform = `rotate(${Math.random() * 360}deg)`;
+            rainContainer.appendChild(pizza);
+            setTimeout(() => { pizza.remove(); }, (duration + 1) * 1000);
+        }
+        setInterval(createPizza, 500);
+
+        // --- LÓGICA DE LOGIN Y REDIRECCIÓN POR ROL ---
         const SUPABASE_URL = 'https://vndfmcxlifcwzpjbphoy.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZuZGZtY3hsaWZjd3pwamJwaG95Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3OTc3MDIsImV4cCI6MjA4NzM3MzcwMn0.OkQ6aSZsHkyLMgfT-x0w3beJ3Ey95smEujmhT7ZfjuY'; 
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -131,7 +197,7 @@
             btn.innerText = "VERIFICANDO...";
             errorDiv.style.display = 'none';
 
-            // 1. Intento de Login en Auth
+            // 1. Intento de Login
             const { data, error } = await _supabase.auth.signInWithPassword({
                 email: email,
                 password: password,
@@ -145,27 +211,23 @@
                 return;
             }
 
-            console.log("Login exitoso. ID de usuario:", data.user.id);
-
-            // 2. Consultar el ROL en la tabla 'perfiles'
+            // 2. Consultar el ROL
             const { data: perfil, error: perfilError } = await _supabase
                 .from('perfiles')
                 .select('rol')
                 .eq('id', data.user.id)
                 .single();
 
-            // 3. Verificación de seguridad y Redirección
+            // 3. Redirección lógica
             if (perfilError || !perfil) {
-                console.error("Error buscando perfil:", perfilError);
-                alert("AVISO: Tu usuario no existe en la tabla 'perfiles'. Serás enviado como cliente.");
+                console.warn("Perfil no encontrado, enviando a catálogo.");
                 window.location.href = 'catalogo.html';
             } else {
                 const rol = perfil.rol.toLowerCase().trim(); 
-                console.log("Rol encontrado en base de datos:", rol);
+                console.log("Rol detectado:", rol);
 
                 if (rol === 'admin') {
-                    console.log("Redirigiendo a panelA.html...");
-                    window.location.href = 'panelA.html'; // <--- CORREGIDO CON MAYÚSCULA
+                    window.location.href = 'panelA.html';
                 } else if (rol === 'vendedor') {
                     window.location.href = 'panel_empleado.html';
                 } else {
