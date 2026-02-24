@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap" rel="stylesheet">
     
     <style>
-        /* Estilos Base - Manteniendo tu estética original */
+        /* Estilos Base */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Segoe UI', sans-serif; background: #f5f5f5; }
 
@@ -28,7 +28,6 @@
 
         .dashboard-container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
 
-        /* GRID DE LOS 4 BOTONES ORIGINALES */
         .control-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -37,38 +36,34 @@
         }
 
         .card {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-            text-decoration: none;
-            padding: 25px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            transition: 0.3s;
+            background: white; border-radius: 12px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            text-decoration: none; padding: 25px; display: flex; align-items: center; gap: 15px; transition: 0.3s;
         }
         .card:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1); }
         .card-icon { font-size: 30px; }
         .card-text h3 { color: #333; font-size: 18px; }
         .card-text p { color: #666; font-size: 13px; }
 
-        /* TABLAS DE GESTIÓN */
         .crud-section { background: white; padding: 25px; border-radius: 12px; margin-top: 30px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
         .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         
         table { width: 100%; border-collapse: collapse; }
         th, td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; }
-        th { font-family: 'Archivo Black', sans-serif; text-transform: uppercase; font-size: 12px; color: #1e293b; }
+        th { font-family: 'Archivo Black', sans-serif; text-transform: uppercase; font-size: 11px; color: #1e293b; }
 
-        /* BOTONES DE ACCIÓN */
         .btn-add { background: #10b981; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; }
         .btn-edit { color: #3b82f6; cursor: pointer; background: none; border: none; font-size: 18px; margin-right: 10px; }
         .btn-delete { color: #ef4444; cursor: pointer; background: none; border: none; font-size: 18px; }
 
-        /* MODAL */
+        /* Estilo para las etiquetas de categoría en la tabla */
+        .badge { padding: 4px 8px; border-radius: 4px; font-size: 10px; font-weight: bold; text-transform: uppercase; }
+        .badge-pizzas { background: #ffedd5; color: #9a3412; }
+        .badge-bebidas { background: #dcfce7; color: #166534; }
+        .badge-promos { background: #fef9c3; color: #854d0e; }
+
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; justify-content: center; align-items: center; }
         .modal-content { background: white; padding: 30px; border-radius: 12px; width: 450px; }
-        .modal-content input { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 6px; }
+        .modal-content input, .modal-content select { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; }
         .modal-actions { display: flex; justify-content: flex-end; gap: 10px; }
     </style>
 </head>
@@ -79,14 +74,13 @@
             <a href="index.html" class="back-btn">←</a>
             <div>
                 <h1 style="font-size: 22px;">Panel de Administrador</h1>
-                <p style="font-size: 12px; opacity: 0.8;">Gestión Integral Freddy's Pizza</p>
+                <p style="font-size: 12px; opacity: 0.8;">Gestión de Productos por Categoría</p>
             </div>
         </div>
         <button onclick="cerrarSesion()" class="logout-btn">Cerrar Sesión</button>
     </header>
 
     <div class="dashboard-container">
-        
         <div class="control-grid">
             <a href="gestion_inventario.html" class="card">
                 <div class="card-icon">📦</div>
@@ -110,144 +104,125 @@
 
         <div class="crud-section">
             <div class="section-header">
-                <h2>🍕 Gestión de Pizzas</h2>
-                <button class="btn-add" onclick="openProductModal()">+ Agregar Pizza</button>
+                <h2>🍕 Gestión de Productos (Menú)</h2>
+                <button class="btn-add" onclick="openProductModal()">+ Agregar Producto</button>
             </div>
             <table>
                 <thead>
                     <tr>
+                        <th>Categoría</th>
                         <th>Nombre</th>
                         <th>Precio</th>
                         <th>Descripción</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
-                <tbody id="pizzaTableBody"></tbody>
-            </table>
-        </div>
-
-        <div class="crud-section">
-            <div class="section-header">
-                <h2>👥 Gestión de Usuarios</h2>
-            </div>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Email</th>
-                        <th>Rol</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody id="userTableBody"></tbody>
+                <tbody id="productTableBody"></tbody>
             </table>
         </div>
     </div>
 
     <div id="productModal" class="modal">
         <div class="modal-content">
-            <h3 id="modalTitle" style="margin-bottom: 20px;">Agregar Nueva Pizza</h3>
+            <h3 id="modalTitle" style="margin-bottom: 20px;">Nuevo Producto</h3>
             <input type="hidden" id="editProductId">
-            <input type="text" id="pName" placeholder="Nombre (ej. Pepperoni)">
-            <input type="number" id="pPrice" placeholder="Precio ($)">
+            
+            <label style="font-size: 12px; font-weight: bold;">Categoría del Menú:</label>
+            <select id="pCategory">
+                <option value="pizzas">Pizzas</option>
+                <option value="bebidas">Bebidas</option>
+                <option value="promos">Promos / Paquetes</option>
+            </select>
+
+            <input type="text" id="pName" placeholder="Nombre (ej. Pizza Hawaina)">
+            <input type="number" step="0.01" id="pPrice" placeholder="Precio ($)">
             <input type="text" id="pDesc" placeholder="Descripción corta">
-            <input type="text" id="pImg" placeholder="URL de la imagen (puedes dejar vacío)">
+            <input type="text" id="pImg" placeholder="URL de la imagen (Supabase Storage o Web)">
+            
             <div class="modal-actions">
-                <button onclick="closeModal()" style="padding: 10px; cursor:pointer;">Cancelar</button>
+                <button onclick="closeModal()" style="padding: 10px; cursor:pointer; background:none; border:1px solid #ccc; border-radius:6px;">Cancelar</button>
                 <button class="btn-add" onclick="saveProduct()">Guardar Cambios</button>
             </div>
         </div>
     </div>
 
     <script>
-        // CONFIGURACIÓN SUPABASE - USA TUS CREDENCIALES
         const SUPABASE_URL = 'https://vndfmcxlifcwzpjbphoy.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZuZGZtY3hsaWZjd3pwamJwaG95Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3OTc3MDIsImV4cCI6MjA4NzM3MzcwMn0.OkQ6aSZsHkyLMgfT-x0w3beJ3Ey95smEujmhT7ZfjuY'; 
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         document.addEventListener('DOMContentLoaded', () => {
-            loadPizzas();
-            loadUsers();
+            loadProducts();
         });
 
-        // --- FUNCIONES PIZZAS ---
-        async function loadPizzas() {
-            const { data, error } = await _supabase.from('pizzas').select('*');
+        // --- CARGAR PRODUCTOS ---
+        async function loadProducts() {
+            const { data, error } = await _supabase.from('productos').select('*').order('categoria', { ascending: true });
             if (error) return console.error(error);
-            const tbody = document.getElementById('pizzaTableBody');
+            
+            const tbody = document.getElementById('productTableBody');
             tbody.innerHTML = data.map(p => `
                 <tr>
+                    <td><span class="badge badge-${p.categoria}">${p.categoria}</span></td>
                     <td>${p.nombre}</td>
                     <td>$${p.precio}</td>
                     <td>${p.descripcion}</td>
                     <td>
-                        <button class="btn-edit" onclick="editProduct('${p.id}', '${p.nombre}', ${p.precio}, '${p.descripcion}', '${p.imagen}')">✏️</button>
+                        <button class="btn-edit" onclick="editProduct('${p.id}', '${p.nombre}', ${p.precio}, '${p.descripcion}', '${p.imagen_url}', '${p.categoria}')">✏️</button>
                         <button class="btn-delete" onclick="deleteProduct('${p.id}')">🗑️</button>
                     </td>
                 </tr>
             `).join('');
         }
 
+        // --- GUARDAR O ACTUALIZAR ---
         async function saveProduct() {
             const id = document.getElementById('editProductId').value;
-            const pizzaData = {
+            const productData = {
                 nombre: document.getElementById('pName').value,
-                precio: document.getElementById('pPrice').value,
+                precio: parseFloat(document.getElementById('pPrice').value),
                 descripcion: document.getElementById('pDesc').value,
-                imagen: document.getElementById('pImg').value
+                imagen_url: document.getElementById('pImg').value,
+                categoria: document.getElementById('pCategory').value
             };
 
             if (id) {
-                await _supabase.from('pizzas').update(pizzaData).eq('id', id);
+                await _supabase.from('productos').update(productData).eq('id', id);
             } else {
-                await _supabase.from('pizzas').insert([pizzaData]);
+                await _supabase.from('productos').insert([productData]);
             }
+            
             closeModal();
-            loadPizzas();
+            loadProducts();
         }
 
+        // --- ELIMINAR ---
         async function deleteProduct(id) {
-            if(confirm('¿Eliminar esta pizza definitivamente?')) {
-                await _supabase.from('pizzas').delete().eq('id', id);
-                loadPizzas();
+            if(confirm('¿Seguro que quieres eliminar este producto del menú?')) {
+                await _supabase.from('productos').delete().eq('id', id);
+                loadProducts();
             }
         }
 
-        // --- FUNCIONES USUARIOS ---
-        async function loadUsers() {
-            const { data } = await _supabase.from('perfiles').select('*');
-            const tbody = document.getElementById('userTableBody');
-            tbody.innerHTML = data.map(u => `
-                <tr>
-                    <td>${u.email}</td>
-                    <td><strong style="color:#ff6b00">${u.rol}</strong></td>
-                    <td>
-                        <button onclick="cambiarRol('${u.id}', '${u.rol}')" style="cursor:pointer; padding: 5px;">Cambiar Rol</button>
-                    </td>
-                </tr>
-            `).join('');
-        }
-
-        async function cambiarRol(id, currentRole) {
-            const nuevoRol = currentRole === 'admin' ? 'cliente' : 'admin';
-            await _supabase.from('perfiles').update({ rol: nuevoRol }).eq('id', id);
-            loadUsers();
-        }
-
-        // --- MODALES Y SESIÓN ---
+        // --- MODALES ---
         function openProductModal() {
             document.getElementById('editProductId').value = "";
             document.getElementById('pName').value = "";
-            document.getElementById('modalTitle').innerText = "Agregar Nueva Pizza";
+            document.getElementById('pPrice').value = "";
+            document.getElementById('pDesc').value = "";
+            document.getElementById('pImg').value = "";
+            document.getElementById('modalTitle').innerText = "Nuevo Producto";
             document.getElementById('productModal').style.display = 'flex';
         }
 
-        function editProduct(id, nom, pre, desc, img) {
+        function editProduct(id, nom, pre, desc, img, cat) {
             document.getElementById('editProductId').value = id;
             document.getElementById('pName').value = nom;
             document.getElementById('pPrice').value = pre;
             document.getElementById('pDesc').value = desc;
             document.getElementById('pImg').value = img;
-            document.getElementById('modalTitle').innerText = "Editar Pizza";
+            document.getElementById('pCategory').value = cat;
+            document.getElementById('modalTitle').innerText = "Editar Producto";
             document.getElementById('productModal').style.display = 'flex';
         }
 
@@ -260,3 +235,4 @@
     </script>
 </body>
 </html>
+
