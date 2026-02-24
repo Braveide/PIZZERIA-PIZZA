@@ -6,7 +6,7 @@
     <title>FREDDY'S PIZZA - Gestión de Usuarios</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        /* --- TUS ESTILOS ORIGINALES RESTAURADOS --- */
+        /* --- ESTILOS ORIGINALES --- */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { 
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; 
@@ -53,64 +53,53 @@
             box-shadow: 0 4px 12px rgba(168, 85, 247, 0.3);
         }
 
-        /* --- NUEVO: ESTILOS PARA FILTROS --- */
-        .controls-row {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-
+        /* --- FILTROS --- */
+        .controls-row { display: flex; gap: 15px; margin-bottom: 25px; }
         .search-box { position: relative; flex: 1; }
         .search-box input {
             width: 100%; padding: 15px 15px 15px 45px;
             border: 1px solid #e2e8f0; border-radius: 12px; font-size: 16px;
             outline: none; transition: border-color 0.3s; background: white;
         }
-        .search-box input:focus { border-color: #a855f7; box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.1); }
+        .search-box input:focus { border-color: #a855f7; }
         .search-icon { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #94a3b8; }
 
         .filter-select {
             padding: 0 15px; border: 1px solid #e2e8f0; border-radius: 12px;
-            background: white; color: #475569; font-weight: 500; cursor: pointer; outline: none;
+            background: white; color: #475569; font-weight: 500; cursor: pointer;
         }
 
-        /* --- TARJETAS DE USUARIO --- */
+        /* --- TARJETAS --- */
         .user-list { display: grid; gap: 16px; }
         .user-card {
             background: white; border-radius: 16px; padding: 20px;
             display: flex; justify-content: space-between; align-items: center;
-            border: 1px solid #e2e8f0; transition: transform 0.2s;
+            border: 1px solid #e2e8f0;
         }
-        .user-card:hover { transform: scale(1.01); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
 
         .user-info h3 { font-size: 18px; margin-bottom: 4px; color: #1e293b; }
         .user-info .email { color: #64748b; font-size: 14px; margin-bottom: 12px; display: block; }
         .user-stats { display: flex; gap: 10px; }
         .stat-tag { background: #f1f5f9; padding: 4px 10px; border-radius: 6px; font-size: 12px; color: #475569; }
-        
-        /* Etiquetas de rol especiales */
         .tag-admin { background: #fee2e2; color: #ef4444; }
         .tag-vendedor { background: #fef3c7; color: #d97706; }
 
-        .action-btn {
-            width: 40px; height: 40px; border-radius: 8px; border: none;
-            cursor: pointer; display: flex; align-items: center; justify-content: center;
-            transition: all 0.2s;
-        }
-        .edit-btn { background: #eff6ff; color: #3b82f6; }
+        .action-btn { width: 40px; height: 40px; border-radius: 8px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
+        .edit-btn { background: #eff6ff; color: #3b82f6; margin-right: 5px; }
         .delete-btn { background: #fef2f2; color: #ef4444; }
 
-        /* MODAL (Restaurado) */
+        /* --- MODAL --- */
         .modal-overlay {
             position: fixed; inset: 0; background: rgba(15, 23, 42, 0.5);
             backdrop-filter: blur(4px); display: none; justify-content: center;
             align-items: center; z-index: 1000;
         }
-        .modal-content {
-            background: white; width: 90%; max-width: 450px;
-            border-radius: 20px; padding: 30px; animation: modalPop 0.3s ease-out;
-        }
-        @keyframes modalPop { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .modal-content { background: white; width: 90%; max-width: 450px; border-radius: 20px; padding: 30px; }
+        .modal-form label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 14px; }
+        .modal-form input, .modal-form select { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #e2e8f0; border-radius: 10px; }
+        .btn-group { display: flex; gap: 10px; }
+        .btn-save { background: #a855f7; color: white; flex: 1; padding: 12px; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; }
+        .btn-cancel { background: #f1f5f9; color: #64748b; flex: 1; padding: 12px; border: none; border-radius: 10px; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -120,7 +109,7 @@
             <a href="panelA.html" class="back-btn">←</a>
             <h1>Freddy's Admin</h1>
         </div>
-        <button class="logout-btn" onclick="cerrarSesion()">Cerrar Sesión</button>
+        <button class="logout-btn" onclick="window.location.href='login.html'">Cerrar Sesión</button>
     </header>
 
     <main class="main-content">
@@ -147,14 +136,42 @@
             </select>
         </div>
 
-        <div id="userList" class="user-list">
-            </div>
+        <div id="userList" class="user-list"></div>
     </main>
 
+    <div id="userModal" class="modal-overlay">
+        <div class="modal-content">
+            <h2 id="modalTitle" style="margin-bottom: 20px;">Nuevo Usuario</h2>
+            <form id="userForm" class="modal-form">
+                <input type="hidden" id="user_id">
+                
+                <label>Nombre Completo</label>
+                <input type="text" id="modalName" placeholder="Ej. Juan Pérez" required>
+
+                <label>Correo Electrónico</label>
+                <input type="email" id="modalEmail" placeholder="correo@ejemplo.com" required>
+
+                <label>Teléfono</label>
+                <input type="text" id="modalPhone" placeholder="1234567890">
+
+                <label>Rol</label>
+                <select id="modalRole">
+                    <option value="usuario">Usuario</option>
+                    <option value="vendedor">Vendedor</option>
+                    <option value="admin">Administrador</option>
+                </select>
+
+                <div class="btn-group">
+                    <button type="button" class="btn-cancel" onclick="closeModal()">Cancelar</button>
+                    <button type="submit" class="btn-save">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script>
-        // Configuración
         const SUPABASE_URL = 'https://vndfmcxlifcwzpjbphoy.supabase.co';
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZuZGZtY3hsaWZjd3pwamJwaG95Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3OTc3MDIsImV4cCI6MjA4NzM3MzcwMn0.OkQ6aSZsHkyLMgfT-x0w3beJ3Ey95smEujmhT7ZfjuY'; // Usa tu clave anon
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZuZGZtY3hsaWZjd3pwamJwaG95Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3OTc3MDIsImV4cCI6MjA4NzM3MzcwMn0.OkQ6aSZsHkyLMgfT-x0w3beJ3Ey95smEujmhT7ZfjuY';
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         let users = [];
@@ -164,11 +181,9 @@
         }
 
         async function fetchUsers() {
-            // Nota: Se quitó .order() porque no tienes created_at en la tabla
             const { data, error } = await _supabase.from('perfiles').select('*');
-            
             if (error) {
-                console.error('Error Supabase:', error.message);
+                console.error('Error:', error.message);
                 return;
             }
             users = data;
@@ -183,21 +198,18 @@
                 const card = document.createElement('div');
                 card.className = 'user-card';
                 
-                // Determinamos la clase del tag según el rol
-                let roleClass = '';
-                if(user.rol === 'admin') roleClass = 'tag-admin';
-                if(user.rol === 'vendedor') roleClass = 'tag-vendedor';
+                let roleClass = user.rol === 'admin' ? 'tag-admin' : (user.rol === 'vendedor' ? 'tag-vendedor' : '');
 
                 card.innerHTML = `
                     <div class="user-info">
-                        <h3 style="color: ${user.color || '#1e293b'}">${user.nombre || 'Usuario sin nombre'}</h3>
+                        <h3>${user.nombre || 'Sin nombre'}</h3>
                         <span class="email">${user.email}</span>
                         <div class="user-stats">
-                            <span class="stat-tag">📞 ${user.telefono || 'Sin Teléfono'}</span>
+                            <span class="stat-tag">📞 ${user.telefono || 'S/T'}</span>
                             <span class="stat-tag ${roleClass}">🛡️ ${user.rol || 'usuario'}</span>
                         </div>
                     </div>
-                    <div class="user-actions">
+                    <div style="display: flex;">
                         <button class="action-btn edit-btn" onclick="editUser('${user.id}')">✏️</button>
                         <button class="action-btn delete-btn" onclick="deleteUser('${user.id}')">🗑️</button>
                     </div>
@@ -209,7 +221,6 @@
         function filterUsers() {
             const term = document.getElementById('searchInput').value.toLowerCase();
             const role = document.getElementById('roleFilter').value;
-
             const filtered = users.filter(u => {
                 const matchesSearch = (u.nombre?.toLowerCase().includes(term)) || (u.email?.toLowerCase().includes(term));
                 const matchesRole = (role === 'all' || u.rol === role);
@@ -218,7 +229,58 @@
             render(filtered);
         }
 
-        // Resto de funciones (cerrarSesion, deleteUser, etc.) se mantienen igual
+        function openUserModal() {
+            document.getElementById('userForm').reset();
+            document.getElementById('user_id').value = '';
+            document.getElementById('modalTitle').innerText = 'Nuevo Usuario';
+            document.getElementById('userModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('userModal').style.display = 'none';
+        }
+
+        function editUser(id) {
+            const user = users.find(u => u.id === id);
+            if (!user) return;
+            document.getElementById('user_id').value = user.id;
+            document.getElementById('modalName').value = user.nombre || '';
+            document.getElementById('modalEmail').value = user.email || '';
+            document.getElementById('modalPhone').value = user.telefono || '';
+            document.getElementById('modalRole').value = user.rol || 'usuario';
+            document.getElementById('modalTitle').innerText = 'Editar Usuario';
+            document.getElementById('userModal').style.display = 'flex';
+        }
+
+        document.getElementById('userForm').onsubmit = async function(e) {
+            e.preventDefault();
+            const id = document.getElementById('user_id').value;
+            const userData = {
+                nombre: document.getElementById('modalName').value,
+                email: document.getElementById('modalEmail').value,
+                telefono: document.getElementById('modalPhone').value,
+                rol: document.getElementById('modalRole').value
+            };
+
+            if (id) {
+                const { error } = await _supabase.from('perfiles').update(userData).eq('id', id);
+                if (error) alert(error.message);
+            } else {
+                const { error } = await _supabase.from('perfiles').insert([userData]);
+                if (error) alert(error.message);
+            }
+            closeModal();
+            fetchUsers();
+        };
+
+        async function deleteUser(id) {
+            if (confirm('¿Eliminar este usuario?')) {
+                const { error } = await _supabase.from('perfiles').delete().eq('id', id);
+                if (error) alert(error.message);
+                else fetchUsers();
+            }
+        }
+
         init();
     </script>
 </body>
