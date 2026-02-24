@@ -6,20 +6,111 @@
     <title>FREDDY'S PIZZA - Gestión de Usuarios</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        /* ... Mantén tus estilos anteriores ... */
-        .filter-container {
+        /* --- TUS ESTILOS ORIGINALES RESTAURADOS --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; 
+            background: #f8fafc; 
+            color: #1e293b;
+        }
+
+        .header {
+            background: #1e293b;
+            padding: 15px 30px;
+            color: white;
             display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
+
+        .header-left { display: flex; align-items: center; gap: 15px; }
+        .back-btn { text-decoration: none; color: white; font-size: 24px; padding: 5px 10px; border-radius: 6px; }
+        .back-btn:hover { background: rgba(255, 255, 255, 0.1); }
+
+        .logout-btn { 
+            background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); 
+            color: white; padding: 8px 16px; border-radius: 6px; cursor: pointer; transition: all 0.3s; 
+        }
+        .logout-btn:hover { background: #ef4444; border-color: #ef4444; }
+
+        .main-content { max-width: 900px; margin: 40px auto; padding: 0 20px; }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 30px;
+        }
+
+        .title-group h2 { font-size: 28px; color: #0f172a; }
+        .title-group p { color: #64748b; font-size: 14px; margin-top: 4px; }
+
+        .new-user-btn {
+            background: #a855f7; color: white; border: none; padding: 12px 24px;
+            border-radius: 10px; font-weight: 600; cursor: pointer; display: flex;
+            align-items: center; gap: 8px; transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(168, 85, 247, 0.3);
+        }
+
+        /* --- NUEVO: ESTILOS PARA FILTROS --- */
+        .controls-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .search-box { position: relative; flex: 1; }
+        .search-box input {
+            width: 100%; padding: 15px 15px 15px 45px;
+            border: 1px solid #e2e8f0; border-radius: 12px; font-size: 16px;
+            outline: none; transition: border-color 0.3s; background: white;
+        }
+        .search-box input:focus { border-color: #a855f7; box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.1); }
+        .search-icon { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #94a3b8; }
+
         .filter-select {
-            padding: 10px;
-            border-radius: 8px;
-            border: 1px solid #e2e8f0;
-            background: white;
-            outline: none;
+            padding: 0 15px; border: 1px solid #e2e8f0; border-radius: 12px;
+            background: white; color: #475569; font-weight: 500; cursor: pointer; outline: none;
         }
-        .role-vendedor { background: #fef3c7; color: #92400e; } /* Estilo para vendedores */
+
+        /* --- TARJETAS DE USUARIO --- */
+        .user-list { display: grid; gap: 16px; }
+        .user-card {
+            background: white; border-radius: 16px; padding: 20px;
+            display: flex; justify-content: space-between; align-items: center;
+            border: 1px solid #e2e8f0; transition: transform 0.2s;
+        }
+        .user-card:hover { transform: scale(1.01); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+
+        .user-info h3 { font-size: 18px; margin-bottom: 4px; color: #1e293b; }
+        .user-info .email { color: #64748b; font-size: 14px; margin-bottom: 12px; display: block; }
+        .user-stats { display: flex; gap: 10px; }
+        .stat-tag { background: #f1f5f9; padding: 4px 10px; border-radius: 6px; font-size: 12px; color: #475569; }
+        
+        /* Etiquetas de rol especiales */
+        .tag-admin { background: #fee2e2; color: #ef4444; }
+        .tag-vendedor { background: #fef3c7; color: #d97706; }
+
+        .action-btn {
+            width: 40px; height: 40px; border-radius: 8px; border: none;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s;
+        }
+        .edit-btn { background: #eff6ff; color: #3b82f6; }
+        .delete-btn { background: #fef2f2; color: #ef4444; }
+
+        /* MODAL (Restaurado) */
+        .modal-overlay {
+            position: fixed; inset: 0; background: rgba(15, 23, 42, 0.5);
+            backdrop-filter: blur(4px); display: none; justify-content: center;
+            align-items: center; z-index: 1000;
+        }
+        .modal-content {
+            background: white; width: 90%; max-width: 450px;
+            border-radius: 20px; padding: 30px; animation: modalPop 0.3s ease-out;
+        }
+        @keyframes modalPop { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
@@ -36,23 +127,23 @@
         <div class="section-header">
             <div class="title-group">
                 <h2>Gestión de Usuarios</h2>
-                <p>Administra la base de datos de tus clientes y empleados</p>
+                <p>Administra clientes, vendedores y administradores</p>
             </div>
             <button class="new-user-btn" onclick="openUserModal()">
                 <span>+</span> Nuevo Usuario
             </button>
         </div>
 
-        <div class="filter-container">
-            <div class="search-box" style="flex: 1; margin-bottom: 0;">
+        <div class="controls-row">
+            <div class="search-box">
                 <span class="search-icon">🔍</span>
-                <input type="text" id="searchInput" placeholder="Buscar por nombre, email..." onkeyup="filterUsers()">
+                <input type="text" id="searchInput" placeholder="Buscar por nombre o email..." onkeyup="filterUsers()">
             </div>
             <select id="roleFilter" class="filter-select" onchange="filterUsers()">
-                <option value="all">Todos los Roles</option>
-                <option value="admin">Administradores</option>
+                <option value="all">Todos los roles</option>
                 <option value="usuario">Usuarios</option>
                 <option value="vendedor">Vendedores</option>
+                <option value="admin">Administradores</option>
             </select>
         </div>
 
@@ -61,8 +152,9 @@
     </main>
 
     <script>
+        // Configuración
         const SUPABASE_URL = 'https://vndfmcxlifcwzpjbphoy.supabase.co';
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZuZGZtY3hsaWZjd3pwamJwaG95Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3OTc3MDIsImV4cCI6MjA4NzM3MzcwMn0.OkQ6aSZsHkyLMgfT-x0w3beJ3Ey95smEujmhT7ZfjuY'; // Tu clave actual
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZuZGZtY3hsaWZjd3pwamJwaG95Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3OTc3MDIsImV4cCI6MjA4NzM3MzcwMn0.OkQ6aSZsHkyLMgfT-x0w3beJ3Ey95smEujmhT7ZfjuY'; // Usa tu clave anon
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         let users = [];
@@ -72,13 +164,11 @@
         }
 
         async function fetchUsers() {
-            // Eliminamos .order('created_at') porque no existe esa columna en tu captura
-            const { data, error } = await _supabase
-                .from('perfiles')
-                .select('*');
-
+            // Nota: Se quitó .order() porque no tienes created_at en la tabla
+            const { data, error } = await _supabase.from('perfiles').select('*');
+            
             if (error) {
-                console.error('Error:', error.message);
+                console.error('Error Supabase:', error.message);
                 return;
             }
             users = data;
@@ -89,23 +179,22 @@
             const list = document.getElementById('userList');
             list.innerHTML = '';
 
-            if (dataToRender.length === 0) {
-                list.innerHTML = `<p style="text-align:center; padding:20px; color:#94a3b8;">No se encontraron resultados.</p>`;
-                return;
-            }
-
             dataToRender.forEach(user => {
                 const card = document.createElement('div');
                 card.className = 'user-card';
-                // Usamos los nombres exactos de tu tabla: nombre, email, rol, telefono
+                
+                // Determinamos la clase del tag según el rol
+                let roleClass = '';
+                if(user.rol === 'admin') roleClass = 'tag-admin';
+                if(user.rol === 'vendedor') roleClass = 'tag-vendedor';
+
                 card.innerHTML = `
                     <div class="user-info">
                         <h3 style="color: ${user.color || '#1e293b'}">${user.nombre || 'Usuario sin nombre'}</h3>
                         <span class="email">${user.email}</span>
                         <div class="user-stats">
                             <span class="stat-tag">📞 ${user.telefono || 'Sin Teléfono'}</span>
-                            <span class="stat-tag ${user.rol === 'vendedor' ? 'role-vendedor' : ''}">🛡️ ${user.rol || 'usuario'}</span>
-                            <span class="stat-tag">🆔 ${user.id.substring(0,8)}...</span>
+                            <span class="stat-tag ${roleClass}">🛡️ ${user.rol || 'usuario'}</span>
                         </div>
                     </div>
                     <div class="user-actions">
@@ -122,17 +211,14 @@
             const role = document.getElementById('roleFilter').value;
 
             const filtered = users.filter(u => {
-                const matchesSearch = (u.nombre && u.nombre.toLowerCase().includes(term)) || 
-                                     u.email.toLowerCase().includes(term);
+                const matchesSearch = (u.nombre?.toLowerCase().includes(term)) || (u.email?.toLowerCase().includes(term));
                 const matchesRole = (role === 'all' || u.rol === role);
-                
                 return matchesSearch && matchesRole;
             });
             render(filtered);
         }
 
-        // ... Mantener funciones de abrir/cerrar modal y eliminar ...
-
+        // Resto de funciones (cerrarSesion, deleteUser, etc.) se mantienen igual
         init();
     </script>
 </body>
