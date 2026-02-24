@@ -6,29 +6,33 @@
     <title>FREDDY'S PIZZA - Registro</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        /* Tu estilo original naranja */
+        /* Estilo mejorado */
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: sans-serif; background:#ff6b00; min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; }
-        .container { background: white; border-radius: 20px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3); max-width: 450px; width: 100%; padding: 40px 30px; text-align: center; }
-        .logo { width: 100px; height: 100px; margin: 0 auto 20px; background: linear-gradient(135deg, #ff6b00 0%, #ff3d00 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
-        .logo img { width: 80%; }
-        h1 { font-size: 28px; color: #333; margin-bottom: 10px; }
-        .subtitle { color: #666; margin-bottom: 30px; }
-        .tabs { display: flex; gap: 10px; margin-bottom: 30px; }
-        .tab { flex: 1; padding: 12px; background: #f5f5f5; border: none; border-radius: 10px; text-decoration: none; color: #666; font-weight: 500; display: flex; justify-content: center; align-items: center; }
-        .tab.active { background: #e8e8e8; color: #333; }
-        .form-group { margin-bottom: 20px; text-align: left; }
-        .input-wrapper { display: flex; align-items: center; background: #f5f5f5; border-radius: 10px; padding: 0 15px; }
-        input { width: 100%; padding: 15px 0; border: none; background: transparent; outline: none; font-size: 15px; }
-        .btn-submit { width: 100%; padding: 16px; background: linear-gradient(90deg, #ff6b00 0%, #ff3d00 100%); color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 16px; }
-        #messageBox { padding: 10px; border-radius: 8px; margin-bottom: 20px; display: none; border: 1px solid; font-size: 14px; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background:#ff6b00; min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; }
+        .container { background: white; border-radius: 20px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4); max-width: 450px; width: 100%; padding: 40px 30px; text-align: center; }
+        .logo { width: 90px; height: 90px; margin: 0 auto 15px; background: linear-gradient(135deg, #ff6b00 0%, #ff3d00 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .logo img { width: 70%; filter: brightness(0) invert(1); }
+        h1 { font-size: 26px; color: #333; margin-bottom: 5px; }
+        .subtitle { color: #666; margin-bottom: 25px; font-size: 0.9rem; }
+        .tabs { display: flex; gap: 10px; margin-bottom: 25px; }
+        .tab { flex: 1; padding: 12px; background: #f0f0f0; border: none; border-radius: 10px; text-decoration: none; color: #888; font-weight: 600; font-size: 14px; transition: 0.3s; }
+        .tab.active { background: #ff6b0015; color: #ff6b00; border: 1px solid #ff6b00; }
+        .form-group { margin-bottom: 15px; text-align: left; }
+        .form-group label { display: block; margin-bottom: 5px; font-size: 13px; font-weight: 600; color: #444; }
+        .input-wrapper { display: flex; align-items: center; background: #f9f9f9; border: 1px solid #eee; border-radius: 10px; padding: 0 15px; transition: 0.3s; }
+        .input-wrapper:focus-within { border-color: #ff6b00; background: white; }
+        input { width: 100%; padding: 12px 0; border: none; background: transparent; outline: none; font-size: 14px; color: #333; }
+        .btn-submit { width: 100%; padding: 15px; background: linear-gradient(90deg, #ff6b00 0%, #ff3d00 100%); color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 16px; margin-top: 10px; transition: transform 0.2s; }
+        .btn-submit:active { transform: scale(0.98); }
+        .btn-submit:disabled { opacity: 0.7; cursor: not-allowed; }
+        #messageBox { padding: 12px; border-radius: 8px; margin-bottom: 20px; display: none; font-size: 13px; line-height: 1.4; }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="logo"><img src="imagenes/logo_pizza.png"></div>
+        <div class="logo"><img src="imagenes/logo_pizza.png" alt="Logo"></div>
         <h1>Freddy´s Pizza</h1>
-        <p class="subtitle">¡Crea tu cuenta!</p>
+        <p class="subtitle">¡Únete a la familia pizzería!</p>
 
         <div id="messageBox"></div>
 
@@ -39,110 +43,103 @@
 
         <form id="registerForm">
             <div class="form-group">
-                <label>Correo Electrónico</label>
-                <div class="input-wrapper"><input type="email" id="emailInput" placeholder="tu@email.com" required></div>
+                <label>Nombre Completo</label>
+                <div class="input-wrapper">
+                    <input type="text" id="nameInput" placeholder="Ej. Juan Pérez" required>
+                </div>
             </div>
+
+            <div class="form-group">
+                <label>Correo Electrónico</label>
+                <div class="input-wrapper">
+                    <input type="email" id="emailInput" placeholder="tu@email.com" required>
+                </div>
+            </div>
+
             <div class="form-group">
                 <label>Contraseña</label>
-                <div class="input-wrapper"><input type="password" id="registerPassword" placeholder="******" required></div>
+                <div class="input-wrapper">
+                    <input type="password" id="registerPassword" placeholder="Mínimo 6 caracteres" required>
+                </div>
             </div>
+
             <div class="form-group">
                 <label>Confirmar Contraseña</label>
-                <div class="input-wrapper"><input type="password" id="confirmPassword" placeholder="******" required></div>
+                <div class="input-wrapper">
+                    <input type="password" id="confirmPassword" placeholder="Repite tu contraseña" required>
+                </div>
             </div>
+
             <button type="submit" id="submitBtn" class="btn-submit">Crear Cuenta</button>
         </form>
     </div>
 
     <script>
-       // CONFIGURACIÓN DE TU PROYECTO
-const SUPABASE_URL = 'https://vndfmcxlifcwzpjbphoy.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZuZGZtY3hsaWZjd3pwamJwaG95Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3OTc3MDIsImV4cCI6MjA4NzM3MzcwMn0.OkQ6aSZsHkyLMgfT-x0w3beJ3Ey95smEujmhT7ZfjuY'; 
-const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        const SUPABASE_URL = 'https://vndfmcxlifcwzpjbphoy.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZuZGZtY3hsaWZjd3pwamJwaG95Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3OTc3MDIsImV4cCI6MjA4NzM3MzcwMn0.OkQ6aSZsHkyLMgfT-x0w3beJ3Ey95smEujmhT7ZfjuY'; 
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-const form = document.getElementById('registerForm');
-const msg = document.getElementById('messageBox');
-const btn = document.getElementById('submitBtn');
+        const form = document.getElementById('registerForm');
+        const msg = document.getElementById('messageBox');
+        const btn = document.getElementById('submitBtn');
 
-form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    btn.disabled = true;
-    btn.textContent = 'Procesando...';
-    msg.style.display = 'none';
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const nombre = document.getElementById('nameInput').value.trim();
+            const email = document.getElementById('emailInput').value.trim();
+            const password = document.getElementById('registerPassword').value;
+            const confirm = document.getElementById('confirmPassword').value;
 
-    const email = document.getElementById('emailInput').value.trim();
-    const password = document.getElementById('registerPassword').value;
-    const confirm = document.getElementById('confirmPassword').value;
+            // Validaciones
+            if (password !== confirm) {
+                return showMsg('Las contraseñas no coinciden', true);
+            }
+            if (password.length < 6) {
+                return showMsg('La contraseña es muy corta (mínimo 6)', true);
+            }
 
-    // Validación básica de contraseñas
-    if (password !== confirm) {
-        showMsg('Las contraseñas no coinciden', true);
-        resetBtn();
-        return;
-    }
+            btn.disabled = true;
+            btn.textContent = 'Creando cuenta...';
+            msg.style.display = 'none';
 
-    if (password.length < 6) {
-        showMsg('La contraseña debe tener al menos 6 caracteres', true);
-        resetBtn();
-        return;
-    }
+            // REGISTRO EN SUPABASE
+            const { data, error } = await _supabase.auth.signUp({ 
+                email, 
+                password,
+                options: {
+                    data: { 
+                        full_name: nombre, // El Trigger usará esto para la columna 'nombre'
+                        rol: 'usuario' 
+                    } 
+                }
+            });
 
-    // 1. Crear usuario en Auth (Llavecita)
-    const { data, error } = await _supabase.auth.signUp({ 
-        email, 
-        password,
-        options: {
-            // Esto asegura que el usuario se loguee de inmediato si no hay confirmación por email activa
-            data: { rol: 'usuario' } 
+            if (error) {
+                showMsg("Error: " + error.message, true);
+                resetBtn();
+                return;
+            }
+
+            if (data.user) {
+                showMsg('¡Registro exitoso! Ya puedes iniciar sesión.', false);
+                form.reset();
+                setTimeout(() => window.location.href = 'login.html', 2500);
+            }
+        });
+
+        function showMsg(txt, isErr) {
+            msg.textContent = txt;
+            msg.style.display = 'block';
+            msg.style.backgroundColor = isErr ? '#fff5f5' : '#f0fff4';
+            msg.style.color = isErr ? '#c53030' : '#276749';
+            msg.style.border = `1px solid ${isErr ? '#feb2b2' : '#9ae6b4'}`;
         }
-    });
 
-    if (error) {
-        console.error("Error en Auth:", error);
-        showMsg("Error de registro: " + error.message, true);
-        resetBtn();
-        return;
-    }
-
-    // 2. Insertar en la tabla 'perfiles' (Base de datos)
-    if (data.user) {
-        console.log("Usuario creado en Auth con ID:", data.user.id);
-        
-        const { error: perfilErr } = await _supabase
-            .from('perfiles')
-            .insert([{ 
-                id: data.user.id, 
-                email: email, 
-                rol: 'usuario' 
-            }]);
-
-        if (perfilErr) {
-            console.error("Error en tabla perfiles:", perfilErr);
-            // Si falla aquí, el usuario existe en Auth pero no en la tabla
-            showMsg('Usuario creado, pero hubo un problema técnico con tu perfil. Por favor, avisa al administrador.', true);
-            resetBtn();
-        } else {
-            showMsg('¡Cuenta creada con éxito! Redirigiendo...', false);
-            setTimeout(() => window.location.href = 'login.html', 2000);
+        function resetBtn() {
+            btn.disabled = false;
+            btn.textContent = 'Crear Cuenta';
         }
-    } else {
-        showMsg('Revisa tu correo para confirmar la cuenta (si tienes activada la confirmación).', false);
-        resetBtn();
-    }
-});
-
-function showMsg(txt, isErr) {
-    msg.textContent = txt;
-    msg.style.display = 'block';
-    msg.style.backgroundColor = isErr ? '#fcebeb' : '#ebfbee';
-    msg.style.color = isErr ? '#e3342f' : '#1f9d55';
-    msg.style.borderColor = isErr ? '#e3342f' : '#1f9d55';
-}
-
-function resetBtn() {
-    btn.disabled = false;
-    btn.textContent = 'Crear Cuenta';
-}
     </script>
 </body>
 </html>
