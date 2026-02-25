@@ -30,10 +30,7 @@
         .header::after {
             content: "";
             position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 15px;
+            bottom: 0; left: 0; width: 100%; height: 15px;
             background-image: 
                 linear-gradient(45deg, #fff 25%, transparent 25%), 
                 linear-gradient(-45deg, #fff 25%, transparent 25%),
@@ -52,158 +49,110 @@
         }
 
         .btn-inicio { 
-            text-decoration: none; 
-            color: #000; 
-            font-weight: bold; 
-            padding: 10px 25px; 
-            background: #fff; 
-            border: 2.5px solid #000;
-            border-radius: 25px; 
-            transition: all 0.3s ease; 
-            box-shadow: 3px 3px 0px #000;
-            text-transform: uppercase;
-            font-size: 13px;
+            text-decoration: none; color: #000; font-weight: bold; 
+            padding: 10px 25px; background: #fff; border: 2.5px solid #000;
+            border-radius: 25px; transition: all 0.3s ease; box-shadow: 3px 3px 0px #000;
+            text-transform: uppercase; font-size: 13px;
         }
 
-        .btn-inicio:hover { 
-            background-color: #ff6b00; 
-            color: white; 
-            transform: translateY(-3px);
-            box-shadow: 5px 5px 0px #000;
-        }
+        .btn-inicio:hover { background-color: #ff6b00; color: white; transform: translateY(-3px); box-shadow: 5px 5px 0px #000; }
 
         /* CONTENEDOR PRINCIPAL */
         .main-container { 
-            max-width: 800px; 
-            width: 92%; 
-            margin: 30px auto; 
-            background: white; 
-            padding: clamp(20px, 5vw, 40px); 
-            border-radius: 20px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05); 
-            display: flex;
-            flex-direction: column; 
-            gap: 30px;
+            max-width: 800px; width: 92%; margin: 30px auto; 
+            background: white; padding: clamp(20px, 5vw, 40px); 
+            border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); 
+            display: flex; flex-direction: column; gap: 30px;
         }
 
         h2 { 
-            font-family: 'Archivo Black', sans-serif; 
-            color: #ff6b00; 
-            text-transform: uppercase; 
-            margin-bottom: 20px;
-            font-size: clamp(18px, 4vw, 24px);
-            border-bottom: 2px solid #fdf2e9;
-            padding-bottom: 10px;
+            font-family: 'Archivo Black', sans-serif; color: #ff6b00; 
+            text-transform: uppercase; margin-bottom: 20px;
+            font-size: clamp(18px, 4vw, 24px); border-bottom: 2px solid #fdf2e9; padding-bottom: 10px;
         }
 
-        /* DISEÑO DE PRODUCTOS EN CARRITO */
+        /* PRODUCTOS */
         .cart-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px;
-            border: 2.5px solid #000;
-            border-radius: 15px;
-            margin-bottom: 15px;
-            box-shadow: 4px 4px 0px #fdf2e9;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 15px; border: 2.5px solid #000; border-radius: 15px; margin-bottom: 15px;
         }
+        .item-info strong { font-family: 'Archivo Black', sans-serif; text-transform: uppercase; font-size: 14px; }
 
-        .item-info strong { font-family: 'Archivo Black', sans-serif; color: #333; text-transform: uppercase; font-size: 14px; }
-        .item-price { color: #ff6b00; font-weight: bold; display: block; margin-top: 5px; }
-
-        .qty-controls { display: flex; align-items: center; gap: 10px; }
-        .qty-btn { 
-            background: #fff; border: 2px solid #000; width: 30px; height: 30px; 
-            border-radius: 50%; cursor: pointer; font-weight: bold; font-family: 'Archivo Black', sans-serif;
-            transition: 0.2s;
-        }
-        .qty-btn:hover { background: #ff6b00; color: #fff; }
-
-        /* SECCIÓN DE PAGO */
+        /* MÉTODOS DE PAGO Y FORMULARIO */
         .payment-option {
-            padding: 15px;
-            border: 2px solid #eee;
-            border-radius: 12px;
-            margin-bottom: 10px;
-            cursor: pointer;
-            transition: 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            padding: 15px; border: 2.5px solid #eee; border-radius: 12px;
+            margin-bottom: 10px; cursor: pointer; transition: 0.3s;
+            display: flex; align-items: center; gap: 10px;
         }
         .payment-option.active { border-color: #ff6b00; background: #fff9f5; border-width: 2.5px; }
 
-        /* BOTÓN FINALIZAR */
+        .api-container { display: none; padding: 15px; border-radius: 12px; margin-bottom: 10px; background: #f9f9f9; border: 2px dashed #000; }
+        .card-input { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 8px; border: 1px solid #ddd; }
+
+        /* BOTÓN FINAL */
         .checkout-btn {
-            width: 100%;
-            padding: 18px;
-            background: #ff6b00;
-            color: white;
-            border: 3px solid #000;
-            border-radius: 50px;
-            font-family: 'Archivo Black', sans-serif;
-            font-size: 18px;
-            text-transform: uppercase;
-            cursor: pointer;
-            box-shadow: 5px 5px 0px #000;
-            transition: 0.3s;
-            margin-top: 20px;
+            width: 100%; padding: 18px; background: #ff6b00; color: white; border: 3px solid #000;
+            border-radius: 50px; font-family: 'Archivo Black', sans-serif; font-size: 18px;
+            text-transform: uppercase; cursor: pointer; box-shadow: 5px 5px 0px #000; transition: 0.3s;
         }
-        .checkout-btn:hover { transform: translateY(-3px); box-shadow: 7px 7px 0px #000; background: #ff4500; }
+        .checkout-btn:hover { transform: translateY(-3px); box-shadow: 7px 7px 0px #000; }
 
-        /* ANIMACIONES */
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         .animar-entrada { animation: fadeInUp 0.6s ease-out forwards; }
-
-        #emptyCart { text-align: center; padding: 40px 0; }
-        .catalog-btn { display: inline-block; margin-top: 20px; }
     </style>
 </head>
 <body>
 
     <header class="header">
-        <div class="header-title">
-            <h1>FREDDY'S PIZZA</h1>
-        </div>
-        <div class="header-right">
-            <a href="index.html" class="btn-inicio">Inicio</a>
-        </div>
+        <div class="header-title"><h1>FREDDY'S PIZZA</h1></div>
+        <div class="header-right"><a href="index.html" class="btn-inicio">Inicio</a></div>
     </header>
 
     <div class="main-container animar-entrada">
-        
-        <div id="emptyCart" style="display: none;">
-            <h2>Tu carrito está vacío 🍕</h2>
-            <p>Parece que aún no has elegido tu pizza favorita.</p>
-            <a href="catalogo.html" class="btn-inicio catalog-btn">Ver Menú</a>
+        <div id="emptyCart" style="display: none; text-align: center; padding: 40px 0;">
+            <div style="font-size: 60px; margin-bottom: 20px;">🍕</div>
+            <h2 style="border:none;">Tu carrito está vacío</h2>
+            <p style="margin-bottom: 25px; color: #666;">¡Agrega algo delicioso para continuar!</p>
+            <a href="catalogo.html" class="btn-inicio">Ir al Catálogo</a>
         </div>
 
-        <div id="cartContent">
-            <section class="info-box">
+        <div id="cartContent" style="display: none;">
+            <section>
                 <h2>Tu Pedido</h2>
-                <div id="cartList">
-                    </div>
+                <div id="cartList"></div>
             </section>
 
-            <section class="info-box">
+            <section style="margin-top: 20px;">
                 <h2>Método de Pago</h2>
                 <div class="payment-option active" onclick="setPay(this, 'cash')">
                     <span>💵</span> <strong>Efectivo</strong>
                 </div>
+                
                 <div class="payment-option" onclick="setPay(this, 'card')">
-                    <span>💳</span> <strong>Tarjeta de Débito/Crédito</strong>
+                    <span>💳</span> <strong>Tarjeta</strong>
+                </div>
+                <div id="box-card" class="api-container">
+                    <input type="text" class="card-input" placeholder="Número de Tarjeta (16 dígitos)" maxlength="16">
+                    <div style="display:flex; gap:10px;">
+                        <input type="text" class="card-input" placeholder="MM/AA">
+                        <input type="text" class="card-input" placeholder="CVV" maxlength="3">
+                    </div>
+                </div>
+
+                <div class="payment-option" onclick="setPay(this, 'paypal')">
+                    <span>💙</span> <strong>PayPal</strong>
+                </div>
+
+                <div class="payment-option" onclick="setPay(this, 'mercadopago')">
+                    <span>🤝</span> <strong>Mercado Pago</strong>
                 </div>
             </section>
 
-            <div style="margin-top: 20px; text-align: right;">
+            <div style="margin-top: 30px; text-align: right;">
                 <h2 style="border: none;">Total: <span id="finalTotal">$0.00</span></h2>
                 <button class="checkout-btn" onclick="confirmOrder()">Finalizar Pedido</button>
             </div>
         </div>
-
     </div>
 
     <script>
@@ -213,29 +162,32 @@
         function updateCart() {
             const cart = JSON.parse(localStorage.getItem(CART_KEY)) || {};
             const items = Object.values(cart);
-            
+
+            const emptyDiv = document.getElementById('emptyCart');
+            const contentDiv = document.getElementById('cartContent');
+
             if (items.length === 0) {
-                document.getElementById('emptyCart').style.display = 'block';
-                document.getElementById('cartContent').style.display = 'none';
+                emptyDiv.style.display = 'block';
+                contentDiv.style.display = 'none';
                 return;
             }
-            
-            document.getElementById('emptyCart').style.display = 'none';
-            document.getElementById('cartContent').style.display = 'block';
+
+            // Mostrar contenido si hay productos
+            emptyDiv.style.display = 'none';
+            contentDiv.style.display = 'block';
 
             document.getElementById('cartList').innerHTML = items.map(item => `
                 <div class="cart-item">
                     <div class="item-info">
-                        <strong>${item.name}</strong>
-                        <span class="item-price">$${(item.price * item.quantity).toFixed(2)}</span>
+                        <strong>${item.name}</strong><br>
+                        <span style="color:#ff6b00; font-weight:bold;">$${(item.price * item.quantity).toFixed(2)}</span>
                     </div>
-                    <div class="qty-controls">
-                        <button class="qty-btn" onclick="changeQty('${item.name}', -1)">-</button>
-                        <span>${item.quantity}</span>
-                        <button class="qty-btn" onclick="changeQty('${item.name}', 1)">+</button>
+                    <div style="display:flex; align-items:center; gap:10px;">
+                        <button style="padding:5px 10px; cursor:pointer; border:1px solid #000; border-radius:5px;" onclick="changeQty('${item.name}', -1)">-</button>
+                        <span style="font-weight:bold;">${item.quantity}</span>
+                        <button style="padding:5px 10px; cursor:pointer; border:1px solid #000; border-radius:5px;" onclick="changeQty('${item.name}', 1)">+</button>
                     </div>
-                </div>
-            `).join('');
+                </div>`).join('');
 
             const total = items.reduce((s, i) => s + (i.price * i.quantity), 0);
             document.getElementById('finalTotal').textContent = `$${total.toFixed(2)}`;
@@ -253,12 +205,23 @@
 
         function setPay(el, method) {
             document.querySelectorAll('.payment-option').forEach(o => o.classList.remove('active'));
+            // Solo mostrar el formulario si elige 'tarjeta'
+            document.getElementById('box-card').style.display = (method === 'card') ? 'block' : 'none';
             el.classList.add('active');
             currentMethod = method;
         }
 
         function confirmOrder() {
-            alert("🍕 ¡Freddy recibió tu pedido! En un momento llegará a tu ubicación.");
+            if(currentMethod === 'paypal') { 
+                window.location.href = "https://www.paypal.com/checkout"; 
+                return; 
+            }
+            if(currentMethod === 'mercadopago') { 
+                window.location.href = "https://www.mercadopago.com.mx/checkout"; 
+                return; 
+            }
+            
+            alert("🍕 ¡Pedido confirmado! Freddy está preparando tu entrega.");
             localStorage.removeItem(CART_KEY);
             window.location.href = 'index.html';
         }
