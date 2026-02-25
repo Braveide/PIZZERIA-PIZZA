@@ -30,19 +30,19 @@
 
         .control-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 20px;
             margin-bottom: 40px;
         }
 
         .card {
             background: white; border-radius: 12px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-            text-decoration: none; padding: 25px; display: flex; align-items: center; gap: 15px; transition: 0.3s;
+            text-decoration: none; padding: 20px; display: flex; align-items: center; gap: 15px; transition: 0.3s;
         }
         .card:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1); }
-        .card-icon { font-size: 30px; }
-        .card-text h3 { color: #333; font-size: 18px; }
-        .card-text p { color: #666; font-size: 13px; }
+        .card-icon { font-size: 25px; }
+        .card-text h3 { color: #333; font-size: 16px; }
+        .card-text p { color: #666; font-size: 12px; }
 
         /* SECCIÓN CRUD Y FILTROS */
         .crud-section { background: white; padding: 25px; border-radius: 12px; margin-top: 30px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
@@ -62,10 +62,15 @@
         .btn-edit { color: #3b82f6; cursor: pointer; background: none; border: none; font-size: 18px; margin-right: 10px; }
         .btn-delete { color: #ef4444; cursor: pointer; background: none; border: none; font-size: 18px; }
 
+        /* Badges Categorías y Buzón */
         .badge { padding: 4px 8px; border-radius: 4px; font-size: 10px; font-weight: bold; text-transform: uppercase; }
         .badge-pizzas { background: #ffedd5; color: #9a3412; }
         .badge-bebidas { background: #dcfce7; color: #166534; }
         .badge-promos { background: #fef9c3; color: #854d0e; }
+        
+        .badge-queja { background: #fee2e2; color: #991b1b; }
+        .badge-sugerencia { background: #e0e7ff; color: #3730a3; }
+        .badge-duda { background: #f0fdf4; color: #166534; }
 
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; justify-content: center; align-items: center; }
         .modal-content { background: white; padding: 30px; border-radius: 12px; width: 450px; }
@@ -80,7 +85,7 @@
             <a href="index.html" class="back-btn">←</a>
             <div>
                 <h1 style="font-size: 22px;">Panel de Administrador</h1>
-                <p style="font-size: 12px; opacity: 0.8;">Gestión de Productos por Categoría</p>
+                <p style="font-size: 12px; opacity: 0.8;">Gestión de Freddy's Pizza</p>
             </div>
         </div>
         <button onclick="cerrarSesion()" class="logout-btn">Cerrar Sesión</button>
@@ -96,17 +101,15 @@
                 <div class="card-icon">📈</div>
                 <div class="card-text"><h3>Reportes</h3><p>Ventas y Métricas</p></div>
             </a>
-            <a href="gestion_pedidos.html" class="card">
-                <div class="card-icon">📋</div>
-                <div class="card-text"><h3>Pedidos</h3><p>Estados en tiempo real</p></div>
+            <a href="#seccionBuzon" class="card">
+                <div class="card-icon">📩</div>
+                <div class="card-text"><h3>Buzón</h3><p>Mensajes de Clientes</p></div>
             </a>
             <a href="gestion_usuario.html" class="card">
                 <div class="card-icon">👥</div>
                 <div class="card-text"><h3>Usuarios</h3><p>Cuentas y Roles</p></div>
             </a>
         </div>
-
-        <hr style="border: 0; border-top: 2px solid #ddd; margin: 40px 0;">
 
         <div class="crud-section">
             <div class="section-header">
@@ -134,25 +137,45 @@
                 <tbody id="productTableBody"></tbody>
             </table>
         </div>
+
+        <div class="crud-section" id="seccionBuzon" style="margin-top: 50px; border-top: 4px solid #ff6b00;">
+            <div class="section-header">
+                <h2>📩 Buzón de Mensajes (Clientes)</h2>
+                <button class="btn-filter" onclick="loadMessages()">🔄 Actualizar</button>
+            </div>
+            
+            <div style="max-height: 400px; overflow-y: auto;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Tipo</th>
+                            <th>Correo</th>
+                            <th>Mensaje</th>
+                            <th>Eliminar</th>
+                        </tr>
+                    </thead>
+                    <tbody id="messageTableBody">
+                        </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 
     <div id="productModal" class="modal">
         <div class="modal-content">
             <h3 id="modalTitle" style="margin-bottom: 20px;">Nuevo Producto</h3>
             <input type="hidden" id="editProductId">
-            
             <label style="font-size: 12px; font-weight: bold;">Categoría del Menú:</label>
             <select id="pCategory">
                 <option value="pizzas">Pizzas</option>
                 <option value="bebidas">Bebidas</option>
                 <option value="promos">Promos / Paquetes</option>
             </select>
-
             <input type="text" id="pName" placeholder="Nombre del producto">
             <input type="number" step="0.01" id="pPrice" placeholder="Precio ($)">
             <input type="text" id="pDesc" placeholder="Descripción">
             <input type="text" id="pImg" placeholder="URL de la imagen">
-            
             <div class="modal-actions">
                 <button onclick="closeModal()" style="padding: 10px; cursor:pointer;">Cancelar</button>
                 <button class="btn-add" onclick="saveProduct()">Guardar</button>
@@ -169,21 +192,16 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             loadProducts();
+            loadMessages(); // Cargar mensajes al iniciar
         });
 
-        // --- FUNCIÓN DE CARGA CON FILTRO ---
+        // --- GESTIÓN DE PRODUCTOS ---
         async function loadProducts(categoria = 'todos') {
             currentFilter = categoria;
             let query = _supabase.from('productos').select('*');
-
-            if (categoria !== 'todos') {
-                query = query.eq('categoria', categoria);
-            }
-
+            if (categoria !== 'todos') query = query.eq('categoria', categoria);
             const { data, error } = await query.order('nombre', { ascending: true });
-            
             if (error) return console.error(error);
-            
             const tbody = document.getElementById('productTableBody');
             tbody.innerHTML = data.map(p => `
                 <tr>
@@ -199,13 +217,9 @@
             `).join('');
         }
 
-        // --- MANEJO DE BOTONES DE FILTRO ---
         function filterTable(btn, categoria) {
-            // Quitar clase active de todos
             document.querySelectorAll('.btn-filter').forEach(b => b.classList.remove('active'));
-            // Poner active al clicado
             btn.classList.add('active');
-            // Cargar datos
             loadProducts(categoria);
         }
 
@@ -218,15 +232,10 @@
                 imagen_url: document.getElementById('pImg').value,
                 categoria: document.getElementById('pCategory').value
             };
-
-            if (id) {
-                await _supabase.from('productos').update(productData).eq('id', id);
-            } else {
-                await _supabase.from('productos').insert([productData]);
-            }
-            
+            if (id) await _supabase.from('productos').update(productData).eq('id', id);
+            else await _supabase.from('productos').insert([productData]);
             closeModal();
-            loadProducts(currentFilter); // Recarga respetando el filtro actual
+            loadProducts(currentFilter);
         }
 
         async function deleteProduct(id) {
@@ -236,6 +245,42 @@
             }
         }
 
+        // --- GESTIÓN DEL BUZÓN (NUEVA FUNCIÓN) ---
+        async function loadMessages() {
+            const { data, error } = await _supabase
+                .from('mensajes_contacto')
+                .select('*')
+                .order('created_at', { ascending: false });
+
+            if (error) return console.error(error);
+
+            const tbody = document.getElementById('messageTableBody');
+            tbody.innerHTML = data.map(m => {
+                const fecha = new Date(m.created_at).toLocaleDateString();
+                const badgeClass = `badge-${m.tipo.toLowerCase().replace(/\s/g, '')}`;
+                return `
+                    <tr>
+                        <td style="font-size: 11px; color: #666;">${fecha}</td>
+                        <td><span class="badge ${badgeClass}">${m.tipo}</span></td>
+                        <td style="font-weight: bold; font-size: 13px;">${m.correo}</td>
+                        <td style="font-size: 13px;">${m.mensaje}</td>
+                        <td>
+                            <button class="btn-delete" onclick="deleteMessage('${m.id}')">🗑️</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        async function deleteMessage(id) {
+            if(confirm('¿Eliminar este mensaje del buzón?')) {
+                const { error } = await _supabase.from('mensajes_contacto').delete().eq('id', id);
+                if (error) alert("Error al borrar");
+                loadMessages();
+            }
+        }
+
+        // --- MODALES Y SESIÓN ---
         function openProductModal() {
             document.getElementById('editProductId').value = "";
             document.getElementById('pName').value = "";
@@ -266,4 +311,3 @@
     </script>
 </body>
 </html>
-
