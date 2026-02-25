@@ -90,7 +90,7 @@
             transition: 0.2s; margin-bottom: 5px; background: #f9f9f9;
         }
         .profile-menu-link:hover { background: #ff6b00; color: #fff; transform: translateX(5px); }
-        .admin-link { background: #000 !important; color: #fff !important; margin-bottom: 10px; text-transform: uppercase; }
+        .admin-link { background: #000 !important; color: #fff !important; margin-bottom: 10px; }
 
         .logout-btn { 
             width: 100%; padding: 10px; margin-top: 10px;
@@ -175,18 +175,6 @@
                     </div>
                 </div>
             </div>
-            <div class="swiper-slide">
-                <div class="slide-container">
-                    <div class="slide-text">
-                        <h1>Clásica <br> Margherita</h1>
-                        <p>Mozzarella fresca de búfala, albahaca recién cortada y el mejor aceite de oliva extra virgen.</p>
-                        <a href="catalogo.html" class="add-btn" style="display: inline-block; text-decoration: none; padding: 15px 25px;">VER CATÁLOGO</a>
-                    </div>
-                    <div class="slide-image-wrapper">
-                        <img src="imagenes/pizza_marg.png" class="slide-img" alt="Pizza">
-                    </div>
-                </div>
-            </div>
         </div>
         <div class="swiper-button-next" style="color: #fff;"></div>
         <div class="swiper-button-prev" style="color: #fff;"></div>
@@ -263,7 +251,6 @@
             const dropdownContent = document.getElementById('dropdownContent');
 
             if (user) {
-                // Buscamos los datos del perfil
                 const { data: perfil } = await supabaseClient
                     .from('perfiles')
                     .select('rol, nombre, avatar_url')
@@ -274,7 +261,7 @@
                 const nombre = perfil && perfil.nombre ? perfil.nombre : 'Usuario';
                 const fotoUrl = perfil && perfil.avatar_url ? perfil.avatar_url : 'imagenes/freddy.png';
                 
-                // Ponemos la foto en el botón circular (Círculo de la derecha)
+                // 1. Inyectamos la foto en el botón circular del header
                 userBtn.innerHTML = `<img src="${fotoUrl}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">`;
                 
                 userBtn.onclick = (e) => { 
@@ -282,7 +269,7 @@
                     userDropdown.classList.toggle('active'); 
                 };
 
-                // Reconstruimos el contenido del Dropdown con el botón Admin NEGRO
+                // 2. Construimos el menú respetando tus clases CSS originales
                 let adminLink = (rol === 'admin') ? `<a href="panelA.html" class="profile-menu-link admin-link">⚙️ PANEL ADMIN</a>` : '';
 
                 dropdownContent.innerHTML = `
