@@ -21,7 +21,7 @@
 
         /* --- NAVEGACIÓN --- */
         .nav-header {
-            background: var(--dark);
+            background: #fff;
             padding: 15px 5%;
             display: flex;
             justify-content: space-between;
@@ -29,7 +29,7 @@
             border-bottom: 4px solid var(--black);
         }
 
-        .logo { font-family: 'Archivo Black', sans-serif; color: var(--primary); text-decoration: none; font-size: 24px; }
+        .logo { font-family: 'Archivo Black', sans-serif; color: var(--primary); text-decoration: none; font-size: 24px; text-shadow: 2px 2px 0px #000; }
 
         /* --- LAYOUT PRINCIPAL --- */
         .profile-wrapper {
@@ -155,7 +155,6 @@
 
         .btn-action:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0px var(--black); }
 
-        /* --- TARJETAS DE MENSAJES --- */
         .msg-card {
             border: 2px solid var(--black);
             border-radius: 10px;
@@ -180,7 +179,7 @@
 
 <nav class="nav-header">
     <a href="index.html" class="logo">FREDDY'S PIZZA</a>
-    <button onclick="cerrarSesion()" style="color: white; border: 2px solid white; background: none; padding: 5px 12px; border-radius: 5px; cursor: pointer;">SALIR</button>
+    <button onclick="cerrarSesion()" style="color: black; border: 2px solid black; background: none; padding: 5px 12px; border-radius: 5px; cursor: pointer; font-weight: bold;">SALIR</button>
 </nav>
 
 <div class="profile-wrapper">
@@ -191,7 +190,7 @@
                 <button class="btn-edit-photo" onclick="document.getElementById('fileInput').click()">✏️</button>
                 <input type="file" id="fileInput" hidden accept="image/*" onchange="subirFoto()">
             </div>
-            <h3 id="displayUserName">Cargando...</h3>
+            <h3 id="displayUserName" style="font-family: 'Archivo Black', sans-serif;">Cargando...</h3>
             <p id="displayUserEmail" style="font-size: 12px; color: #666;"></p>
         </div>
 
@@ -204,7 +203,6 @@
     </aside>
 
     <main class="main-content">
-        
         <section id="tab-datos" class="tab-panel active">
             <h2>Configuración de Perfil</h2>
             <div class="form-grid">
@@ -230,9 +228,7 @@
 
         <section id="tab-buzon" class="tab-panel">
             <h2>Respuestas del Administrador</h2>
-            <p style="font-size: 13px; color: #666; margin-bottom: 20px;">Aquí aparecerán las respuestas a tus quejas o sugerencias.</p>
-            <div id="userInboxContainer">
-                </div>
+            <div id="userInboxContainer"></div>
         </section>
 
         <section id="tab-pedidos" class="tab-panel">
@@ -248,65 +244,96 @@
             </div>
             <button class="btn-action" style="background: #ef4444;" onclick="cambiarPassword()">Actualizar Contraseña</button>
         </section>
-
     </main>
 </div>
 
 <script>
-    // --- CONFIGURACIÓN SUPABASE ---
     const SUPABASE_URL = 'https://vndfmcxlifcwzpjbphoy.supabase.co';
-    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZuZGZtY3hsaWZjd3pwamJwaG95Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3OTc3MDIsImV4cCI6MjA4NzM3MzcwMn0.OkQ6aSZsHkyLMgfT-x0w3beJ3Ey95smEujmhT7ZfjuY'; // USA TU CLAVE ANON DE SUPABASE
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZuZGZtY3hsaWZjd3pwamJwaG95Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3OTc3MDIsImV4cCI6MjA4NzM3MzcwMn0.OkQ6aSZsHkyLMgfT-x0w3beJ3Ey95smEujmhT7ZfjuY'; 
     const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    // --- LÓGICA DE PESTAÑAS ---
     function switchTab(event, tabId) {
         document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-        
         document.getElementById(tabId).classList.add('active');
         event.currentTarget.classList.add('active');
-
         if(tabId === 'tab-buzon') cargarBuzonUsuario();
     }
 
-    // --- CARGAR DATOS AL INICIAR ---
     async function inicializarPerfil() {
         const { data: { user } } = await _supabase.auth.getUser();
-        
-        if (!user) {
-            window.location.href = "login.html";
-            return;
-        }
+        if (!user) { window.location.href = "login.html"; return; }
 
-        // Llenar campos
-        document.getElementById('displayUserName').innerText = user.user_metadata.full_name || "Cliente Freddy's";
-        document.getElementById('displayUserEmail').innerText = user.email;
-        document.getElementById('inNombre').value = user.user_metadata.full_name || "";
         document.getElementById('inEmail').value = user.email;
+        document.getElementById('displayUserEmail').innerText = user.email;
+
+        // Cargar desde tabla 'perfiles' (nombre y foto_url como en index)
+        const { data: perfil } = await _supabase.from('perfiles').select('*').eq('id', user.id).maybeSingle();
         
-        // Si tienes datos extra en una tabla 'perfiles'
-        const { data: perfil } = await _supabase.from('perfiles').select('*').eq('id', user.id).single();
         if(perfil) {
+            document.getElementById('displayUserName').innerText = perfil.nombre || "Usuario Freddy's";
+            document.getElementById('inNombre').value = perfil.nombre || "";
             document.getElementById('inTelefono').value = perfil.telefono || "";
             document.getElementById('inDireccion').value = perfil.direccion || "";
-            if(perfil.avatar_url) document.getElementById('userAvatar').src = perfil.avatar_url;
+            if(perfil.foto_url) document.getElementById('userAvatar').src = perfil.foto_url;
+        } else {
+            document.getElementById('displayUserName').innerText = user.email.split('@')[0];
         }
     }
 
-    // --- LÓGICA DEL BUZÓN (RESPUESTAS DEL ADMIN) ---
+    async function actualizarPerfil() {
+        const { data: { user } } = await _supabase.auth.getUser();
+        const updates = {
+            id: user.id,
+            nombre: document.getElementById('inNombre').value,
+            telefono: document.getElementById('inTelefono').value,
+            direccion: document.getElementById('inDireccion').value,
+            updated_at: new Date()
+        };
+
+        const { error } = await _supabase.from('perfiles').upsert(updates);
+        if(!error) { alert("¡Perfil actualizado!"); location.reload(); }
+        else { alert("Error al actualizar"); }
+    }
+
+    async function subirFoto() {
+        const file = document.getElementById('fileInput').files[0];
+        if (!file) return;
+
+        const { data: { user } } = await _supabase.auth.getUser();
+        const fileExt = file.name.split('.').pop();
+        const fileName = `${user.id}-${Math.random()}.${fileExt}`;
+        const filePath = `avatars/${fileName}`;
+
+        // Subir a Storage (Asegúrate de tener un bucket llamado 'perfiles' público)
+        const { error: uploadError } = await _supabase.storage.from('perfiles').upload(filePath, file);
+
+        if (!uploadError) {
+            const { data: { publicUrl } } = _supabase.storage.from('perfiles').getPublicUrl(filePath);
+            await _supabase.from('perfiles').upsert({ id: user.id, foto_url: publicUrl });
+            location.reload();
+        } else {
+            alert("Error al subir imagen. Revisa que el bucket 'perfiles' exista.");
+        }
+    }
+
+    async function cambiarPassword() {
+        const newPass = document.getElementById('newPassword').value;
+        if(newPass.length < 6) { alert("Mínimo 6 caracteres"); return; }
+        const { error } = await _supabase.auth.updateUser({ password: newPass });
+        if(!error) alert("Contraseña actualizada");
+        else alert("Error: " + error.message);
+    }
+
     async function cargarBuzonUsuario() {
         const { data: { user } } = await _supabase.auth.getUser();
         const container = document.getElementById('userInboxContainer');
-        container.innerHTML = "Cargando mensajes...";
+        container.innerHTML = "Cargando...";
 
-        const { data, error } = await _supabase
-            .from('mensajes_contacto')
-            .select('*')
-            .eq('correo', user.email)
-            .order('created_at', { ascending: false });
+        const { data } = await _supabase.from('mensajes_contacto').select('*').eq('correo', user.email).order('created_at', { ascending: false });
 
-        if(data.length === 0) {
-            container.innerHTML = "<p>No has enviado mensajes de contacto aún.</p>";
+        if(!data || data.length === 0) {
+            container.innerHTML = "<p>No hay mensajes enviados.</p>";
             return;
         }
 
@@ -318,41 +345,10 @@
                         ${m.respuesta_admin ? 'RESPONDIDO' : 'EN ESPERA'}
                     </span>
                 </div>
-                <p style="font-size: 14px;"><strong>Tú escribiste:</strong> ${m.mensaje}</p>
-                
-                ${m.respuesta_admin ? `
-                    <div class="admin-reply-box">
-                        <p style="font-size:13px;"><strong>Respuesta de Freddy's Pizza:</strong></p>
-                        <p style="font-size:13px; color: #334155; font-style: italic;">"${m.respuesta_admin}"</p>
-                    </div>
-                ` : ''}
-                <div style="font-size: 10px; color: #999; margin-top: 10px;">Enviado el: ${new Date(m.created_at).toLocaleString()}</div>
+                <p style="font-size: 14px;"><strong>Tú:</strong> ${m.mensaje}</p>
+                ${m.respuesta_admin ? `<div class="admin-reply-box"><p style="font-size:13px;"><strong>Freddy's:</strong> ${m.respuesta_admin}</p></div>` : ''}
             </div>
         `).join('');
-    }
-
-    // --- ACCIONES ---
-    async function actualizarPerfil() {
-        const { data: { user } } = await _supabase.auth.getUser();
-        const nuevoNombre = document.getElementById('inNombre').value;
-        
-        // 1. Actualizar metadatos de Auth
-        await _supabase.auth.updateUser({ data: { full_name: nuevoNombre } });
-        
-        // 2. Actualizar tabla perfiles
-        const updates = {
-            id: user.id,
-            telefono: document.getElementById('inTelefono').value,
-            direccion: document.getElementById('inDireccion').value,
-            updated_at: new Date()
-        };
-
-        const { error } = await _supabase.from('perfiles').upsert(updates);
-        
-        if(!error) {
-            alert("¡Perfil actualizado con éxito!");
-            location.reload();
-        }
     }
 
     async function cerrarSesion() {
@@ -362,6 +358,5 @@
 
     document.addEventListener('DOMContentLoaded', inicializarPerfil);
 </script>
-
 </body>
 </html>
