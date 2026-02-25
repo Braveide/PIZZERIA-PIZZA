@@ -50,14 +50,14 @@
 
         .header-right { display: flex; gap: 15px; align-items: center; }
 
-        /* --- BOTONES CIRCULARES --- */
+        /* --- BOTONES CIRCULARES (USER & CART) --- */
         .cart-btn { 
             background: #fff; border: 3px solid #000; color: #000; 
             width: 48px; height: 48px; border-radius: 50%; cursor: pointer; 
             display: flex; align-items: center; justify-content: center; 
             position: relative; text-decoration: none; font-size: 20px;
             box-shadow: 3px 3px 0px #000; transition: 0.3s;
-            overflow: hidden;
+            overflow: hidden; 
         }
         .cart-btn:hover { background: #ff6b00; transform: scale(1.1); color: #fff; }
 
@@ -67,21 +67,25 @@
             border-radius: 50%; padding: 2px; min-width: 22px; height: 22px;
             font-size: 11px; font-weight: 900; display: flex; align-items: center; justify-content: center;
             box-shadow: 2px 2px 0px #000; z-index: 10;
+            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         /* --- DROPDOWN PERFIL --- */
         .user-dropdown { 
             display: none; position: absolute; top: 60px; right: 0; 
             background: white; border: 4px solid #000; box-shadow: 8px 8px 0px #000; 
-            width: 280px; padding: 20px; z-index: 2000; border-radius: 15px;
+            width: 260px; padding: 20px; z-index: 2000; border-radius: 15px;
             animation: slideDown 0.3s ease-out; 
         }
         .user-dropdown.active { display: block; }
 
         .user-info-box { text-align: center; padding-bottom: 15px; border-bottom: 2px solid #eee; margin-bottom: 15px; }
-        .dropdown-avatar { width: 75px; height: 75px; border-radius: 50%; border: 3px solid #000; margin-bottom: 10px; object-fit: cover; }
-        .user-name { font-family: 'Archivo Black', sans-serif; font-size: 16px; color: #000; margin-bottom: 5px; text-transform: uppercase; }
-        .user-role-badge { font-size: 10px; font-weight: 900; color: #ff6b00; text-transform: uppercase; letter-spacing: 1px; }
+        .user-role-badge { font-size: 10px; font-weight: 900; color: #ff6b00; text-transform: uppercase; letter-spacing: 1px; margin-top: 5px; }
+
+        .dropdown-avatar {
+            width: 60px; height: 60px; border-radius: 50%; border: 3px solid #000;
+            margin: 0 auto 10px; object-fit: cover; display: block;
+        }
 
         .profile-menu-link {
             display: flex; align-items: center; gap: 10px;
@@ -90,15 +94,17 @@
             transition: 0.2s; margin-bottom: 5px; background: #f9f9f9;
         }
         .profile-menu-link:hover { background: #ff6b00; color: #fff; transform: translateX(5px); }
-        .admin-link { background: #000 !important; color: #fff !important; margin-bottom: 10px; }
+        
+        .admin-link { background: #000; color: #fff; }
+        .admin-link:hover { background: #333; color: #ff6b00; }
 
         .logout-btn { 
             width: 100%; padding: 10px; margin-top: 10px;
-            background: none; border: 2px solid #ff3d00; color: #ff3d00;
+            background: none; border: none; color: #ff3d00;
             font-weight: 900; text-transform: uppercase; cursor: pointer;
             transition: 0.2s; border-radius: 10px;
         }
-        .logout-btn:hover { background: #ff3d00; color: #fff; }
+        .logout-btn:hover { background: #fff1f1; }
 
         /* --- HERO & GRID --- */
         .hero-swiper { width: 100%; min-height: 500px; border-bottom: 5px solid #000; background-image: url('imagenes/carrusel.png'); background-size: cover; background-position: center; }
@@ -123,6 +129,7 @@
         .add-btn { background: #fff; color: #000; border: 3px solid #000; padding: 12px 20px; border-radius: 15px; cursor: pointer; font-weight: 900; transition: 0.2s; box-shadow: 4px 4px 0px #000; text-transform: uppercase; font-size: 13px; }
         .add-btn:hover { transform: scale(1.05) translateY(-2px); background: #ff6b00; color: #fff; box-shadow: 6px 6px 0px #000; }
 
+        /* --- FOOTER --- */
         .main-footer { background-color: #fff; border-top: 5px solid #000; padding: 40px 20px; margin-top: 50px; }
         .footer-grid { max-width: 800px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; text-align: center; }
         .footer-col h4 { font-family: 'Archivo Black', sans-serif; font-size: 16px; margin-bottom: 15px; text-transform: uppercase; }
@@ -146,12 +153,20 @@
         </a>
         <div class="header-right">
             <div style="position: relative;" id="userMenuContainer">
-                <div class="cart-btn" id="userBtn">👤</div>
+                <div class="cart-btn" id="userBtn" style="cursor: pointer;">👤</div>
                 
                 <div class="user-dropdown" id="userDropdown">
-                    <div id="dropdownContent">
-                        <p style="text-align:center; font-size:12px;">Cargando...</p>
+                    <div class="user-info-box">
+                        <img id="userAvatarDropdown" src="" class="dropdown-avatar" style="display: none;">
+                        <h4 id="userName" style="font-size:16px; font-family:'Archivo Black', sans-serif; margin-bottom: 2px;"></h4>
+                        <p id="userEmail" style="font-size:12px; color: #666; word-break: break-all;"></p>
+                        <p id="userRole" class="user-role-badge"></p>
                     </div>
+                    
+                    <div id="adminLinkContainer"></div>
+                    <a href="perfil.html" class="profile-menu-link">👤 Mi Perfil</a>
+                    
+                    <button onclick="cerrarSesion()" class="logout-btn">Cerrar Sesión</button>
                 </div>
             </div>
 
@@ -175,6 +190,18 @@
                     </div>
                 </div>
             </div>
+            <div class="swiper-slide">
+                <div class="slide-container">
+                    <div class="slide-text">
+                        <h1>Clásica <br> Margherita</h1>
+                        <p>Mozzarella fresca de búfala, albahaca recién cortada y el mejor aceite de oliva extra virgen.</p>
+                        <a href="catalogo.html" class="add-btn" style="display: inline-block; text-decoration: none; padding: 15px 25px;">VER CATÁLOGO</a>
+                    </div>
+                    <div class="slide-image-wrapper">
+                        <img src="imagenes/pizza_marg.png" class="slide-img" alt="Pizza">
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="swiper-button-next" style="color: #fff;"></div>
         <div class="swiper-button-prev" style="color: #fff;"></div>
@@ -195,29 +222,7 @@
                     <button class="add-btn" onclick="addToCart('Pepperoni Premium', 121.99, 'imagenes/pizza_pepe.png')">AGREGAR</button>
                 </div>
             </div>
-            <div class="card">
-                <img src="imagenes/pizza_suprema.png" class="card-image" alt="Suprema">
-                <div class="card-info">
-                    <h3>Pizza Suprema</h3>
-                    <p>Pimientos, cebolla y champiñones.</p>
-                </div>
-                <div class="card-footer">
-                    <span class="card-price">$166.99</span>
-                    <button class="add-btn" onclick="addToCart('Pizza Suprema', 166.99, 'imagenes/pizza_suprema.png')">AGREGAR</button>
-                </div>
             </div>
-            <div class="card">
-                <img src="imagenes/pizza_marg.png" class="card-image" alt="Margherita">
-                <div class="card-info">
-                    <h3>Margherita</h3>
-                    <p>Sencillez: mozzarella y albahaca.</p>
-                </div>
-                <div class="card-footer">
-                    <span class="card-price">$158.99</span>
-                    <button class="add-btn" onclick="addToCart('Margherita', 158.99, 'imagenes/pizza_marg.png')">AGREGAR</button>
-                </div>
-            </div>
-        </div>
     </div>
 
     <footer class="main-footer">
@@ -245,45 +250,52 @@
         });
 
         async function initAuth() {
-            const { data: { user } } = await supabaseClient.auth.getUser();
+            const { data: { user }, error: authError } = await supabaseClient.auth.getUser();
             const userBtn = document.getElementById('userBtn');
             const userDropdown = document.getElementById('userDropdown');
-            const dropdownContent = document.getElementById('dropdownContent');
 
             if (user) {
-                const { data: perfil } = await supabaseClient
+                // Obtener datos del perfil
+                const { data: perfil, error: profileError } = await supabaseClient
                     .from('perfiles')
-                    .select('rol, nombre, avatar_url')
+                    .select('rol, nombre, foto_url')
                     .eq('id', user.id)
                     .maybeSingle();
 
-                const rol = perfil ? perfil.rol : 'usuario';
-                const nombre = perfil && perfil.nombre ? perfil.nombre : 'Usuario';
-                const fotoUrl = perfil && perfil.avatar_url ? perfil.avatar_url : 'imagenes/freddy.png';
-                
-                // 1. Inyectamos la foto en el botón circular del header
-                userBtn.innerHTML = `<img src="${fotoUrl}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">`;
+                const rol = perfil?.rol || 'usuario';
+                const nombre = perfil?.nombre || user.email.split('@')[0];
+                const foto = perfil?.foto_url;
+
+                // Actualizar Botón Header
+                if (foto) {
+                    userBtn.innerHTML = `<img src="${foto}" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">`;
+                } else {
+                    const inicial = nombre.charAt(0).toUpperCase();
+                    userBtn.innerHTML = `<div style="width:100%; height:100%; background:#ff6b00; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:900; border-radius:50%;">${inicial}</div>`;
+                }
                 
                 userBtn.onclick = (e) => { 
                     e.stopPropagation();
                     userDropdown.classList.toggle('active'); 
                 };
 
-                // 2. Construimos el menú respetando tus clases CSS originales
-                let adminLink = (rol === 'admin') ? `<a href="panelA.html" class="profile-menu-link admin-link">⚙️ PANEL ADMIN</a>` : '';
-
-                dropdownContent.innerHTML = `
-                    <div class="user-info-box">
-                        <img src="${fotoUrl}" class="dropdown-avatar">
-                        <div class="user-name">${nombre}</div>
-                        <div style="font-size:11px; color:#666; margin-bottom:5px;">${user.email}</div>
-                        <p class="user-role-badge">${rol.toUpperCase()}</p>
-                    </div>
-                    ${adminLink}
-                    <a href="perfil.html" class="profile-menu-link">👤 Mi Perfil</a>
-                    <button onclick="cerrarSesion()" class="logout-btn">CERRAR SESIÓN</button>
-                `;
+                // Llenar Dropdown
+                if (foto) {
+                    const dropdownAvatar = document.getElementById('userAvatarDropdown');
+                    dropdownAvatar.src = foto;
+                    dropdownAvatar.style.display = 'block';
+                }
+                document.getElementById('userName').textContent = nombre;
+                document.getElementById('userEmail').textContent = user.email;
+                document.getElementById('userRole').textContent = rol;
+                
+                if (rol === 'admin') {
+                    document.getElementById('adminLinkContainer').innerHTML = `
+                        <a href="panelA.html" class="profile-menu-link admin-link">⚙️ PANEL ADMIN</a>
+                    `;
+                }
             } else {
+                // Usuario no logueado
                 userBtn.onclick = () => window.location.href = 'login.html';
             }
         }
@@ -293,6 +305,7 @@
             window.location.reload();
         }
 
+        // --- CARRITO ---
         function addToCart(name, price, img) {
             let cart = JSON.parse(localStorage.getItem('pizzaCart')) || {};
             cart[name] = cart[name] ? {...cart[name], quantity: cart[name].quantity + 1} : {name, price, image: img, quantity: 1};
@@ -304,20 +317,18 @@
             let cart = JSON.parse(localStorage.getItem('pizzaCart')) || {};
             let total = Object.values(cart).reduce((s, i) => s + i.quantity, 0);
             const badge = document.getElementById('cartBadge');
-            if (badge) {
-                if (total > 0) {
-                    badge.style.display = 'flex';
-                    badge.textContent = total;
-                } else {
-                    badge.style.display = 'none';
-                }
+            if (total > 0) {
+                badge.style.display = 'flex';
+                badge.textContent = total;
+            } else {
+                badge.style.display = 'none';
             }
         }
 
         window.onclick = (e) => {
             const container = document.getElementById('userMenuContainer');
             if (container && !container.contains(e.target)) {
-                userDropdown.classList.remove('active');
+                document.getElementById('userDropdown').classList.remove('active');
             }
         };
     </script>
