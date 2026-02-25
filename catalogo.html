@@ -29,9 +29,16 @@
             position: sticky;
             top: 0;
             z-index: 1000;
+            /* AGREGADO: Transición suave para el escondite */
+            transition: transform 0.4s ease-in-out; 
         }
 
-        /* PATRÓN DE CUADROS BLANCO Y NEGRO (DE TU SEGUNDO CÓDIGO) */
+        /* CLASE NUEVA PARA ESCONDER EL HEADER */
+        .header.nav-up {
+            transform: translateY(-100%);
+        }
+
+        /* PATRÓN DE CUADROS BLANCO Y NEGRO */
         .header::after {
             content: "";
             position: absolute;
@@ -51,7 +58,7 @@
             font-family: 'Archivo Black', sans-serif;
             font-size: clamp(22px, 6vw, 36px);
             text-transform: uppercase;
-            color: #ff4500; /* Naranja Freddy's */
+            color: #ff4500; 
             text-shadow: 3px 3px 0px #000; 
         }
 
@@ -125,7 +132,7 @@
             box-shadow: 7px 7px 0px #000;
         }
 
-        /* GRID Y TARJETAS (ESTILO SEGUNDO CÓDIGO) */
+        /* GRID Y TARJETAS */
         .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
         
         .grid-container { 
@@ -143,7 +150,7 @@
             display: flex; 
             flex-direction: column; 
             transition: 0.3s; 
-            opacity: 0; /* Para la animación de entrada */
+            opacity: 0; 
         }
 
         .card:hover { 
@@ -199,7 +206,7 @@
 </head>
 <body>
 
-    <header class="header">
+    <header class="header" id="mainHeader">
         <div class="header-title">
             <h1>FREDDY'S PIZZA</h1>
         </div>
@@ -219,7 +226,7 @@
 
     <div class="container">
         <div class="grid-container" id="productos-render">
-            </div>
+        </div>
     </div>
 
     <script>
@@ -230,19 +237,32 @@
 
         const CART_KEY = 'pizzaCart';
 
-        // FUNCIÓN CARGAR CATEGORÍA (CON LÓGICA DE SUPABASE)
+        // LÓGICA PARA OCULTAR HEADER AL HACER SCROLL
+        let lastScrollTop = 0;
+        const header = document.getElementById('mainHeader');
+
+        window.addEventListener('scroll', function() {
+            let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            
+            if (scrollTop > lastScrollTop && scrollTop > 100) {
+                // Si bajas: ocultar
+                header.classList.add('nav-up');
+            } else {
+                // Si subes: mostrar
+                header.classList.remove('nav-up');
+            }
+            lastScrollTop = scrollTop;
+        });
+
+        // FUNCIÓN CARGAR CATEGORÍA
         async function cargarCategoria(categoria, btn) {
-            // Manejo de tabs
             if (btn) {
                 document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
-            } else {
-                // Si se llama por primera vez sin botón, marcar el primero como activo
-                document.querySelector('.tab-btn').classList.add('active');
             }
 
             const container = document.getElementById('productos-render');
-            container.innerHTML = ""; // Limpiar antes de cargar
+            container.innerHTML = ""; 
 
             const { data: productos, error } = await supabaseClient
                 .from('productos')
@@ -254,7 +274,6 @@
                 return;
             }
 
-            // Renderizar tarjetas con el estilo y animación
             productos.forEach((p, index) => {
                 const card = document.createElement('div');
                 card.className = "card animar-entrada";
@@ -282,7 +301,6 @@
             localStorage.setItem(CART_KEY, JSON.stringify(cart));
             updateCartBadge();
             
-            // Animación pequeña en el icono del carrito
             const cartIcon = document.querySelector('.cart-btn');
             cartIcon.style.transform = "scale(1.3)";
             setTimeout(() => cartIcon.style.transform = "scale(1)", 200);
@@ -296,7 +314,6 @@
             badge.textContent = total;
         }
 
-        // INICIALIZACIÓN
         window.onload = () => {
             cargarCategoria('pizzas');
             updateCartBadge();
