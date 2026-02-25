@@ -45,7 +45,6 @@
         .card-text h3 { color: #333; font-size: 16px; }
         .card-text p { color: #666; font-size: 12px; }
 
-        /* SECCIÓN CRUD Y FILTROS */
         .crud-section { background: white; padding: 25px; border-radius: 12px; margin-top: 30px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
         .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px; }
         
@@ -62,7 +61,6 @@
         .btn-edit { color: #3b82f6; cursor: pointer; background: none; border: none; font-size: 18px; margin-right: 10px; }
         .btn-delete { color: #ef4444; cursor: pointer; background: none; border: none; font-size: 18px; }
 
-        /* Badges */
         .badge { padding: 4px 8px; border-radius: 4px; font-size: 10px; font-weight: bold; text-transform: uppercase; }
         .badge-pizzas { background: #ffedd5; color: #9a3412; }
         .badge-bebidas { background: #dcfce7; color: #166534; }
@@ -72,10 +70,8 @@
         .badge-duda { background: #f0fdf4; color: #166534; }
         .badge-inconformidad { background: #ffedda; color: #b45309; }
 
-        /* Contador de Notificaciones en Card */
         #msgCount { background: #ef4444; color: white; padding: 2px 8px; border-radius: 10px; font-size: 11px; margin-left: 5px; }
 
-        /* Modales */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; justify-content: center; align-items: center; }
         .modal-content { background: white; padding: 30px; border-radius: 12px; width: 450px; max-width: 90%; }
         .modal-content input, .modal-content select, .modal-content textarea { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; }
@@ -156,6 +152,7 @@
                             <th>Tipo</th>
                             <th>Correo</th>
                             <th>Mensaje</th>
+                            <th>Estado</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
@@ -192,12 +189,12 @@
             <p style="font-size: 14px; margin-bottom: 5px;"><strong>De:</strong> <span id="msgFrom"></span></p>
             <div id="msgBody" style="background: #f1f5f9; padding: 15px; border-radius: 8px; margin-bottom: 20px; font-style: italic; font-size: 14px; border-left: 4px solid #ff6b00;"></div>
             
-            <label style="font-size: 12px; font-weight: bold; color: #1e293b;">TU RESPUESTA:</label>
+            <label style="font-size: 12px; font-weight: bold; color: #1e293b;">TU RESPUESTA (Se guardará en el perfil del cliente):</label>
             <textarea id="adminReply" placeholder="Escribe aquí tu respuesta para el cliente..." style="height: 120px; margin-top: 5px; resize: none;"></textarea>
             
             <div class="modal-actions">
                 <button onclick="closeReplyModal()" style="padding: 10px; cursor:pointer; background: none; border: none; font-weight: bold;">Cerrar</button>
-                <button class="btn-add" onclick="sendEmailResponse()">📧 Enviar por Correo</button>
+                <button class="btn-add" onclick="sendAdminResponse()">📧 Responder y Guardar</button>
             </div>
         </div>
     </div>
@@ -207,12 +204,14 @@
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZuZGZtY3hsaWZjd3pwamJwaG95Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3OTc3MDIsImV4cCI6MjA4NzM3MzcwMn0.OkQ6aSZsHkyLMgfT-x0w3beJ3Ey95smEujmhT7ZfjuY'; 
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
+        let currentMsgId = null; // Variable global para saber a qué mensaje respondemos
+
         document.addEventListener('DOMContentLoaded', () => {
             loadProducts();
             loadMessages();
         });
 
-        // --- PRODUCTOS ---
+        // --- GESTIÓN PRODUCTOS ---
         async function loadProducts(categoria = 'todos') {
             let query = _supabase.from('productos').select('*');
             if (categoria !== 'todos') query = query.eq('categoria', categoria);
@@ -259,20 +258,19 @@
             }
         }
 
-        // --- BUZÓN CON MEJORAS ---
+        // --- GESTIÓN BUZÓN ---
         async function loadMessages() {
             const { data, error } = await _supabase.from('mensajes_contacto').select('*').order('created_at', { ascending: false });
             if (error) return;
 
-            // Actualizar contador de notificaciones
-            document.getElementById('msgCount').innerText = data.length;
+            document.getElementById('msgCount').innerText = data.filter(m => !m.respuesta_admin).length;
 
             const tbody = document.getElementById('messageTableBody');
             tbody.innerHTML = data.map(m => {
                 const fecha = new Date(m.created_at).toLocaleDateString();
                 const badgeClass = `badge-${m.tipo.toLowerCase().replace(/\s/g, '')}`;
-                // Cortar el mensaje para la tabla
                 const msjCorto = m.mensaje.length > 30 ? m.mensaje.substring(0, 30) + "..." : m.mensaje;
+                const estado = m.respuesta_admin ? '✅ Respondido' : '⏳ Pendiente';
                 
                 return `
                     <tr>
@@ -280,8 +278,9 @@
                         <td><span class="badge ${badgeClass}">${m.tipo}</span></td>
                         <td style="font-weight: bold; font-size: 13px;">${m.correo}</td>
                         <td style="font-size: 13px;">${msjCorto}</td>
+                        <td style="font-size: 12px;">${estado}</td>
                         <td>
-                            <button class="btn-edit" onclick="viewMessage('${m.correo}', \`${m.mensaje.replace(/`/g, "\\`")}\`)">👁️</button>
+                            <button class="btn-edit" onclick="viewMessage('${m.id}', '${m.correo}', \`${m.mensaje.replace(/`/g, "\\`")}\`)">👁️</button>
                             <button class="btn-delete" onclick="deleteMessage('${m.id}')">🗑️</button>
                         </td>
                     </tr>
@@ -289,26 +288,45 @@
             }).join('');
         }
 
-        function viewMessage(correo, mensaje) {
+        function viewMessage(id, correo, mensaje) {
+            currentMsgId = id; // Guardamos el ID del mensaje actual
             document.getElementById('msgFrom').innerText = correo;
             document.getElementById('msgBody').innerText = mensaje;
             document.getElementById('replyModal').style.display = 'flex';
         }
 
+        async function sendAdminResponse() {
+            const correo = document.getElementById('msgFrom').innerText;
+            const respuesta = document.getElementById('adminReply').value;
+            
+            if(!respuesta) return alert("Por favor escribe una respuesta.");
+
+            // 1. Guardar en Supabase para que el usuario lo vea en su panel
+            const { error } = await _supabase
+                .from('mensajes_contacto')
+                .update({ 
+                    respuesta_admin: respuesta,
+                    estado: 'Respondido' 
+                })
+                .eq('id', currentMsgId);
+
+            if (error) {
+                alert("Error al guardar la respuesta: " + error.message);
+            } else {
+                alert("Respuesta guardada con éxito.");
+                // 2. Abrir correo electrónico (opcional, como respaldo)
+                const subject = encodeURIComponent("Respuesta de Freddy's Pizza");
+                window.location.href = `mailto:${correo}?subject=${subject}&body=${encodeURIComponent(respuesta)}`;
+                
+                closeReplyModal();
+                loadMessages();
+            }
+        }
+
         function closeReplyModal() {
             document.getElementById('replyModal').style.display = 'none';
             document.getElementById('adminReply').value = "";
-        }
-
-        function sendEmailResponse() {
-            const correo = document.getElementById('msgFrom').innerText;
-            const respuesta = document.getElementById('adminReply').value;
-            if(!respuesta) return alert("Por favor escribe una respuesta.");
-            
-            const subject = encodeURIComponent("Respuesta de Freddy's Pizza");
-            const body = encodeURIComponent(respuesta);
-            window.location.href = `mailto:${correo}?subject=${subject}&body=${body}`;
-            closeReplyModal();
+            currentMsgId = null;
         }
 
         async function deleteMessage(id) {
@@ -345,4 +363,3 @@
     </script>
 </body>
 </html>
-
