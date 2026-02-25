@@ -1,247 +1,251 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-EVDX4YSVLB"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-EVDX4YSVLB');
-    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/x-icon" href="freddy.png">
-    <title>FREDDY'S PIZZA - Inicio</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap" rel="stylesheet">
+    <title>FREDDY'S PIZZA - Control de Usuarios</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-
     <style>
-        /* Animación para que la ventana salga con estilo */
-        @keyframes popIn {
-            from { opacity: 0; transform: scale(0.9) translateY(-10px); }
-            to { opacity: 1; transform: scale(1) translateY(0); }
-        }
+        :root { --primary: #a855f7; --dark: #0f172a; --bg: #f8fafc; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { background: var(--bg); color: var(--dark); }
 
-        :root { --freddy-orange: #ff6b00; --freddy-dark: #000; }
+        /* Header Estilo Freddy's */
+        .header { background: var(--dark); color: white; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid var(--primary); }
+        .admin-info { display: flex; align-items: center; gap: 12px; }
+        .admin-img-wrapper { position: relative; width: 42px; height: 42px; }
+        .admin-img { width: 100%; height: 100%; border-radius: 50%; border: 2px solid var(--primary); object-fit: cover; background: #334155; }
+
+        .container { max-width: 1000px; margin: 30px auto; padding: 0 20px; }
         
-        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #fdf2e9; color: #333; overflow-x: hidden; }
+        /* Barra de herramientas */
+        .top-bar { display: flex; gap: 15px; margin-bottom: 25px; flex-wrap: wrap; }
+        .input-styled { padding: 14px; border: 1px solid #e2e8f0; border-radius: 14px; outline: none; transition: 0.3s; }
+        .btn { padding: 12px 20px; border: none; border-radius: 12px; cursor: pointer; font-weight: bold; transition: 0.2s; display: flex; align-items: center; gap: 8px; justify-content: center; }
+        .btn-primary { background: var(--primary); color: white; }
+
+        /* Tarjetas de Usuario */
+        .user-card { background: white; padding: 20px; border-radius: 20px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .user-meta img { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; background: #eee; }
+        .role-tag { padding: 4px 12px; border-radius: 10px; font-size: 11px; font-weight: 800; text-transform: uppercase; display: inline-block; margin-top: 5px; }
+        .tag-admin { background: #fee2e2; color: #ef4444; }
+        .tag-vendedor { background: #fef3c7; color: #d97706; }
+        .tag-usuario { background: #f1f5f9; color: #475569; }
+
+        /* Modal */
+        .modal { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.7); display: none; justify-content: center; align-items: center; backdrop-filter: blur(8px); z-index: 999; }
+        .modal-content { background: white; padding: 30px; border-radius: 25px; width: 90%; max-width: 420px; max-height: 90vh; overflow-y: auto; }
+        .form-group { margin-bottom: 15px; display: flex; flex-direction: column; gap: 5px; }
         
-        /* HEADER ORIGINAL */
-        .header { 
-            background: #fff; padding: 15px 25px; display: flex; 
-            justify-content: space-between; align-items: center; 
-            border-bottom: 4px solid #000; position: sticky; top: 0; z-index: 1000; 
-        }
-        .logo-container { display: flex; align-items: center; gap: 12px; text-decoration: none; }
-        .logo-img { height: 45px; width: auto; }
-        .logo-text { font-family: 'Archivo Black', sans-serif; font-size: 22px; color: #ff4500; text-shadow: 2px 2px 0px #000; }
-
-        .header-right { display: flex; gap: 15px; align-items: center; }
-
-        /* BOTÓN DE USUARIO CIRCULAR */
-        .user-btn-circle { 
-            width: 48px; height: 48px; border-radius: 50%; border: 3px solid #000; 
-            cursor: pointer; overflow: hidden; background: #fff; transition: 0.3s;
-            box-shadow: 3px 3px 0px #000; display: flex; align-items: center; justify-content: center;
-        }
-        .user-btn-circle:hover { transform: scale(1.1); }
-        .user-btn-circle img { width: 100%; height: 100%; object-fit: cover; }
-
-        /* VENTANA FLOTANTE (MODAL) */
-        .user-modal {
-            display: none; position: absolute; top: 70px; right: 0; 
-            width: 280px; background: #fff; border: 4px solid #000; 
-            border-radius: 20px; box-shadow: 8px 8px 0px #000; 
-            padding: 20px; z-index: 2000; animation: popIn 0.25s ease-out;
-        }
-        .user-modal.active { display: block; }
-
-        .modal-profile-box { text-align: center; margin-bottom: 20px; }
-        .modal-photo {
-            width: 80px; height: 80px; border-radius: 50%; border: 4px solid var(--freddy-orange);
-            margin-bottom: 10px; object-fit: cover; box-shadow: 4px 4px 0px #000;
-        }
-        .modal-name { font-family: 'Archivo Black', sans-serif; font-size: 16px; margin-bottom: 4px; color: #000; }
-        .modal-email { font-size: 11px; color: #666; margin-bottom: 10px; word-break: break-all; }
-
-        /* BOTONES DEL MODAL */
-        .modal-nav { display: flex; flex-direction: column; gap: 10px; }
-        .m-btn {
-            text-decoration: none; color: #000; font-weight: 900; padding: 12px;
-            border: 3px solid #000; border-radius: 12px; text-align: center;
-            transition: 0.2s; box-shadow: 4px 4px 0px #000; text-transform: uppercase; font-size: 12px;
-            display: flex; align-items: center; justify-content: center; gap: 8px;
-        }
-        .m-btn:hover { background: var(--freddy-orange); color: #fff; transform: translate(-2px, -2px); box-shadow: 6px 6px 0px #000; }
-        
-        /* Botón Admin Negro */
-        .btn-admin { background: #000; color: #fff; }
-        
-        .btn-logout { 
-            margin-top: 15px; color: #ff3d00; font-weight: 900; cursor: pointer; 
-            border: none; background: none; text-transform: uppercase; font-size: 11px;
-            width: 100%; text-align: center; border-top: 1px solid #eee; padding-top: 15px;
-        }
-
-        /* CARRUSEL Y GRID (TU DISEÑO ORIGINAL) */
-        .hero-swiper { width: 100%; min-height: 500px; border-bottom: 5px solid #000; background-image: url('imagenes/carrusel.png'); background-size: cover; background-position: center; }
-        .swiper-slide { display: flex; align-items: center; justify-content: center; padding: 20px; }
-        .slide-container { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 40px; width: 100%; max-width: 1100px; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(8px); padding: 30px; border-radius: 30px; border: 2px solid rgba(255,255,255,0.3); }
-        .slide-text h1 { font-family: 'Archivo Black', sans-serif; font-size: clamp(28px, 5vw, 55px); color: #fff; text-shadow: 3px 3px 0px #000; text-transform: uppercase; line-height: 1; margin-bottom: 15px; }
-        .slide-text p { font-size: clamp(14px, 2vw, 18px); font-weight: 600; color: #fff; margin-bottom: 25px; text-shadow: 1px 1px 5px rgba(0,0,0,0.7); }
-        .slide-img { max-height: 350px; width: auto; max-width: 100%; border-radius: 40px; box-shadow: 0 15px 35px rgba(0,0,0,0.4); border: 5px solid #fff; }
-        
-        .container { max-width: 1200px; margin: 0 auto; padding: 50px 20px; }
-        .section-title { font-family: 'Archivo Black', sans-serif; text-align: center; margin-bottom: 40px; font-size: clamp(24px, 5vw, 35px); text-transform: uppercase; color: #000; }
-        .grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px; }
-        
-        .card { background: white; border-radius: 20px; border: 3px solid #000; overflow: hidden; box-shadow: 6px 6px 0px #000; transition: 0.3s; display: flex; flex-direction: column; }
-        .card-image { width: 100%; height: 230px; object-fit: cover; border-bottom: 3px solid #000; }
-        .card-info { padding: 25px; flex-grow: 1; }
-        .card-price { color: #ff6b00; font-size: 26px; font-weight: 900; }
-        .add-btn { background: #fff; border: 3px solid #000; padding: 12px 20px; border-radius: 15px; cursor: pointer; font-weight: 900; box-shadow: 4px 4px 0px #000; text-transform: uppercase; font-size: 13px; }
+        /* Estilo para subir foto */
+        .photo-upload { text-align: center; margin-bottom: 20px; }
+        .preview-img { width: 80px; height: 80px; border-radius: 50%; border: 3px solid var(--primary); object-fit: cover; margin-bottom: 10px; }
     </style>
 </head>
 <body>
 
     <header class="header">
-        <a href="index.html" class="logo-container">
-            <img src="imagenes/logo.png" alt="Logo" class="logo-img">
-            <span class="logo-text">FREDDY'S PIZZA</span>
-        </a>
-        <div class="header-right">
-            <div style="position: relative;" id="menuWrapper">
-                <div class="user-btn-circle" id="userBtn">
-                    <span id="userInitial">👤</span>
-                </div>
-
-                <div class="user-modal" id="userModal">
-                    <div class="modal-profile-box">
-                        <img src="https://via.placeholder.com/80" id="modalPhoto" class="modal-photo">
-                        <h3 id="modalName" class="modal-name">Cargando...</h3>
-                        <p id="modalEmail" class="modal-email">email@ejemplo.com</p>
-                    </div>
-                    
-                    <nav class="modal-nav">
-                        <div id="adminLinkContainer"></div> <a href="perfil_cliente.html" class="m-btn">👤 Mi Perfil</a>
-                    </nav>
-
-                    <button class="btn-logout" onclick="cerrarSesion()">Cerrar Sesión</button>
-                </div>
+        <div style="display:flex; align-items:center; gap:15px;">
+            <a href="panelA.html" style="color:white; text-decoration:none; font-size:20px;">← Volver</a>
+            <h1 style="font-size: 20px;">Freddy's Admin 🍕</h1>
+        </div>
+        <div class="admin-info" id="adminTrigger" style="cursor:pointer">
+            <div style="text-align:right">
+                <p id="curAdminName" style="font-size:14px; font-weight:bold;">Cargando...</p>
+                <p style="font-size:11px; color:var(--primary); font-weight: 800;">ADMINISTRADOR</p>
             </div>
-
-            <a href="carrito.html" class="user-btn-circle" style="text-decoration:none; font-size: 22px;">
-                🛒<span id="cartBadge" style="position:absolute; top:-5px; right:-5px; background:red; color:white; font-size:10px; padding:2px 6px; border-radius:50%; display:none; border:2px solid #000;">0</span>
-            </a>
+            <div class="admin-img-wrapper">
+                <img id="curAdminImg" src="https://via.placeholder.com/42" class="admin-img">
+            </div>
         </div>
     </header>
 
-    <section class="swiper hero-swiper">
-        <div class="swiper-wrapper">
-            <div class="swiper-slide">
-                <div class="slide-container">
-                    <div class="slide-text">
-                        <h1>Pepperoni <br> Legendario</h1>
-                        <p>Nuestra pizza estrella con pepperoni de corte grueso y una mezcla secreta de quesos derretidos.</p>
-                        <a href="#menu" class="m-btn" style="display:inline-block; background:#fff">¡ORDENAR YA!</a>
-                    </div>
-                    <img src="imagenes/pizza_pepe.png" class="slide-img" alt="Pizza">
-                </div>
-            </div>
+    <div class="container">
+        <div class="top-bar">
+            <input type="text" id="searchInput" class="input-styled" style="flex:2" placeholder="Buscar usuario..." onkeyup="render()">
+            <select id="roleFilter" class="input-styled" onchange="render()">
+                <option value="todos">Todos los Roles</option>
+                <option value="admin">Administradores</option>
+                <option value="vendedor">Vendedores</option>
+                <option value="usuario">Usuarios</option>
+            </select>
+            <button class="btn btn-primary" onclick="openModal()">+ Nuevo Usuario</button>
         </div>
-        <div class="swiper-button-next" style="color:#fff"></div>
-        <div class="swiper-button-prev" style="color:#fff"></div>
-        <div class="swiper-pagination"></div>
-    </section>
 
-    <div class="container" id="menu">
-        <h2 class="section-title">Especialidades</h2>
-        <div class="grid-container" id="pizzasGrid">
-            <div class="card">
-                <img src="imagenes/pizza_pepe.png" class="card-image">
-                <div class="card-info">
-                    <h3 style="font-family:'Archivo Black'">Pepperoni Premium</h3>
-                    <p style="font-size:14px; color:#666; margin: 10px 0;">Extra pepperoni y mucho queso.</p>
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <span class="card-price">$121.99</span>
-                        <button class="add-btn">AGREGAR</button>
-                    </div>
-                </div>
+        <div id="userList"></div>
+    </div>
+
+    <div id="userModal" class="modal">
+        <div class="modal-content">
+            <h2 id="modalTitle" style="text-align:center; margin-bottom:20px;">Usuario</h2>
+            
+            <div class="photo-upload">
+                <img id="modalPreview" src="https://via.placeholder.com/80" class="preview-img">
+                <input type="file" id="fileInput" accept="image/*" style="display:none" onchange="previewImage(event)">
+                <button type="button" class="btn" style="font-size:12px; margin:auto; background:#f1f5f9" onclick="document.getElementById('fileInput').click()">
+                    📸 Cambiar Foto
+                </button>
             </div>
+
+            <form id="userForm">
+                <input type="hidden" id="userId">
+                <div class="form-group">
+                    <label style="font-size:12px; font-weight:bold">Nombre</label>
+                    <input type="text" id="userName" class="input-styled" required>
+                </div>
+                <div class="form-group">
+                    <label style="font-size:12px; font-weight:bold">Email</label>
+                    <input type="email" id="userEmail" class="input-styled" required>
+                </div>
+                <div class="form-group" id="passArea">
+                    <label style="font-size:12px; font-weight:bold">Contraseña</label>
+                    <input type="password" id="userPass" class="input-styled">
+                </div>
+                <div class="form-group">
+                    <label style="font-size:12px; font-weight:bold">Rol</label>
+                    <select id="userRole" class="input-styled">
+                        <option value="usuario">Usuario</option>
+                        <option value="vendedor">Vendedor</option>
+                        <option value="admin">Administrador</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width:100%">Guardar</button>
+                <button type="button" class="btn" style="width:100%; margin-top:10px; background:none" onclick="closeModal()">Cancelar</button>
+            </form>
         </div>
     </div>
 
     <script>
         const SUPABASE_URL = 'https://vndfmcxlifcwzpjbphoy.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZuZGZtY3hsaWZjd3pwamJwaG95Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3OTc3MDIsImV4cCI6MjA4NzM3MzcwMn0.OkQ6aSZsHkyLMgfT-x0w3beJ3Ey95smEujmhT7ZfjuY'; 
-        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        const userBtn = document.getElementById('userBtn');
-        const userModal = document.getElementById('userModal');
+        let allUsers = [];
+        let selectedFile = null;
 
-        // Toggle del modal
-        userBtn.onclick = (e) => {
-            e.stopPropagation();
-            userModal.classList.toggle('active');
-        };
-
-        // Cerrar al hacer clic fuera
-        window.onclick = (e) => {
-            if (!document.getElementById('menuWrapper').contains(e.target)) {
-                userModal.classList.remove('active');
-            }
-        };
-
-        async function initAuth() {
-            const { data: { user } } = await supabaseClient.auth.getUser();
-
+        async function loadAdmin() {
+            const { data: { user } } = await _supabase.auth.getUser();
             if (user) {
-                const { data: perfil } = await supabaseClient.from('perfiles').select('*').eq('id', user.id).single();
-                
-                const nombre = perfil?.nombre || 'Usuario';
-                const foto = perfil?.foto_url || null;
-                const rol = perfil?.rol || 'usuario';
-
-                // Update UI
-                if (foto) {
-                    userBtn.innerHTML = `<img src="${foto}">`;
-                    document.getElementById('modalPhoto').src = foto;
-                } else {
-                    document.getElementById('userInitial').innerText = user.email.charAt(0).toUpperCase();
+                const { data } = await _supabase.from('perfiles').select('*').eq('id', user.id).single();
+                if (data) {
+                    document.getElementById('curAdminName').innerText = data.nombre || user.email;
+                    if (data.foto_url) document.getElementById('curAdminImg').src = data.foto_url;
                 }
-
-                document.getElementById('modalName').innerText = nombre;
-                document.getElementById('modalEmail').innerText = user.email;
-
-                // Botón de Admin estilizado
-                if (rol === 'admin') {
-                    document.getElementById('adminLinkContainer').innerHTML = `
-                        <a href="panelA.html" class="m-btn btn-admin">⚙️ PANEL ADMIN</a>
-                    `;
-                }
-            } else {
-                userBtn.onclick = () => window.location.href = 'login.html';
             }
         }
 
-        async function cerrarSesion() {
-            await supabaseClient.auth.signOut();
-            window.location.reload();
+        async function load() {
+            // CORRECCIÓN: Quitamos el .order('created_at') porque no existe la columna
+            const { data, error } = await _supabase.from('perfiles').select('*');
+            if (error) return console.log(error);
+            allUsers = data;
+            render();
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            initAuth();
-            new Swiper('.hero-swiper', {
-                loop: true,
-                autoplay: { delay: 4000 },
-                pagination: { el: '.swiper-pagination' },
-                navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' }
+        function render() {
+            const list = document.getElementById('userList');
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const filter = document.getElementById('roleFilter').value;
+            list.innerHTML = '';
+
+            const filtered = allUsers.filter(u => {
+                const matchSearch = (u.nombre || '').toLowerCase().includes(search) || u.email.toLowerCase().includes(search);
+                const matchRole = filter === 'todos' || u.rol === filter;
+                return matchSearch && matchRole;
             });
-        });
+
+            filtered.forEach(u => {
+                const img = u.foto_url || 'https://via.placeholder.com/45';
+                list.innerHTML += `
+                    <div class="user-card">
+                        <div style="display:flex; gap:15px; align-items:center">
+                            <img src="${img}" style="width:45px; height:45px; border-radius:50%; object-fit:cover">
+                            <div>
+                                <strong>${u.nombre || 'Sin nombre'}</strong><br>
+                                <small style="color:gray">${u.email}</small><br>
+                                <span class="role-tag tag-${u.rol}">${u.rol}</span>
+                            </div>
+                        </div>
+                        <div style="display:flex; gap:8px">
+                            <button class="btn" style="background:#f1f5f9" onclick="editUser('${u.id}')">✏️</button>
+                            <button class="btn" style="background:#fee2e2; color:#ef4444" onclick="deleteUser('${u.id}')">🗑️</button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function previewImage(event) {
+            selectedFile = event.target.files[0];
+            if (selectedFile) {
+                const reader = new FileReader();
+                reader.onload = (e) => document.getElementById('modalPreview').src = e.target.result;
+                reader.readAsDataURL(selectedFile);
+            }
+        }
+
+        function openModal(isEdit = false) {
+            document.getElementById('userForm').reset();
+            document.getElementById('userId').value = '';
+            selectedFile = null;
+            document.getElementById('modalPreview').src = 'https://via.placeholder.com/80';
+            document.getElementById('passArea').style.display = isEdit ? 'none' : 'block';
+            document.getElementById('userModal').style.display = 'flex';
+        }
+
+        function closeModal() { document.getElementById('userModal').style.display = 'none'; }
+
+        function editUser(id) {
+            const u = allUsers.find(x => x.id === id);
+            openModal(true);
+            document.getElementById('userId').value = u.id;
+            document.getElementById('userName').value = u.nombre || '';
+            document.getElementById('userEmail').value = u.email;
+            document.getElementById('userRole').value = u.rol;
+            if (u.foto_url) document.getElementById('modalPreview').src = u.foto_url;
+            document.getElementById('modalTitle').innerText = "Editar Perfil";
+        }
+
+        document.getElementById('userForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('userId').value;
+            const payload = {
+                nombre: document.getElementById('userName').value,
+                email: document.getElementById('userEmail').value,
+                rol: document.getElementById('userRole').value
+            };
+
+            // Lógica de subir foto (si hay archivo seleccionado)
+            if (selectedFile) {
+                const fileName = `avatars/${Date.now()}_${selectedFile.name}`;
+                const { data: uploadData } = await _supabase.storage.from('fotos').upload(fileName, selectedFile);
+                if (uploadData) {
+                    const { data: urlData } = _supabase.storage.from('fotos').getPublicUrl(fileName);
+                    payload.foto_url = urlData.publicUrl;
+                }
+            }
+
+            if (id) {
+                await _supabase.from('perfiles').update(payload).eq('id', id);
+                alert("Actualizado");
+            } else {
+                const pass = document.getElementById('userPass').value;
+                await _supabase.auth.signUp({ email: payload.email, password: pass, options: { data: payload } });
+                alert("Usuario creado");
+            }
+            closeModal();
+            load();
+        };
+
+        async function deleteUser(id) {
+            if (confirm("¿Eliminar usuario?")) {
+                await _supabase.from('perfiles').delete().eq('id', id);
+                load();
+            }
+        }
+
+        loadAdmin();
+        load();
     </script>
 </body>
 </html>
