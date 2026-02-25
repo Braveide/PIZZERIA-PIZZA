@@ -57,9 +57,10 @@
             display: flex; align-items: center; justify-content: center; 
             position: relative; text-decoration: none; font-size: 20px;
             box-shadow: 3px 3px 0px #000; transition: 0.3s;
-            overflow: hidden; 
+            overflow: hidden; /* Para la imagen de perfil circular */
         }
         .cart-btn:hover { background: #ff6b00; transform: scale(1.1); color: #fff; }
+        .cart-btn img { width: 100%; height: 100%; object-fit: cover; }
 
         .cart-badge { 
             position: absolute; top: -8px; right: -8px; 
@@ -80,12 +81,7 @@
         .user-dropdown.active { display: block; }
 
         .user-info-box { text-align: center; padding-bottom: 15px; border-bottom: 2px solid #eee; margin-bottom: 15px; }
-        .user-role-badge { font-size: 10px; font-weight: 900; color: #ff6b00; text-transform: uppercase; letter-spacing: 1px; margin-top: 5px; }
-
-        .dropdown-avatar {
-            width: 60px; height: 60px; border-radius: 50%; border: 3px solid #000;
-            margin: 0 auto 10px; object-fit: cover; display: block;
-        }
+        .user-role-badge { font-size: 10px; font-weight: 900; color: #ff6b00; text-transform: uppercase; letter-spacing: 1px; margin-top: 5px; display: block; }
 
         .profile-menu-link {
             display: flex; align-items: center; gap: 10px;
@@ -107,7 +103,7 @@
         .logout-btn:hover { background: #fff1f1; }
 
         /* --- HERO & GRID --- */
-        .hero-swiper { width: 100%; min-height: 500px; border-bottom: 5px solid #000; background-image: url('imagenes/carrusel.png'); background-size: cover; background-position: center; }
+        .hero-swiper { width: 100%; min-height: 500px; border-bottom: 5px solid #000; background: #ff4500; }
         .swiper-slide { display: flex; align-items: center; justify-content: center; padding: 20px; }
         .slide-container { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 40px; width: 100%; max-width: 1100px; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(8px); padding: 30px; border-radius: 30px; border: 2px solid rgba(255,255,255,0.3); animation: fadeInUp 0.8s ease-out; }
         .slide-text h1 { font-family: 'Archivo Black', sans-serif; font-size: clamp(28px, 5vw, 55px); color: #fff; text-shadow: 3px 3px 0px #000; text-transform: uppercase; line-height: 1; margin-bottom: 15px; }
@@ -153,18 +149,20 @@
         </a>
         <div class="header-right">
             <div style="position: relative;" id="userMenuContainer">
-                <div class="cart-btn" id="userBtn" style="cursor: pointer;">👤</div>
+                <div class="cart-btn" id="userBtn">
+                    <span id="userInitial">👤</span>
+                </div>
                 
                 <div class="user-dropdown" id="userDropdown">
                     <div class="user-info-box">
-                        <img id="userAvatarDropdown" src="" class="dropdown-avatar" style="display: none;">
-                        <h4 id="userName" style="font-size:16px; font-family:'Archivo Black', sans-serif; margin-bottom: 2px;"></h4>
-                        <p id="userEmail" style="font-size:12px; color: #666; word-break: break-all;"></p>
-                        <p id="userRole" class="user-role-badge"></p>
+                        <h4 id="userNameDisplay" style="font-family: 'Archivo Black', sans-serif; font-size: 16px;">Invitado</h4>
+                        <p id="userEmail" style="font-size:12px; color: #666; word-break: break-all;">Inicia sesión</p>
+                        <span id="userRole" class="user-role-badge"></span>
                     </div>
                     
                     <div id="adminLinkContainer"></div>
-                    <a href="perfil.html" class="profile-menu-link">👤 Mi Perfil</a>
+                    <a href="perfil_cliente.html" class="profile-menu-link">👤 Mi Perfil</a>
+                    <a href="pedidos.html" class="profile-menu-link">🍕 Mis Pedidos</a>
                     
                     <button onclick="cerrarSesion()" class="logout-btn">Cerrar Sesión</button>
                 </div>
@@ -190,19 +188,7 @@
                     </div>
                 </div>
             </div>
-            <div class="swiper-slide">
-                <div class="slide-container">
-                    <div class="slide-text">
-                        <h1>Clásica <br> Margherita</h1>
-                        <p>Mozzarella fresca de búfala, albahaca recién cortada y el mejor aceite de oliva extra virgen.</p>
-                        <a href="catalogo.html" class="add-btn" style="display: inline-block; text-decoration: none; padding: 15px 25px;">VER CATÁLOGO</a>
-                    </div>
-                    <div class="slide-image-wrapper">
-                        <img src="imagenes/pizza_marg.png" class="slide-img" alt="Pizza">
-                    </div>
-                </div>
             </div>
-        </div>
         <div class="swiper-button-next" style="color: #fff;"></div>
         <div class="swiper-button-prev" style="color: #fff;"></div>
         <div class="swiper-pagination"></div>
@@ -210,7 +196,7 @@
 
     <div class="container">
         <h2 class="section-title">Especialidades</h2>
-        <div class="grid-container">
+        <div class="grid-container" id="menu-container">
             <div class="card">
                 <img src="imagenes/pizza_pepe.png" class="card-image" alt="Pepperoni">
                 <div class="card-info">
@@ -237,7 +223,7 @@
     <script>
         const SUPABASE_URL = 'https://vndfmcxlifcwzpjbphoy.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZuZGZtY3hsaWZjd3pwamJwaG95Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3OTc3MDIsImV4cCI6MjA4NzM3MzcwMn0.OkQ6aSZsHkyLMgfT-x0w3beJ3Ey95smEujmhT7ZfjuY'; 
-        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         document.addEventListener('DOMContentLoaded', () => {
             initAuth();
@@ -250,67 +236,64 @@
         });
 
         async function initAuth() {
-            const { data: { user }, error: authError } = await supabaseClient.auth.getUser();
+            const { data: { user } } = await _supabase.auth.getUser();
             const userBtn = document.getElementById('userBtn');
             const userDropdown = document.getElementById('userDropdown');
 
             if (user) {
-                // Obtener datos del perfil
-                const { data: perfil, error: profileError } = await supabaseClient
-                    .from('perfiles')
-                    .select('rol, nombre, foto_url')
-                    .eq('id', user.id)
-                    .maybeSingle();
-
-                const rol = perfil?.rol || 'usuario';
+                // Obtener datos del perfil (nombre, foto y rol)
+                const { data: perfil } = await _supabase.from('perfiles').select('*').eq('id', user.id).maybeSingle();
+                
                 const nombre = perfil?.nombre || user.email.split('@')[0];
+                const rol = perfil?.rol || 'usuario';
                 const foto = perfil?.foto_url;
 
-                // Actualizar Botón Header
+                // Actualizar UI del Dropdown
+                document.getElementById('userNameDisplay').textContent = nombre;
+                document.getElementById('userEmail').textContent = user.email;
+                document.getElementById('userRole').textContent = rol;
+
+                // Actualizar Botón Circular (Foto o Inicial)
                 if (foto) {
-                    userBtn.innerHTML = `<img src="${foto}" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">`;
+                    userBtn.innerHTML = `<img src="${foto}" alt="Perfil">`;
                 } else {
                     const inicial = nombre.charAt(0).toUpperCase();
-                    userBtn.innerHTML = `<div style="width:100%; height:100%; background:#ff6b00; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:900; border-radius:50%;">${inicial}</div>`;
+                    userBtn.innerHTML = `<div style="width:100%; height:100%; background:#000; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:900;">${inicial}</div>`;
                 }
                 
+                // Toggle Dropdown
                 userBtn.onclick = (e) => { 
                     e.stopPropagation();
                     userDropdown.classList.toggle('active'); 
                 };
 
-                // Llenar Dropdown
-                if (foto) {
-                    const dropdownAvatar = document.getElementById('userAvatarDropdown');
-                    dropdownAvatar.src = foto;
-                    dropdownAvatar.style.display = 'block';
-                }
-                document.getElementById('userName').textContent = nombre;
-                document.getElementById('userEmail').textContent = user.email;
-                document.getElementById('userRole').textContent = rol;
-                
+                // Link de Admin si aplica
                 if (rol === 'admin') {
                     document.getElementById('adminLinkContainer').innerHTML = `
                         <a href="panelA.html" class="profile-menu-link admin-link">⚙️ PANEL ADMIN</a>
                     `;
                 }
             } else {
-                // Usuario no logueado
+                // Si no hay sesión, al clickear va al login
                 userBtn.onclick = () => window.location.href = 'login.html';
             }
         }
 
         async function cerrarSesion() {
-            await supabaseClient.auth.signOut();
+            await _supabase.auth.signOut();
             window.location.reload();
         }
 
-        // --- CARRITO ---
         function addToCart(name, price, img) {
             let cart = JSON.parse(localStorage.getItem('pizzaCart')) || {};
             cart[name] = cart[name] ? {...cart[name], quantity: cart[name].quantity + 1} : {name, price, image: img, quantity: 1};
             localStorage.setItem('pizzaCart', JSON.stringify(cart));
             updateCartBadge();
+            
+            // Efecto visual rápido en el badge
+            const badge = document.getElementById('cartBadge');
+            badge.style.transform = 'scale(1.5)';
+            setTimeout(() => badge.style.transform = 'scale(1)', 200);
         }
 
         function updateCartBadge() {
@@ -325,6 +308,7 @@
             }
         }
 
+        // Cerrar dropdown al hacer click fuera
         window.onclick = (e) => {
             const container = document.getElementById('userMenuContainer');
             if (container && !container.contains(e.target)) {
