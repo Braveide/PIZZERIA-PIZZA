@@ -3,56 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FREDDY'S PIZZA - Dashboard Pro</title>
+    <title>FREDDY'S PIZZA - Control de Usuarios</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root { --primary: #a855f7; --dark: #0f172a; --bg: #f8fafc; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
         body { background: var(--bg); color: var(--dark); }
 
+        /* Header Estilo Freddy's */
         .header { background: var(--dark); color: white; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid var(--primary); }
         .admin-info { display: flex; align-items: center; gap: 12px; }
-        .admin-img { width: 42px; height: 42px; border-radius: 50%; border: 2px solid var(--primary); background: #334155; object-fit: cover; }
+        .admin-img-wrapper { position: relative; width: 42px; height: 42px; }
+        .admin-img { width: 100%; height: 100%; border-radius: 50%; border: 2px solid var(--primary); object-fit: cover; background: #334155; }
 
         .container { max-width: 1000px; margin: 30px auto; padding: 0 20px; }
+        
+        /* Barra de herramientas */
         .top-bar { display: flex; gap: 15px; margin-bottom: 25px; flex-wrap: wrap; }
         .input-styled { padding: 14px; border: 1px solid #e2e8f0; border-radius: 14px; outline: none; transition: 0.3s; }
-        .input-styled:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.1); }
-        
-        .btn { padding: 12px 20px; border: none; border-radius: 12px; cursor: pointer; font-weight: bold; transition: 0.2s; display: flex; align-items: center; gap: 8px; }
+        .btn { padding: 12px 20px; border: none; border-radius: 12px; cursor: pointer; font-weight: bold; transition: 0.2s; display: flex; align-items: center; gap: 8px; justify-content: center; }
         .btn-primary { background: var(--primary); color: white; }
-        .btn-primary:hover { transform: translateY(-2px); opacity: 0.9; }
 
-        .user-card { background: white; padding: 20px; border-radius: 20px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
-        .role-tag { padding: 4px 12px; border-radius: 10px; font-size: 11px; font-weight: 800; text-transform: uppercase; margin-top: 5px; display: inline-block; }
+        /* Tarjetas de Usuario */
+        .user-card { background: white; padding: 20px; border-radius: 20px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .user-meta img { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; background: #eee; }
+        .role-tag { padding: 4px 12px; border-radius: 10px; font-size: 11px; font-weight: 800; text-transform: uppercase; display: inline-block; margin-top: 5px; }
         .tag-admin { background: #fee2e2; color: #ef4444; }
         .tag-vendedor { background: #fef3c7; color: #d97706; }
         .tag-usuario { background: #f1f5f9; color: #475569; }
 
+        /* Modal */
         .modal { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.7); display: none; justify-content: center; align-items: center; backdrop-filter: blur(8px); z-index: 999; }
-        .modal-content { background: white; padding: 35px; border-radius: 25px; width: 90%; max-width: 420px; }
+        .modal-content { background: white; padding: 30px; border-radius: 25px; width: 90%; max-width: 420px; max-height: 90vh; overflow-y: auto; }
         .form-group { margin-bottom: 15px; display: flex; flex-direction: column; gap: 5px; }
+        
+        /* Estilo para subir foto */
+        .photo-upload { text-align: center; margin-bottom: 20px; }
+        .preview-img { width: 80px; height: 80px; border-radius: 50%; border: 3px solid var(--primary); object-fit: cover; margin-bottom: 10px; }
     </style>
 </head>
 <body>
 
     <header class="header">
         <div style="display:flex; align-items:center; gap:15px;">
-            <a href="panelA.html" style="color:white; text-decoration:none; font-size:20px;">←</a>
+            <a href="panelA.html" style="color:white; text-decoration:none; font-size:20px;">← Volver</a>
             <h1 style="font-size: 20px;">Freddy's Admin 🍕</h1>
         </div>
-        <div class="admin-info">
+        <div class="admin-info" id="adminTrigger" style="cursor:pointer">
             <div style="text-align:right">
                 <p id="curAdminName" style="font-size:14px; font-weight:bold;">Cargando...</p>
-                <p id="curAdminRole" style="font-size:11px; color:var(--primary); font-weight: 800;">ADMINISTRADOR</p>
+                <p style="font-size:11px; color:var(--primary); font-weight: 800;">ADMINISTRADOR</p>
             </div>
-            <img id="curAdminImg" src="https://via.placeholder.com/42" class="admin-img">
+            <div class="admin-img-wrapper">
+                <img id="curAdminImg" src="https://via.placeholder.com/42" class="admin-img">
+            </div>
         </div>
     </header>
 
     <div class="container">
         <div class="top-bar">
-            <input type="text" id="searchInput" class="input-styled" style="flex:2" placeholder="Buscar por nombre o correo..." onkeyup="render()">
+            <input type="text" id="searchInput" class="input-styled" style="flex:2" placeholder="Buscar usuario..." onkeyup="render()">
             <select id="roleFilter" class="input-styled" onchange="render()">
                 <option value="todos">Todos los Roles</option>
                 <option value="admin">Administradores</option>
@@ -62,44 +72,45 @@
             <button class="btn btn-primary" onclick="openModal()">+ Nuevo Usuario</button>
         </div>
 
-        <div id="userList">
-            </div>
+        <div id="userList"></div>
     </div>
 
     <div id="userModal" class="modal">
         <div class="modal-content">
-            <h2 id="modalTitle" style="margin-bottom: 20px; text-align: center;">Usuario</h2>
+            <h2 id="modalTitle" style="text-align:center; margin-bottom:20px;">Usuario</h2>
+            
+            <div class="photo-upload">
+                <img id="modalPreview" src="https://via.placeholder.com/80" class="preview-img">
+                <input type="file" id="fileInput" accept="image/*" style="display:none" onchange="previewImage(event)">
+                <button type="button" class="btn" style="font-size:12px; margin:auto; background:#f1f5f9" onclick="document.getElementById('fileInput').click()">
+                    📸 Cambiar Foto
+                </button>
+            </div>
+
             <form id="userForm">
                 <input type="hidden" id="userId">
                 <div class="form-group">
-                    <label style="font-size: 13px; font-weight: bold;">Nombre Completo</label>
+                    <label style="font-size:12px; font-weight:bold">Nombre</label>
                     <input type="text" id="userName" class="input-styled" required>
                 </div>
                 <div class="form-group">
-                    <label style="font-size: 13px; font-weight: bold;">Correo Electrónico</label>
+                    <label style="font-size:12px; font-weight:bold">Email</label>
                     <input type="email" id="userEmail" class="input-styled" required>
                 </div>
                 <div class="form-group" id="passArea">
-                    <label style="font-size: 13px; font-weight: bold;">Contraseña Inicial</label>
+                    <label style="font-size:12px; font-weight:bold">Contraseña</label>
                     <input type="password" id="userPass" class="input-styled">
                 </div>
                 <div class="form-group">
-                    <label style="font-size: 13px; font-weight: bold;">Rol de Acceso</label>
+                    <label style="font-size:12px; font-weight:bold">Rol</label>
                     <select id="userRole" class="input-styled">
-                        <option value="usuario">Usuario Estándar</option>
+                        <option value="usuario">Usuario</option>
                         <option value="vendedor">Vendedor</option>
                         <option value="admin">Administrador</option>
                     </select>
                 </div>
-                
-                <div id="editTools" style="display:none; margin-bottom: 15px;">
-                    <button type="button" class="btn" style="background: #6366f1; color: white; width: 100%; font-size: 12px;" onclick="resetPassword()">
-                        🔑 Resetear Contraseña a "Freddy123456"
-                    </button>
-                </div>
-
-                <button type="submit" class="btn btn-primary" style="width:100%; justify-content: center;">Guardar Cambios</button>
-                <button type="button" class="btn" style="width:100%; margin-top:10px; background:none; color:gray; justify-content: center;" onclick="closeModal()">Cancelar</button>
+                <button type="submit" class="btn btn-primary" style="width:100%">Guardar</button>
+                <button type="button" class="btn" style="width:100%; margin-top:10px; background:none" onclick="closeModal()">Cancelar</button>
             </form>
         </div>
     </div>
@@ -110,31 +121,27 @@
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         let allUsers = [];
+        let selectedFile = null;
 
-        // 1. Datos del Admin Logueado
-        async function loadAdminInfo() {
+        async function loadAdmin() {
             const { data: { user } } = await _supabase.auth.getUser();
             if (user) {
-                const { data: profile } = await _supabase.from('perfiles').select('*').eq('id', user.id).single();
-                if (profile) {
-                    document.getElementById('curAdminName').innerText = profile.nombre || 'Admin Pío';
-                    if (profile.foto_url) document.getElementById('curAdminImg').src = profile.foto_url;
+                const { data } = await _supabase.from('perfiles').select('*').eq('id', user.id).single();
+                if (data) {
+                    document.getElementById('curAdminName').innerText = data.nombre || user.email;
+                    if (data.foto_url) document.getElementById('curAdminImg').src = data.foto_url;
                 }
             }
         }
 
-        // 2. Cargar Lista de la DB
         async function load() {
-            const { data, error } = await _supabase.from('perfiles').select('*').order('created_at', {ascending: false});
-            if (error) {
-                alert("Error de conexión: " + error.message);
-                return;
-            }
+            // CORRECCIÓN: Quitamos el .order('created_at') porque no existe la columna
+            const { data, error } = await _supabase.from('perfiles').select('*');
+            if (error) return console.log(error);
             allUsers = data;
             render();
         }
 
-        // 3. Renderizar Lista
         function render() {
             const list = document.getElementById('userList');
             const search = document.getElementById('searchInput').value.toLowerCase();
@@ -147,20 +154,19 @@
                 return matchSearch && matchRole;
             });
 
-            if (filtered.length === 0) {
-                list.innerHTML = '<p style="text-align:center; color:gray; margin-top:20px;">No hay usuarios con esos criterios.</p>';
-                return;
-            }
-
             filtered.forEach(u => {
+                const img = u.foto_url || 'https://via.placeholder.com/45';
                 list.innerHTML += `
                     <div class="user-card">
-                        <div>
-                            <strong style="font-size:16px">${u.nombre || 'Sin nombre'}</strong><br>
-                            <span style="font-size:13px; color:gray">${u.email}</span><br>
-                            <span class="role-tag tag-${u.rol}">${u.rol}</span>
+                        <div style="display:flex; gap:15px; align-items:center">
+                            <img src="${img}" style="width:45px; height:45px; border-radius:50%; object-fit:cover">
+                            <div>
+                                <strong>${u.nombre || 'Sin nombre'}</strong><br>
+                                <small style="color:gray">${u.email}</small><br>
+                                <span class="role-tag tag-${u.rol}">${u.rol}</span>
+                            </div>
                         </div>
-                        <div style="display:flex; gap:10px">
+                        <div style="display:flex; gap:8px">
                             <button class="btn" style="background:#f1f5f9" onclick="editUser('${u.id}')">✏️</button>
                             <button class="btn" style="background:#fee2e2; color:#ef4444" onclick="deleteUser('${u.id}')">🗑️</button>
                         </div>
@@ -169,12 +175,21 @@
             });
         }
 
-        // 4. Lógica de Modales
+        function previewImage(event) {
+            selectedFile = event.target.files[0];
+            if (selectedFile) {
+                const reader = new FileReader();
+                reader.onload = (e) => document.getElementById('modalPreview').src = e.target.result;
+                reader.readAsDataURL(selectedFile);
+            }
+        }
+
         function openModal(isEdit = false) {
             document.getElementById('userForm').reset();
             document.getElementById('userId').value = '';
+            selectedFile = null;
+            document.getElementById('modalPreview').src = 'https://via.placeholder.com/80';
             document.getElementById('passArea').style.display = isEdit ? 'none' : 'block';
-            document.getElementById('editTools').style.display = isEdit ? 'block' : 'none';
             document.getElementById('userModal').style.display = 'flex';
         }
 
@@ -182,16 +197,15 @@
 
         function editUser(id) {
             const u = allUsers.find(x => x.id === id);
-            if (!u) return;
             openModal(true);
             document.getElementById('userId').value = u.id;
             document.getElementById('userName').value = u.nombre || '';
             document.getElementById('userEmail').value = u.email;
             document.getElementById('userRole').value = u.rol;
+            if (u.foto_url) document.getElementById('modalPreview').src = u.foto_url;
             document.getElementById('modalTitle').innerText = "Editar Perfil";
         }
 
-        // 5. ACCIONES EN DB (GUARDAR / EDITAR)
         document.getElementById('userForm').onsubmit = async (e) => {
             e.preventDefault();
             const id = document.getElementById('userId').value;
@@ -201,50 +215,36 @@
                 rol: document.getElementById('userRole').value
             };
 
+            // Lógica de subir foto (si hay archivo seleccionado)
+            if (selectedFile) {
+                const fileName = `avatars/${Date.now()}_${selectedFile.name}`;
+                const { data: uploadData } = await _supabase.storage.from('fotos').upload(fileName, selectedFile);
+                if (uploadData) {
+                    const { data: urlData } = _supabase.storage.from('fotos').getPublicUrl(fileName);
+                    payload.foto_url = urlData.publicUrl;
+                }
+            }
+
             if (id) {
-                // EDITAR EXISTENTE
-                const { error } = await _supabase.from('perfiles').update(payload).eq('id', id);
-                if (error) alert("Error: " + error.message);
-                else alert("✅ Usuario actualizado correctamente");
+                await _supabase.from('perfiles').update(payload).eq('id', id);
+                alert("Actualizado");
             } else {
-                // CREAR NUEVO
                 const pass = document.getElementById('userPass').value;
-                if (pass.length < 6) return alert("Contraseña muy corta");
-                
-                const { error } = await _supabase.auth.signUp({
-                    email: payload.email,
-                    password: pass,
-                    options: { data: payload }
-                });
-                if (error) alert("Error: " + error.message);
-                else alert("✅ Usuario creado (Revisar tabla en unos segundos)");
+                await _supabase.auth.signUp({ email: payload.email, password: pass, options: { data: payload } });
+                alert("Usuario creado");
             }
             closeModal();
-            setTimeout(load, 1000);
+            load();
         };
 
-        // 6. BORRAR REAL
         async function deleteUser(id) {
-            if (confirm("⚠️ ¿Eliminar permanentemente a este usuario?")) {
-                const { error } = await _supabase.rpc('admin_delete_user', { target_user_id: id });
-                if (error) {
-                    // Si falla el RPC, borramos solo de la tabla perfiles
-                    await _supabase.from('perfiles').delete().eq('id', id);
-                }
-                alert("🗑️ Usuario eliminado");
+            if (confirm("¿Eliminar usuario?")) {
+                await _supabase.from('perfiles').delete().eq('id', id);
                 load();
             }
         }
 
-        // 7. RESET PASSWORD (Simulado vía RPC o aviso)
-        async function resetPassword() {
-            const email = document.getElementById('userEmail').value;
-            alert("Se ha enviado una solicitud de reset para: " + email + "\n(En producción, esto dispara un correo de recuperación)");
-            // Aquí podrías usar _supabase.auth.resetPasswordForEmail(email)
-        }
-
-        // Inicio
-        loadAdminInfo();
+        loadAdmin();
         load();
     </script>
 </body>
