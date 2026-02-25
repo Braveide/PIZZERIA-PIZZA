@@ -8,12 +8,18 @@
     <style>
         /* ESTILOS BASE */
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #fdf2e9; color: #333; }
         
-        /* HEADER CON BANNER */
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: #fdf2e9; 
+            color: #333; 
+            overflow-x: hidden;
+        }
+        
+        /* HEADER */
         .header { 
-            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('imagenes/baner.jpg') center/cover no-repeat;
-            padding: 45px 30px; 
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('imagenes/bannerin.png') center/cover no-repeat;
+            padding: clamp(30px, 8vw, 60px) 20px; 
             color: white; 
             display: flex; 
             justify-content: space-between; 
@@ -21,14 +27,13 @@
             position: relative;
         }
 
-        /* DIVISOR DE CUADROS BLANCOS Y NEGROS */
         .header::after {
             content: "";
             position: absolute;
             bottom: 0;
             left: 0;
             width: 100%;
-            height: 20px;
+            height: 15px;
             background-image: 
                 linear-gradient(45deg, #fff 25%, transparent 25%), 
                 linear-gradient(-45deg, #fff 25%, transparent 25%),
@@ -41,65 +46,12 @@
 
         .header-title h1 { 
             font-family: 'Archivo Black', sans-serif;
-            font-size: 28px; 
+            font-size: clamp(20px, 6vw, 32px);
             text-transform: uppercase;
             text-shadow: 3px 3px 0px #000;
         }
 
-        /* CONTENEDOR PRINCIPAL BLANCO SIN MARCOS */
-        .main-container { 
-            max-width: 1100px; 
-            margin: 40px auto; 
-            background: white; 
-            padding: 40px; 
-            border-radius: 20px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05); 
-        }
-
-        h2 { 
-            font-family: 'Archivo Black', sans-serif; 
-            color: #ff6b00; 
-            text-transform: uppercase; 
-            margin-bottom: 20px;
-            font-size: 24px;
-        }
-
-        .texto-quienes { font-size: 18px; line-height: 1.6; margin-bottom: 30px; color: #555; }
-
-        /* DOS COLUMNAS */
-        .contacto-wrapper {
-            display: flex;
-            gap: 40px;
-            flex-wrap: wrap;
-        }
-
-        .columna { flex: 1; min-width: 300px; }
-
-        /* RECUADROS DE INFO LIMPITOS */
-        .info-box {
-            margin-bottom: 25px;
-            padding: 10px 0;
-        }
-
-        .info-box p { font-size: 17px; margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
-
-        .empleado { 
-            padding: 15px 0;
-            border-bottom: 1px solid #eee;
-        }
-        .empleado strong { color: #ff6b00; font-size: 18px; }
-
-        /* MAPA */
-        .mapa-container {
-            border-radius: 15px;
-            overflow: hidden;
-            height: 350px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-        }
-        .mapa-container iframe { width: 100%; height: 100%; border: none; }
-
-        /* BOTÓN INICIO ESTILO PEGATINA */
-        .header-right { display: flex; align-items: center; }
+        /* BOTÓN INICIO CON EFECTO HOVER NARANJA */
         .btn-inicio { 
             text-decoration: none; 
             color: #000; 
@@ -108,17 +60,100 @@
             background: #fff; 
             border: 2.5px solid #000;
             border-radius: 25px; 
-            transition: 0.3s;
+            transition: all 0.3s ease; 
             box-shadow: 3px 3px 0px #000;
             text-transform: uppercase;
-            font-size: 14px;
+            font-size: 13px;
+            display: inline-block;
         }
+
         .btn-inicio:hover { 
-            background: #ff6b00; 
+            background-color: #ff6b00; 
             color: white; 
-            transform: translateY(-2px);
-            box-shadow: 1px 1px 0px #000;
+            transform: translateY(-3px);
+            box-shadow: 5px 5px 0px #000;
         }
+
+        .btn-inicio:active {
+            transform: translateY(1px);
+            box-shadow: 2px 2px 0px #000;
+        }
+
+        /* CONTENEDOR PRINCIPAL */
+        .main-container { 
+            max-width: 800px; 
+            width: 92%; 
+            margin: 30px auto; 
+            background: white; 
+            padding: clamp(20px, 5vw, 40px); 
+            border-radius: 20px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05); 
+            display: flex;
+            flex-direction: column; 
+            gap: 40px;
+        }
+
+        h2 { 
+            font-family: 'Archivo Black', sans-serif; 
+            color: #ff6b00; 
+            text-transform: uppercase; 
+            margin-bottom: 20px;
+            font-size: clamp(18px, 4vw, 24px);
+            border-bottom: 2px solid #fdf2e9;
+            padding-bottom: 10px;
+        }
+
+        /* --- ANIMACIONES --- */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animar-entrada {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        .delay-1 { animation-delay: 0.2s; opacity: 0; }
+        .delay-2 { animation-delay: 0.4s; opacity: 0; }
+        .delay-3 { animation-delay: 0.6s; opacity: 0; }
+
+        .info-box p { font-size: 16px; margin-bottom: 12px; display: flex; align-items: center; gap: 10px; }
+
+        /* SECCIÓN EQUIPO */
+        .empleado { 
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .img-equipo {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 3px solid #ff6b00;
+            object-fit: cover;
+            box-shadow: 3px 3px 0px #000;
+        }
+
+        .empleado strong { color: #ff6b00; font-size: 17px; }
+
+        /* MAPA */
+        .mapa-container {
+            border-radius: 15px;
+            overflow: hidden;
+            height: 350px;
+            width: 100%;
+            border: 3px solid #000;
+        }
+        .mapa-container iframe { width: 100%; height: 100%; border: none; }
     </style>
 </head>
 <body>
@@ -133,35 +168,44 @@
     </header>
 
     <div class="main-container">
-        <h2>¿Quiénes somos?</h2>
-        <div class="texto-quienes">
-            <p>Somos una pizzería apasionada por crear momentos deliciosos. 🍕✨ Combinamos ingredientes frescos, recetas artesanales y un toque moderno para ofrecer pizzas que reconfortan y sorprenden en cada rebanada.</p>
-        </div>
         
-        <div class="contacto-wrapper">
-            <div class="columna">
-                <div class="info-box">
-                    <h2>Contacto</h2>
-                    <p>📍 Privada 494 lomas de san Lorenzo, CP 09780, Iztapalapa</p>
-                    <p>📞 5626213069</p>
-                    <p>📧 Felpaxd1@gmail.com</p>
-                </div>
+        <section class="info-box animar-entrada">
+            <h2>¿Quiénes somos?</h2>
+            <p>Somos una pizzería apasionada por crear momentos deliciosos. 🍕✨ Combinamos ingredientes frescos y recetas artesanales.</p>
+        </section>
+        
+        <section class="info-box animar-entrada">
+            <h2>Contacto</h2>
+            <p>📍 Privada 494 lomas de san Lorenzo, CP 09780, Iztapalapa</p>
+            <p>📞 5626213069</p>
+            <p>📧 Felpaxd1@gmail.com</p>
+        </section>
 
-                <div class="info-box">
-                    <h2>Nuestro Equipo</h2>
-                    <div class="empleado"><p><strong>Foxy</strong> - Gerente (Cruz Bravo Felipe)</p></div>
-                    <div class="empleado"><p><strong>Bonnie</strong> - Chef (Arroyo Sosa Yeitzin)</p></div>
-                    <div class="empleado"><p><strong>Chica</strong> - Encargada (Martinez Santiago Aidee)</p></div>
-                </div>
+        <section class="info-box">
+            <h2 class="animar-entrada">Nuestro Equipo</h2>
+            
+            <div class="empleado animar-entrada delay-1">
+                <img src="imagenes/foxy.png" alt="Foxy" class="img-equipo">
+                <span><strong>Foxy</strong> - Gerente (Cruz Bravo Felipe)</span>
             </div>
 
-            <div class="columna">
-                <h2>Ubicación</h2>
-                <div class="mapa-container">
-                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3765.485123456789!2d-99.0682!3d19.3156!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTnCsDE4JzU2LjIiTiA5OcKwMDQnMDYuMiJX!5e0!3m2!1ses!2smx!4v1234567890123" loading="lazy"></iframe>
-                </div>
+            <div class="empleado animar-entrada delay-2">
+                <img src="imagenes/bonnie.png" alt="Bonnie" class="img-equipo">
+                <span><strong>Bonnie</strong> - Chef (Arroyo Sosa Yeitzin)</span>
             </div>
-        </div>
+
+            <div class="empleado animar-entrada delay-3">
+                <img src="imagenes/chica.png" alt="Chica" class="img-equipo">
+                <span><strong>Chica</strong> - Encargada (Martinez Santiago Aidee)</span>
+            </div>
+        </section>
+
+        <section class="info-box animar-entrada">
+            <h2>Ubicación</h2>
+            <div class="mapa-container">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d3764.3831834241693!2d-99.06648102434032!3d19.330894781930262!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1ses-419!2smx!4v1710000000000!5m2!1ses-419!2smx" loading="lazy"></iframe>
+            </div>
+        </section>
     </div>
 
 </body>
