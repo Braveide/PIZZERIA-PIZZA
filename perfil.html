@@ -19,7 +19,6 @@
         
         body { background-color: #f1f5f9; color: var(--dark); padding-bottom: 50px; }
 
-        /* --- NAVEGACIÓN --- */
         .nav-header {
             background: #fff;
             padding: 15px 5%;
@@ -31,7 +30,6 @@
 
         .logo { font-family: 'Archivo Black', sans-serif; color: var(--primary); text-decoration: none; font-size: 24px; text-shadow: 2px 2px 0px #000; }
 
-        /* --- LAYOUT PRINCIPAL --- */
         .profile-wrapper {
             max-width: 1000px;
             margin: 40px auto;
@@ -41,7 +39,6 @@
             padding: 0 20px;
         }
 
-        /* --- SIDEBAR --- */
         .sidebar {
             background: white;
             border: 3px solid var(--black);
@@ -109,7 +106,6 @@
             box-shadow: 4px 4px 0px var(--black);
         }
 
-        /* --- ÁREA DE CONTENIDO --- */
         .main-content {
             background: white;
             border: 3px solid var(--black);
@@ -126,7 +122,6 @@
 
         h2 { font-family: 'Archivo Black', sans-serif; margin-bottom: 25px; text-transform: uppercase; font-size: 22px; }
 
-        /* --- FORMULARIOS --- */
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         .full-width { grid-column: 1 / -1; }
 
@@ -267,7 +262,6 @@
         document.getElementById('inEmail').value = user.email;
         document.getElementById('displayUserEmail').innerText = user.email;
 
-        // Cargar desde tabla 'perfiles' (nombre y foto_url)
         const { data: perfil } = await _supabase.from('perfiles').select('*').eq('id', user.id).maybeSingle();
         
         if(perfil) {
@@ -275,7 +269,6 @@
             document.getElementById('inNombre').value = perfil.nombre || "";
             document.getElementById('inTelefono').value = perfil.telefono || "";
             document.getElementById('inDireccion').value = perfil.direccion || "";
-            // Usamos foto_url para coincidir con tu tabla
             if(perfil.foto_url) document.getElementById('userAvatar').src = perfil.foto_url;
         } else {
             document.getElementById('displayUserName').innerText = user.email.split('@')[0];
@@ -284,17 +277,24 @@
 
     async function actualizarPerfil() {
         const { data: { user } } = await _supabase.auth.getUser();
+        
+        // ENVIAR SOLO COLUMNAS EXISTENTES
         const updates = {
             id: user.id,
             nombre: document.getElementById('inNombre').value,
             telefono: document.getElementById('inTelefono').value,
-            direccion: document.getElementById('inDireccion').value,
-            updated_at: new Date()
+            direccion: document.getElementById('inDireccion').value
         };
 
         const { error } = await _supabase.from('perfiles').upsert(updates);
-        if(!error) { alert("¡Perfil actualizado!"); location.reload(); }
-        else { alert("Error al actualizar"); }
+        
+        if(!error) { 
+            alert("¡Perfil actualizado!"); 
+            location.reload(); 
+        } else { 
+            console.error(error);
+            alert("Error: " + error.message); 
+        }
     }
 
     async function subirFoto() {
@@ -303,18 +303,16 @@
 
         const { data: { user } } = await _supabase.auth.getUser();
         const fileExt = file.name.split('.').pop();
-        // Nombre de archivo único
         const fileName = `${user.id}-${Date.now()}.${fileExt}`;
         const filePath = `avatars/${fileName}`;
 
-        // SUBIDA AL BUCKET 'fotos' (Nombre corregido según tu captura)
+        // Subir al bucket 'fotos'
         const { error: uploadError } = await _supabase.storage.from('fotos').upload(filePath, file);
 
         if (!uploadError) {
-            // Obtener URL pública del BUCKET 'fotos'
             const { data: { publicUrl } } = _supabase.storage.from('fotos').getPublicUrl(filePath);
             
-            // Guardar esa URL en el campo 'foto_url' de la tabla 'perfiles'
+            // Actualizar solo foto_url en la tabla
             const { error: updateError } = await _supabase.from('perfiles').upsert({ 
                 id: user.id, 
                 foto_url: publicUrl 
@@ -323,11 +321,10 @@
             if(!updateError) {
                 location.reload();
             } else {
-                alert("Foto subida pero no se pudo actualizar el perfil.");
+                alert("Error al vincular foto: " + updateError.message);
             }
         } else {
-            console.error(uploadError);
-            alert("Error al subir imagen. Revisa que el bucket 'fotos' sea público y existan políticas RLS.");
+            alert("Error al subir imagen al bucket.");
         }
     }
 
