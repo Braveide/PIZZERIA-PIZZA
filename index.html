@@ -57,7 +57,7 @@
             display: flex; align-items: center; justify-content: center; 
             position: relative; text-decoration: none; font-size: 20px;
             box-shadow: 3px 3px 0px #000; transition: 0.3s;
-            overflow: hidden; 
+            overflow: hidden;
         }
         .cart-btn:hover { background: #ff6b00; transform: scale(1.1); color: #fff; }
 
@@ -73,18 +73,15 @@
         .user-dropdown { 
             display: none; position: absolute; top: 60px; right: 0; 
             background: white; border: 4px solid #000; box-shadow: 8px 8px 0px #000; 
-            width: 260px; padding: 20px; z-index: 2000; border-radius: 15px;
+            width: 280px; padding: 20px; z-index: 2000; border-radius: 15px;
             animation: slideDown 0.3s ease-out; 
         }
         .user-dropdown.active { display: block; }
 
         .user-info-box { text-align: center; padding-bottom: 15px; border-bottom: 2px solid #eee; margin-bottom: 15px; }
-        .user-role-badge { font-size: 10px; font-weight: 900; color: #ff6b00; text-transform: uppercase; letter-spacing: 1px; margin-top: 5px; }
-
-        .dropdown-avatar {
-            width: 75px; height: 75px; border-radius: 50%; border: 3px solid #000;
-            margin: 0 auto 10px; object-fit: cover; display: block;
-        }
+        .dropdown-avatar { width: 75px; height: 75px; border-radius: 50%; border: 3px solid #000; margin-bottom: 10px; object-fit: cover; }
+        .user-name { font-family: 'Archivo Black', sans-serif; font-size: 16px; color: #000; margin-bottom: 5px; text-transform: uppercase; }
+        .user-role-badge { font-size: 10px; font-weight: 900; color: #ff6b00; text-transform: uppercase; letter-spacing: 1px; }
 
         .profile-menu-link {
             display: flex; align-items: center; gap: 10px;
@@ -93,18 +90,15 @@
             transition: 0.2s; margin-bottom: 5px; background: #f9f9f9;
         }
         .profile-menu-link:hover { background: #ff6b00; color: #fff; transform: translateX(5px); }
-        
-        /* BOTÓN ADMIN NEGRO */
-        .admin-link { background: #000 !important; color: #fff !important; }
-        .admin-link:hover { background: #333 !important; color: #ff6b00 !important; }
+        .admin-link { background: #000; color: #fff; margin-bottom: 10px; }
 
         .logout-btn { 
             width: 100%; padding: 10px; margin-top: 10px;
-            background: none; border: none; color: #ff3d00;
+            background: none; border: 2px solid #ff3d00; color: #ff3d00;
             font-weight: 900; text-transform: uppercase; cursor: pointer;
             transition: 0.2s; border-radius: 10px;
         }
-        .logout-btn:hover { background: #fff1f1; }
+        .logout-btn:hover { background: #ff3d00; color: #fff; }
 
         /* --- HERO & GRID --- */
         .hero-swiper { width: 100%; min-height: 500px; border-bottom: 5px solid #000; background-image: url('imagenes/carrusel.png'); background-size: cover; background-position: center; }
@@ -155,17 +149,9 @@
                 <div class="cart-btn" id="userBtn">👤</div>
                 
                 <div class="user-dropdown" id="userDropdown">
-                    <div class="user-info-box">
-                        <img id="userAvatarDropdown" src="" class="dropdown-avatar" style="display: none;">
-                        <h4 id="userName" style="font-size:16px; font-family:'Archivo Black', sans-serif; margin-bottom: 2px;"></h4>
-                        <p id="userEmail" style="font-size:12px; color: #666; word-break: break-all;"></p>
-                        <p id="userRole" class="user-role-badge"></p>
+                    <div id="dropdownContent">
+                        <p style="text-align:center; font-size:12px;">Cargando...</p>
                     </div>
-                    
-                    <div id="adminLinkContainer"></div>
-                    <a href="perfil.html" class="profile-menu-link">👤 Mi Perfil</a>
-                    
-                    <button onclick="cerrarSesion()" class="logout-btn">Cerrar Sesión</button>
                 </div>
             </div>
 
@@ -189,7 +175,21 @@
                     </div>
                 </div>
             </div>
+            <div class="swiper-slide">
+                <div class="slide-container">
+                    <div class="slide-text">
+                        <h1>Clásica <br> Margherita</h1>
+                        <p>Mozzarella fresca de búfala, albahaca recién cortada y el mejor aceite de oliva extra virgen.</p>
+                        <a href="catalogo.html" class="add-btn" style="display: inline-block; text-decoration: none; padding: 15px 25px;">VER CATÁLOGO</a>
+                    </div>
+                    <div class="slide-image-wrapper">
+                        <img src="imagenes/pizza_marg.png" class="slide-img" alt="Pizza">
+                    </div>
+                </div>
+            </div>
         </div>
+        <div class="swiper-button-next" style="color: #fff;"></div>
+        <div class="swiper-button-prev" style="color: #fff;"></div>
         <div class="swiper-pagination"></div>
     </section>
 
@@ -218,6 +218,17 @@
                     <button class="add-btn" onclick="addToCart('Pizza Suprema', 166.99, 'imagenes/pizza_suprema.png')">AGREGAR</button>
                 </div>
             </div>
+            <div class="card">
+                <img src="imagenes/pizza_marg.png" class="card-image" alt="Margherita">
+                <div class="card-info">
+                    <h3>Margherita</h3>
+                    <p>Sencillez: mozzarella y albahaca.</p>
+                </div>
+                <div class="card-footer">
+                    <span class="card-price">$158.99</span>
+                    <button class="add-btn" onclick="addToCart('Margherita', 158.99, 'imagenes/pizza_marg.png')">AGREGAR</button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -240,7 +251,8 @@
             updateCartBadge();
             new Swiper('.hero-swiper', {
                 loop: true, autoplay: { delay: 5000 },
-                pagination: { el: '.swiper-pagination', clickable: true }
+                pagination: { el: '.swiper-pagination', clickable: true },
+                navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
             });
         });
 
@@ -248,45 +260,42 @@
             const { data: { user } } = await supabaseClient.auth.getUser();
             const userBtn = document.getElementById('userBtn');
             const userDropdown = document.getElementById('userDropdown');
+            const dropdownContent = document.getElementById('dropdownContent');
 
             if (user) {
-                // Buscamos datos reales del perfil (incluyendo foto_url)
                 const { data: perfil } = await supabaseClient
                     .from('perfiles')
-                    .select('rol, nombre, foto_url')
+                    .select('rol, nombre, avatar_url')
                     .eq('id', user.id)
                     .maybeSingle();
 
-                const rol = perfil?.rol || 'usuario';
-                const nombre = perfil?.nombre || "Usuario";
-                const foto = perfil?.foto_url;
-
-                // FOTO EN EL HEADER (Círculo pequeño)
-                if (foto) {
-                    userBtn.innerHTML = `<img src="${foto}" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">`;
-                }
-
+                const rol = perfil ? perfil.rol : 'usuario';
+                const nombre = perfil && perfil.nombre ? perfil.nombre : 'Usuario';
+                const fotoUrl = perfil && perfil.avatar_url ? perfil.avatar_url : 'imagenes/freddy.png';
+                
+                // Foto en el círculo del Header
+                userBtn.innerHTML = `<img src="${fotoUrl}" style="width:100%; height:100%; object-fit:cover;">`;
+                
                 userBtn.onclick = (e) => { 
                     e.stopPropagation();
                     userDropdown.classList.toggle('active'); 
                 };
 
-                // DATOS EN EL DROPDOWN
-                if (foto) {
-                    const dropdownAvatar = document.getElementById('userAvatarDropdown');
-                    dropdownAvatar.src = foto;
-                    dropdownAvatar.style.display = 'block';
-                }
-                document.getElementById('userName').textContent = nombre;
-                document.getElementById('userEmail').textContent = user.email;
-                document.getElementById('userRole').textContent = rol.toUpperCase();
-                
-                // PANEL ADMIN (Botón Negro)
-                if (rol === 'admin') {
-                    document.getElementById('adminLinkContainer').innerHTML = `
-                        <a href="panelA.html" class="profile-menu-link admin-link">⚙️ PANEL ADMIN</a>
-                    `;
-                }
+                // Contenido del Dropdown reconstruido
+                let adminLink = (rol === 'admin') ? `<a href="panelA.html" class="profile-menu-link admin-link">⚙️ PANEL ADMIN</a>` : '';
+
+                dropdownContent.innerHTML = `
+                    <div class="user-info-box">
+                        <img src="${fotoUrl}" class="dropdown-avatar">
+                        <div class="user-name">${nombre}</div>
+                        <div style="font-size:11px; color:#666; margin-bottom:5px;">${user.email}</div>
+                        <p class="user-role-badge">${rol}</p>
+                    </div>
+                    ${adminLink}
+                    <a href="perfil.html" class="profile-menu-link">👤 Mi Perfil</a>
+                    <a href="mis-pedidos.html" class="profile-menu-link">🍕 Mis Pedidos</a>
+                    <button onclick="cerrarSesion()" class="logout-btn">CERRAR SESIÓN</button>
+                `;
             } else {
                 userBtn.onclick = () => window.location.href = 'login.html';
             }
@@ -308,20 +317,19 @@
             let cart = JSON.parse(localStorage.getItem('pizzaCart')) || {};
             let total = Object.values(cart).reduce((s, i) => s + i.quantity, 0);
             const badge = document.getElementById('cartBadge');
-            if (badge) {
-                if (total > 0) {
-                    badge.style.display = 'flex';
-                    badge.textContent = total;
-                } else {
-                    badge.style.display = 'none';
-                }
+            if (total > 0) {
+                badge.style.display = 'flex';
+                badge.textContent = total;
+            } else {
+                badge.style.display = 'none';
             }
         }
 
         window.onclick = (e) => {
             const container = document.getElementById('userMenuContainer');
+            const dropdown = document.getElementById('userDropdown');
             if (container && !container.contains(e.target)) {
-                userDropdown.classList.remove('active');
+                dropdown.classList.remove('active');
             }
         };
     </script>
