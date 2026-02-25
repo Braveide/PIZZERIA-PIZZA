@@ -38,14 +38,6 @@
 
         .header-right { display: flex; gap: 15px; align-items: center; }
 
-        .btn-header { 
-            text-decoration: none; color: #000; font-weight: 900; 
-            padding: 10px 18px; background: #fff; border: 3px solid #000;
-            border-radius: 50px; font-size: 13px; transition: 0.3s;
-            box-shadow: 3px 3px 0px #000; text-transform: uppercase;
-        }
-        .btn-header:hover { background: #ff6b00; color: white; transform: translateY(-2px); box-shadow: 1px 1px 0px #000; }
-        
         .cart-btn { 
             background: #fff; border: 3px solid #000; color: #000; 
             width: 48px; height: 48px; border-radius: 50%; cursor: pointer; 
@@ -63,143 +55,81 @@
             box-shadow: 2px 2px 0px #000; z-index: 10;
         }
 
-        /* CARRUSEL */
-        .hero-swiper { 
-            width: 100%; 
-            min-height: 500px; 
-            border-bottom: 5px solid #000; 
-            background-image: url('imagenes/carrusel.png'); 
-            background-size: cover;
-            background-position: center;
-        }
+        /* HERO & GRID */
+        .hero-swiper { width: 100%; min-height: 500px; border-bottom: 5px solid #000; background-image: url('imagenes/carrusel.png'); background-size: cover; background-position: center; }
+        .swiper-slide { display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .slide-container { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 40px; width: 100%; max-width: 1100px; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(8px); padding: 30px; border-radius: 30px; border: 2px solid rgba(255,255,255,0.3); }
+        .slide-text h1 { font-family: 'Archivo Black', sans-serif; font-size: clamp(28px, 5vw, 55px); color: #fff; text-shadow: 3px 3px 0px #000; text-transform: uppercase; line-height: 1; margin-bottom: 15px; }
+        .slide-text p { font-size: clamp(14px, 2vw, 18px); font-weight: 600; color: #fff; margin-bottom: 25px; line-height: 1.4; text-shadow: 1px 1px 5px rgba(0,0,0,0.7); }
+        .slide-img { max-height: 350px; width: auto; max-width: 100%; border-radius: 40px; box-shadow: 0 15px 35px rgba(0,0,0,0.4); border: 5px solid #fff; transition: 0.5s ease; }
         
-        .swiper-slide { 
-            display: flex; 
-            align-items: center; 
-            justify-content: center;
-            padding: 20px; /* Reducido para móviles */
-        }
-
-        .slide-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            align-items: center;
-            gap: 40px;
-            width: 100%;
-            max-width: 1100px; /* Limita el ancho en pantallas grandes */
-            background: rgba(255, 255, 255, 0.15); 
-            backdrop-filter: blur(8px);
-            padding: 30px;
-            border-radius: 30px;
-            border: 2px solid rgba(255,255,255,0.3);
-        }
-
-        .slide-text h1 { 
-            font-family: 'Archivo Black', sans-serif; 
-            font-size: clamp(28px, 5vw, 55px); /* Fluido según el tamaño de pantalla */
-            color: #fff; 
-            text-shadow: 3px 3px 0px #000;
-            text-transform: uppercase;
-            line-height: 1;
-            margin-bottom: 15px;
-        }
-
-        .slide-text p { 
-            font-size: clamp(14px, 2vw, 18px); 
-            font-weight: 600; 
-            color: #fff; 
-            margin-bottom: 25px;
-            line-height: 1.4;
-            text-shadow: 1px 1px 5px rgba(0,0,0,0.7);
-        }
-
-        .slide-image-wrapper {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .slide-img { 
-            max-height: 350px; 
-            width: auto; 
-            max-width: 100%; /* Evita que se salga en pantallas chicas */
-            border-radius: 40px; 
-            box-shadow: 0 15px 35px rgba(0,0,0,0.4); 
-            border: 5px solid #fff; 
-            transition: 0.5s ease;
-        }
-        
-        .swiper-slide-active .slide-img {
-            animation: float 3s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-15px) rotate(2deg); }
-            100% { transform: translateY(0px) rotate(0deg); }
-        }
-
-        /* GRID Y TARJETAS */
         .container { max-width: 1200px; margin: 0 auto; padding: 50px 20px; }
         .section-title { font-family: 'Archivo Black', sans-serif; text-align: center; margin-bottom: 40px; font-size: clamp(24px, 5vw, 35px); text-transform: uppercase; text-shadow: 3px 3px 0px #ff6b00; color: #000; }
-
-        .grid-container { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
-            gap: 30px; 
-        }
-        
-        .card { 
-            background: white; border-radius: 20px; border: 3px solid #000; 
-            overflow: hidden; box-shadow: 6px 6px 0px #000; transition: 0.3s;
-            display: flex; flex-direction: column;
-        }
+        .grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px; }
+        .card { background: white; border-radius: 20px; border: 3px solid #000; overflow: hidden; box-shadow: 6px 6px 0px #000; transition: 0.3s; display: flex; flex-direction: column; }
         .card:hover { transform: translateY(-10px); box-shadow: 10px 10px 0px #ff6b00; }
         .card-image { width: 100%; height: 230px; object-fit: cover; border-bottom: 3px solid #000; }
         .card-info { padding: 25px; flex-grow: 1; }
         .card-info h3 { font-family: 'Archivo Black', sans-serif; font-size: 20px; margin-bottom: 10px; text-transform: uppercase; }
-        .card-description { color: #555; font-size: 14px; line-height: 1.4; font-weight: 600; }
         .card-footer { display: flex; justify-content: space-between; align-items: center; padding: 0 25px 25px; }
         .card-price { color: #ff6b00; font-size: 26px; font-weight: 900; text-shadow: 1.5px 1.5px 0px #000; }
-        
-        .add-btn { 
-            background: #fff; color: #000; border: 3px solid #000; padding: 12px 20px; 
-            border-radius: 15px; cursor: pointer; font-weight: 900; transition: 0.2s;
-            box-shadow: 4px 4px 0px #000; text-transform: uppercase; font-size: 13px;
-        }
-        .add-btn:hover { background: #ff6b00; color: white; transform: translateY(-3px); box-shadow: 2px 2px 0px #000; }
+        .add-btn { background: #fff; color: #000; border: 3px solid #000; padding: 12px 20px; border-radius: 15px; cursor: pointer; font-weight: 900; transition: 0.2s; box-shadow: 4px 4px 0px #000; text-transform: uppercase; font-size: 13px; }
 
-        .user-dropdown { 
-            display: none; position: absolute; top: 60px; right: 0; 
-            background: white; border: 4px solid #000; box-shadow: 6px 6px 0px #000;
-            width: 240px; padding: 15px; z-index: 2000; 
+        /* FOOTER SIMPLIFICADO */
+        .main-footer {
+            background-color: #fff;
+            border-top: 5px solid #000;
+            padding: 40px 20px;
+            margin-top: 50px;
         }
+        .footer-grid {
+            max-width: 800px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+            text-align: center;
+        }
+        .footer-col h4 {
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 16px;
+            margin-bottom: 15px;
+            color: #000;
+            text-transform: uppercase;
+        }
+        .footer-col a {
+            display: block;
+            text-decoration: none;
+            color: #333;
+            font-size: 14px;
+            margin-bottom: 10px;
+            font-weight: 700;
+            transition: 0.2s;
+        }
+        .footer-col a:hover { color: #ff6b00; }
+
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 30px auto 0;
+            padding-top: 20px;
+            border-top: 2px solid #000;
+            text-align: center; /* Centrado total */
+        }
+        .copy { 
+            font-size: 13px; 
+            font-weight: 900; 
+            color: #000; 
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .user-dropdown { display: none; position: absolute; top: 60px; right: 0; background: white; border: 4px solid #000; box-shadow: 6px 6px 0px #000; width: 240px; padding: 15px; z-index: 2000; }
         .user-dropdown.active { display: block; }
 
-        /* AJUSTES RESPONSIVOS ADICIONALES */
         @media (max-width: 850px) {
-            .slide-container { 
-                grid-template-columns: 1fr; 
-                text-align: center; 
-                gap: 20px;
-                padding: 20px;
-            }
-            .slide-text { order: 2; }
-            .slide-image-wrapper { order: 1; }
-            .slide-img { max-height: 250px; }
-            .hero-swiper { height: auto; min-height: 600px; padding: 40px 0; }
-            
-            .header { padding: 10px 15px; }
-            .logo-text { font-size: 18px; }
-            .btn-header { padding: 8px 12px; font-size: 11px; }
-        }
-
-        @media (max-width: 480px) {
-            .header-right { gap: 8px; }
-            .btn-header { display: none; } /* Ocultar botones de texto en móvil muy pequeño para evitar amontonamiento */
-            .btn-header.mobile-visible { display: inline-block; } /* Por si quieres forzar alguno */
-            .logo-text { font-size: 16px; }
-            .card-image { height: 180px; }
+            .slide-container { grid-template-columns: 1fr; text-align: center; }
+            .slide-text { order: 2; } .slide-image-wrapper { order: 1; }
+            .footer-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -211,9 +141,6 @@
             <span class="logo-text">FREDDY'S PIZZA</span>
         </a>
         <div class="header-right">
-            <a href="contacto.html" class="btn-header">Nosotros</a>
-            <a href="Conta.html" class="btn-header">Contacto</a>
-            
             <div style="position: relative;" id="userMenuContainer">
                 <a href="login.html" class="cart-btn" id="userBtn">👤</a>
                 <div class="user-dropdown" id="userDropdown">
@@ -238,7 +165,7 @@
                     <div class="slide-text">
                         <h1>Pepperoni <br> Legendario</h1>
                         <p>Nuestra pizza estrella con pepperoni de corte grueso y una mezcla secreta de quesos derretidos.</p>
-                        <a href="catalogo.html" class="btn-header" style="display: inline-block;">¡ORDENAR YA!</a>
+                        <a href="catalogo.html" class="add-btn" style="display: inline-block; text-decoration: none; padding: 15px 25px;">¡ORDENAR YA!</a>
                     </div>
                     <div class="slide-image-wrapper">
                         <img src="imagenes/pizza_pepe.png" class="slide-img" alt="Pizza Pepperoni">
@@ -250,7 +177,7 @@
                     <div class="slide-text">
                         <h1>Clásica <br> Margherita</h1>
                         <p>Mozzarella fresca de búfala, albahaca recién cortada y el mejor aceite de oliva extra virgen.</p>
-                        <a href="catalogo.html" class="btn-header" style="display: inline-block;">VER CATÁLOGO</a>
+                        <a href="catalogo.html" class="add-btn" style="display: inline-block; text-decoration: none; padding: 15px 25px;">VER CATÁLOGO</a>
                     </div>
                     <div class="slide-image-wrapper">
                         <img src="imagenes/pizza_marg.png" class="slide-img" alt="Pizza Margherita">
@@ -277,7 +204,6 @@
                     <button class="add-btn" onclick="addToCart('Pepperoni Premium', 121.99, 'imagenes/pizza_pepe.png')">AGREGAR</button>
                 </div>
             </div>
-
             <div class="card">
                 <img src="imagenes/pizza_suprema.png" class="card-image" alt="Suprema">
                 <div class="card-info">
@@ -289,7 +215,6 @@
                     <button class="add-btn" onclick="addToCart('Pizza Suprema', 166.99, 'imagenes/pizza_suprema.png')">AGREGAR</button>
                 </div>
             </div>
-
             <div class="card">
                 <img src="imagenes/pizza_marg.png" class="card-image" alt="Margherita">
                 <div class="card-info">
@@ -303,6 +228,30 @@
             </div>
         </div>
     </div>
+
+    <footer class="main-footer">
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h4>Menú</h4>
+                <a href="catalogo.html">Pizzas</a>
+                <a href="catalogo.html">Promociones</a>
+            </div>
+            <div class="footer-col">
+                <h4>Nosotros</h4>
+                <a href="contacto.html">Nuestra Historia</a>
+            </div>
+            <div class="footer-col">
+                <h4>Contacto</h4>
+                <a href="Conta.html">Atención al Cliente</a>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <div class="copy">
+                &copy; 2026 FREDDY'S PIZZA. TODOS LOS DERECHOS RESERVADOS.
+            </div>
+        </div>
+    </footer>
 
     <script>
         const SUPABASE_URL = 'https://vndfmcxlifcwzpjbphoy.supabase.co';
