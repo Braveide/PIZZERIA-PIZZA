@@ -186,7 +186,7 @@
     <aside class="sidebar">
         <div class="profile-card">
             <div class="avatar-container">
-                <img id="userAvatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=Freddy" alt="Avatar">
+                <img id="userAvatar" src="imagenes/freddy.png" alt="Avatar">
                 <button class="btn-edit-photo" onclick="document.getElementById('fileInput').click()">✏️</button>
                 <input type="file" id="fileInput" hidden accept="image/*" onchange="subirFoto()">
             </div>
@@ -267,7 +267,7 @@
         document.getElementById('inEmail').value = user.email;
         document.getElementById('displayUserEmail').innerText = user.email;
 
-        // Cargar desde tabla 'perfiles' (nombre y foto_url como en index)
+        // Cargar desde tabla 'perfiles' (nombre y foto_url)
         const { data: perfil } = await _supabase.from('perfiles').select('*').eq('id', user.id).maybeSingle();
         
         if(perfil) {
@@ -275,6 +275,7 @@
             document.getElementById('inNombre').value = perfil.nombre || "";
             document.getElementById('inTelefono').value = perfil.telefono || "";
             document.getElementById('inDireccion').value = perfil.direccion || "";
+            // Usamos foto_url para coincidir con tu tabla
             if(perfil.foto_url) document.getElementById('userAvatar').src = perfil.foto_url;
         } else {
             document.getElementById('displayUserName').innerText = user.email.split('@')[0];
@@ -302,18 +303,31 @@
 
         const { data: { user } } = await _supabase.auth.getUser();
         const fileExt = file.name.split('.').pop();
-        const fileName = `${user.id}-${Math.random()}.${fileExt}`;
+        // Nombre de archivo único
+        const fileName = `${user.id}-${Date.now()}.${fileExt}`;
         const filePath = `avatars/${fileName}`;
 
-        // Subir a Storage (Asegúrate de tener un bucket llamado 'perfiles' público)
-        const { error: uploadError } = await _supabase.storage.from('perfiles').upload(filePath, file);
+        // SUBIDA AL BUCKET 'fotos' (Nombre corregido según tu captura)
+        const { error: uploadError } = await _supabase.storage.from('fotos').upload(filePath, file);
 
         if (!uploadError) {
-            const { data: { publicUrl } } = _supabase.storage.from('perfiles').getPublicUrl(filePath);
-            await _supabase.from('perfiles').upsert({ id: user.id, foto_url: publicUrl });
-            location.reload();
+            // Obtener URL pública del BUCKET 'fotos'
+            const { data: { publicUrl } } = _supabase.storage.from('fotos').getPublicUrl(filePath);
+            
+            // Guardar esa URL en el campo 'foto_url' de la tabla 'perfiles'
+            const { error: updateError } = await _supabase.from('perfiles').upsert({ 
+                id: user.id, 
+                foto_url: publicUrl 
+            });
+
+            if(!updateError) {
+                location.reload();
+            } else {
+                alert("Foto subida pero no se pudo actualizar el perfil.");
+            }
         } else {
-            alert("Error al subir imagen. Revisa que el bucket 'perfiles' exista.");
+            console.error(uploadError);
+            alert("Error al subir imagen. Revisa que el bucket 'fotos' sea público y existan políticas RLS.");
         }
     }
 
