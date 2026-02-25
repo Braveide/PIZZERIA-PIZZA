@@ -50,49 +50,38 @@
 
         .header-right { display: flex; gap: 15px; align-items: center; }
 
-        /* --- BOTONES CIRCULARES (Corregido el overflow) --- */
+        /* --- BOTONES CIRCULARES --- */
         .cart-btn { 
             background: #fff; border: 3px solid #000; color: #000; 
             width: 48px; height: 48px; border-radius: 50%; cursor: pointer; 
             display: flex; align-items: center; justify-content: center; 
             position: relative; text-decoration: none; font-size: 20px;
             box-shadow: 3px 3px 0px #000; transition: 0.3s;
-            /* SE QUITÓ EL OVERFLOW HIDDEN PARA QUE SE VEA EL BADGE */
+            /* SE MANTIENE SIN OVERFLOW PARA EL BADGE */
         }
         .cart-btn:hover { background: #ff6b00; transform: scale(1.1); color: #fff; }
 
         .cart-badge { 
-            position: absolute; 
-            top: -5px; 
-            right: -5px; 
-            background-color: #ff3d00; 
-            color: #fff; 
-            border: 2px solid #000; 
-            border-radius: 50%; 
-            width: 22px; 
-            height: 22px;
-            font-size: 11px; 
-            font-family: 'Archivo Black', sans-serif;
-            display: flex; 
-            align-items: center; 
-            justify-content: center;
-            box-shadow: 2px 2px 0px #000; 
-            z-index: 10;
+            position: absolute; top: -5px; right: -5px; 
+            background-color: #ff3d00; color: #fff; border: 2px solid #000; 
+            border-radius: 50%; width: 22px; height: 22px;
+            font-size: 11px; font-family: 'Archivo Black', sans-serif; 
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 2px 2px 0px #000; z-index: 10;
         }
 
         /* --- DROPDOWN PERFIL --- */
         .user-dropdown { 
             display: none; position: absolute; top: 60px; right: 0; 
             background: white; border: 4px solid #000; box-shadow: 8px 8px 0px #000; 
-            width: 280px; padding: 20px; z-index: 2000; border-radius: 15px;
+            width: 260px; padding: 20px; z-index: 2000; border-radius: 15px;
             animation: slideDown 0.3s ease-out; 
         }
         .user-dropdown.active { display: block; }
 
         .user-info-box { text-align: center; padding-bottom: 15px; border-bottom: 2px solid #eee; margin-bottom: 15px; }
-        .dropdown-avatar { width: 75px; height: 75px; border-radius: 50%; border: 3px solid #000; margin-bottom: 10px; object-fit: cover; }
-        .user-name { font-family: 'Archivo Black', sans-serif; font-size: 16px; color: #000; margin-bottom: 5px; text-transform: uppercase; }
-        .user-role-badge { font-size: 10px; font-weight: 900; color: #ff6b00; text-transform: uppercase; letter-spacing: 1px; }
+        .dropdown-avatar { width: 65px; height: 65px; border-radius: 50%; border: 3px solid #000; margin: 0 auto 10px; object-fit: cover; display: block; }
+        .user-role-badge { font-size: 10px; font-weight: 900; color: #ff6b00; text-transform: uppercase; letter-spacing: 1px; margin-top: 5px; }
 
         .profile-menu-link {
             display: flex; align-items: center; gap: 10px;
@@ -101,23 +90,24 @@
             transition: 0.2s; margin-bottom: 5px; background: #f9f9f9;
         }
         .profile-menu-link:hover { background: #ff6b00; color: #fff; transform: translateX(5px); }
-        .admin-link { background: #000; color: #fff; margin-bottom: 10px; }
+        .admin-link { background: #000; color: #fff; }
+        .admin-link:hover { background: #333; color: #ff6b00; }
 
         .logout-btn { 
             width: 100%; padding: 10px; margin-top: 10px;
-            background: none; border: 2px solid #ff3d00; color: #ff3d00;
+            background: none; border: none; color: #ff3d00;
             font-weight: 900; text-transform: uppercase; cursor: pointer;
             transition: 0.2s; border-radius: 10px;
         }
-        .logout-btn:hover { background: #ff3d00; color: #fff; }
+        .logout-btn:hover { background: #fff1f1; }
 
-        /* --- HERO & GRID --- */
+        /* --- HERO & SECCIONES --- */
         .hero-swiper { width: 100%; min-height: 500px; border-bottom: 5px solid #000; background-image: url('imagenes/carrusel.png'); background-size: cover; background-position: center; }
         .swiper-slide { display: flex; align-items: center; justify-content: center; padding: 20px; }
         .slide-container { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 40px; width: 100%; max-width: 1100px; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(8px); padding: 30px; border-radius: 30px; border: 2px solid rgba(255,255,255,0.3); animation: fadeInUp 0.8s ease-out; }
         .slide-text h1 { font-family: 'Archivo Black', sans-serif; font-size: clamp(28px, 5vw, 55px); color: #fff; text-shadow: 3px 3px 0px #000; text-transform: uppercase; line-height: 1; margin-bottom: 15px; }
         .slide-text p { font-size: clamp(14px, 2vw, 18px); font-weight: 600; color: #fff; margin-bottom: 25px; line-height: 1.4; text-shadow: 1px 1px 5px rgba(0,0,0,0.7); }
-        .slide-img { max-height: 350px; width: auto; max-width: 100%; border-radius: 40px; box-shadow: 0 15px 35px rgba(0,0,0,0.4); border: 5px solid #fff; transition: 0.5s ease; }
+        .slide-img { max-height: 350px; width: auto; max-width: 100%; border-radius: 40px; box-shadow: 0 15px 35px rgba(0,0,0,0.4); border: 5px solid #fff; }
         
         .container { max-width: 1200px; margin: 0 auto; padding: 50px 20px; }
         .section-title { font-family: 'Archivo Black', sans-serif; text-align: center; margin-bottom: 40px; font-size: clamp(24px, 5vw, 35px); text-transform: uppercase; text-shadow: 3px 3px 0px #ff6b00; color: #000; }
@@ -160,9 +150,17 @@
                 <div class="cart-btn" id="userBtn">👤</div>
                 
                 <div class="user-dropdown" id="userDropdown">
-                    <div id="dropdownContent">
-                        <p style="text-align:center; font-size:12px;">Cargando...</p>
+                    <div class="user-info-box">
+                        <img id="userAvatarDropdown" src="" class="dropdown-avatar" style="display: none;">
+                        <div id="userInitial" style="width:60px; height:60px; background:#ff6b00; color:#fff; display:none; align-items:center; justify-content:center; font-weight:900; border-radius:50%; border: 3px solid #000; margin: 0 auto 10px; font-size: 24px;"></div>
+                        <h4 id="userName" style="font-size:16px; font-family:'Archivo Black', sans-serif; margin-bottom: 2px; text-transform: uppercase;"></h4>
+                        <p id="userEmail" style="font-size:11px; color: #666; word-break: break-all; margin-bottom: 5px;"></p>
+                        <p id="userRole" class="user-role-badge"></p>
                     </div>
+                    
+                    <div id="adminLinkContainer"></div>
+                    <a href="perfil.html" class="profile-menu-link">👤 Mi Perfil</a>
+                    <button onclick="cerrarSesion()" class="logout-btn">Cerrar Sesión</button>
                 </div>
             </div>
 
@@ -271,40 +269,58 @@
             const { data: { user } } = await supabaseClient.auth.getUser();
             const userBtn = document.getElementById('userBtn');
             const userDropdown = document.getElementById('userDropdown');
-            const dropdownContent = document.getElementById('dropdownContent');
 
             if (user) {
+                // Obtener datos del perfil unificado (asegúrate que en tu DB sea foto_url)
                 const { data: perfil } = await supabaseClient
                     .from('perfiles')
-                    .select('rol, nombre, avatar_url')
+                    .select('rol, nombre, foto_url')
                     .eq('id', user.id)
                     .maybeSingle();
 
-                const rol = perfil ? perfil.rol : 'usuario';
-                const nombre = perfil && perfil.nombre ? perfil.nombre : 'Usuario';
-                const fotoUrl = perfil && perfil.avatar_url ? perfil.avatar_url : 'imagenes/freddy.png';
+                const rol = perfil?.rol || 'usuario';
+                const nombre = perfil?.nombre || user.email.split('@')[0];
+                const foto = perfil?.foto_url;
+
+                // Actualizar Botón del Header
+                if (foto) {
+                    userBtn.innerHTML = `<img src="${foto}" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">`;
+                } else {
+                    const inicial = nombre.charAt(0).toUpperCase();
+                    userBtn.innerHTML = `<div style="width:100%; height:100%; background:#ff6b00; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:900; border-radius:50%; font-size:18px;">${inicial}</div>`;
+                }
                 
-                userBtn.innerHTML = `<img src="${fotoUrl}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">`;
-                
+                // Evento para abrir dropdown
                 userBtn.onclick = (e) => { 
                     e.stopPropagation();
                     userDropdown.classList.toggle('active'); 
                 };
 
-                let adminLink = (rol === 'admin') ? `<a href="panelA.html" class="profile-menu-link admin-link">⚙️ PANEL ADMIN</a>` : '';
+                // Llenar información del Dropdown
+                const avatarImg = document.getElementById('userAvatarDropdown');
+                const initialDiv = document.getElementById('userInitial');
+                
+                if (foto) {
+                    avatarImg.src = foto;
+                    avatarImg.style.display = 'block';
+                    initialDiv.style.display = 'none';
+                } else {
+                    avatarImg.style.display = 'none';
+                    initialDiv.textContent = nombre.charAt(0).toUpperCase();
+                    initialDiv.style.display = 'flex';
+                }
 
-                dropdownContent.innerHTML = `
-                    <div class="user-info-box">
-                        <img src="${fotoUrl}" class="dropdown-avatar">
-                        <div class="user-name">${nombre}</div>
-                        <div style="font-size:11px; color:#666; margin-bottom:5px;">${user.email}</div>
-                        <p class="user-role-badge">${rol}</p>
-                    </div>
-                    ${adminLink}
-                    <a href="perfil.html" class="profile-menu-link">👤 Mi Perfil</a>
-                    <button onclick="cerrarSesion()" class="logout-btn">Cerrar Sesión</button>
-                `;
+                document.getElementById('userName').textContent = nombre;
+                document.getElementById('userEmail').textContent = user.email;
+                document.getElementById('userRole').textContent = rol;
+                
+                if (rol === 'admin') {
+                    document.getElementById('adminLinkContainer').innerHTML = `
+                        <a href="panelA.html" class="profile-menu-link admin-link">⚙️ PANEL ADMIN</a>
+                    `;
+                }
             } else {
+                // Si no hay usuario, mandarlo al login al hacer clic
                 userBtn.onclick = () => window.location.href = 'login.html';
             }
         }
@@ -314,6 +330,7 @@
             window.location.reload();
         }
 
+        // --- LÓGICA DE CARRITO ---
         function addToCart(name, price, img) {
             let cart = JSON.parse(localStorage.getItem('pizzaCart')) || {};
             cart[name] = cart[name] ? {...cart[name], quantity: cart[name].quantity + 1} : {name, price, image: img, quantity: 1};
@@ -333,11 +350,11 @@
             }
         }
 
+        // Cerrar dropdown al hacer clic fuera
         window.onclick = (e) => {
             const container = document.getElementById('userMenuContainer');
-            const userDropdown = document.getElementById('userDropdown');
             if (container && !container.contains(e.target)) {
-                userDropdown.classList.remove('active');
+                document.getElementById('userDropdown').classList.remove('active');
             }
         };
     </script>
