@@ -20,14 +20,15 @@
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
     <style>
-        /* --- ANIMACIONES --- */
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes slideDown {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
+        /* --- ANIMACIONES Y ALERTAS --- */
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* Estilo para que la alerta no corte el diseño */
+        #cartAlert {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            background: #000; color: #fff; padding: 12px 25px; border-radius: 50px;
+            font-weight: bold; z-index: 10000; display: none; box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
 
         /* --- GENERAL --- */
@@ -36,40 +37,33 @@
         
         /* --- HEADER --- */
         .header { 
-            background: #fff; 
-            padding: 15px 25px; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            border-bottom: 4px solid #000;
-            position: sticky; top: 0; z-index: 1000; 
+            background: #fff; padding: 15px 25px; display: flex; 
+            justify-content: space-between; align-items: center; 
+            border-bottom: 4px solid #000; position: sticky; top: 0; z-index: 1000; 
         }
         .logo-container { display: flex; align-items: center; gap: 12px; text-decoration: none; }
-        .logo-img { height: 45px; width: auto; transition: 0.3s; }
+        .logo-img { height: 45px; width: auto; }
         .logo-text { font-family: 'Archivo Black', sans-serif; font-size: 22px; color: #ff4500; text-shadow: 2px 2px 0px #000; }
 
         .header-right { display: flex; gap: 15px; align-items: center; }
 
-        /* --- BOTONES CIRCULARES --- */
         .cart-btn { 
             background: #fff; border: 3px solid #000; color: #000; 
             width: 48px; height: 48px; border-radius: 50%; cursor: pointer; 
             display: flex; align-items: center; justify-content: center; 
             position: relative; text-decoration: none; font-size: 20px;
-            box-shadow: 3px 3px 0px #000; transition: 0.3s;
-            overflow: hidden;
+            box-shadow: 3px 3px 0px #000; transition: 0.3s; overflow: hidden;
         }
         .cart-btn:hover { background: #ff6b00; transform: scale(1.1); color: #fff; }
 
         .cart-badge { 
-            position: absolute; top: -8px; right: -8px; 
-            background-color: #ff3d00; color: #fff; border: 2px solid #000; 
-            border-radius: 50%; padding: 2px; min-width: 22px; height: 22px;
-            font-size: 11px; font-weight: 900; display: flex; align-items: center; justify-content: center;
-            box-shadow: 2px 2px 0px #000; z-index: 10;
+            position: absolute; top: -8px; right: -8px; background-color: #ff3d00; 
+            color: #fff; border: 2px solid #000; border-radius: 50%; 
+            min-width: 22px; height: 22px; font-size: 11px; font-weight: 900; 
+            display: flex; align-items: center; justify-content: center; z-index: 10;
         }
 
-        /* --- DROPDOWN PERFIL --- */
+        /* --- DROPDOWN --- */
         .user-dropdown { 
             display: none; position: absolute; top: 60px; right: 0; 
             background: white; border: 4px solid #000; box-shadow: 8px 8px 0px #000; 
@@ -77,67 +71,45 @@
             animation: slideDown 0.3s ease-out; 
         }
         .user-dropdown.active { display: block; }
-
         .user-info-box { text-align: center; padding-bottom: 15px; border-bottom: 2px solid #eee; margin-bottom: 15px; }
         .dropdown-avatar { width: 75px; height: 75px; border-radius: 50%; border: 3px solid #000; margin-bottom: 10px; object-fit: cover; }
-        .user-name { font-family: 'Archivo Black', sans-serif; font-size: 16px; color: #000; margin-bottom: 5px; text-transform: uppercase; }
-        .user-role-badge { font-size: 10px; font-weight: 900; color: #ff6b00; text-transform: uppercase; letter-spacing: 1px; }
+        .user-name { font-family: 'Archivo Black', sans-serif; font-size: 16px; color: #000; text-transform: uppercase; }
+        .user-role-badge { font-size: 10px; font-weight: 900; color: #ff6b00; text-transform: uppercase; }
+        .profile-menu-link { display: flex; align-items: center; gap: 10px; padding: 12px; border-radius: 10px; text-decoration: none; color: #000; font-weight: bold; background: #f9f9f9; margin-bottom: 5px; transition: 0.2s; }
+        .profile-menu-link:hover { background: #ff6b00; color: #fff; }
+        .logout-btn { width: 100%; padding: 10px; margin-top: 10px; background: none; border: 2px solid #ff3d00; color: #ff3d00; font-weight: 900; cursor: pointer; border-radius: 10px; }
 
-        .profile-menu-link {
-            display: flex; align-items: center; gap: 10px;
-            padding: 12px; border-radius: 10px; text-decoration: none;
-            color: #000; font-weight: bold; font-size: 14px;
-            transition: 0.2s; margin-bottom: 5px; background: #f9f9f9;
-        }
-        .profile-menu-link:hover { background: #ff6b00; color: #fff; transform: translateX(5px); }
-        .admin-link { background: #000; color: #fff; margin-bottom: 10px; }
+        /* --- HERO --- */
+        .hero-swiper { width: 100%; height: 550px; border-bottom: 5px solid #000; background: url('imagenes/carrusel.png') center/cover; }
+        .slide-container { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 40px; width: 100%; max-width: 1100px; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(8px); padding: 30px; border-radius: 30px; border: 2px solid rgba(255,255,255,0.3); }
+        .slide-text h1 { font-family: 'Archivo Black', sans-serif; font-size: clamp(30px, 5vw, 55px); color: #fff; text-shadow: 3px 3px 0px #000; line-height: 1; margin-bottom: 15px; }
+        .slide-text p { font-size: 18px; color: #fff; margin-bottom: 25px; text-shadow: 1px 1px 5px rgba(0,0,0,0.7); }
+        .slide-img { max-height: 350px; border-radius: 40px; border: 5px solid #fff; box-shadow: 0 15px 35px rgba(0,0,0,0.4); }
 
-        .logout-btn { 
-            width: 100%; padding: 10px; margin-top: 10px;
-            background: none; border: 2px solid #ff3d00; color: #ff3d00;
-            font-weight: 900; text-transform: uppercase; cursor: pointer;
-            transition: 0.2s; border-radius: 10px;
-        }
-        .logout-btn:hover { background: #ff3d00; color: #fff; }
-
-        /* --- HERO & GRID --- */
-        .hero-swiper { width: 100%; min-height: 500px; border-bottom: 5px solid #000; background-image: url('imagenes/carrusel.png'); background-size: cover; background-position: center; }
-        .swiper-slide { display: flex; align-items: center; justify-content: center; padding: 20px; }
-        .slide-container { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 40px; width: 100%; max-width: 1100px; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(8px); padding: 30px; border-radius: 30px; border: 2px solid rgba(255,255,255,0.3); animation: fadeInUp 0.8s ease-out; }
-        .slide-text h1 { font-family: 'Archivo Black', sans-serif; font-size: clamp(28px, 5vw, 55px); color: #fff; text-shadow: 3px 3px 0px #000; text-transform: uppercase; line-height: 1; margin-bottom: 15px; }
-        .slide-text p { font-size: clamp(14px, 2vw, 18px); font-weight: 600; color: #fff; margin-bottom: 25px; line-height: 1.4; text-shadow: 1px 1px 5px rgba(0,0,0,0.7); }
-        .slide-img { max-height: 350px; width: auto; max-width: 100%; border-radius: 40px; box-shadow: 0 15px 35px rgba(0,0,0,0.4); border: 5px solid #fff; transition: 0.5s ease; }
-        
+        /* --- GRID --- */
         .container { max-width: 1200px; margin: 0 auto; padding: 50px 20px; }
-        .section-title { font-family: 'Archivo Black', sans-serif; text-align: center; margin-bottom: 40px; font-size: clamp(24px, 5vw, 35px); text-transform: uppercase; text-shadow: 3px 3px 0px #ff6b00; color: #000; }
-        
-        .grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px; }
-        .card { background: white; border-radius: 20px; border: 3px solid #000; overflow: hidden; box-shadow: 6px 6px 0px #000; transition: 0.3s; display: flex; flex-direction: column; animation: fadeInUp 0.8s ease-out; }
+        .section-title { font-family: 'Archivo Black', sans-serif; text-align: center; margin-bottom: 40px; font-size: 35px; text-transform: uppercase; text-shadow: 3px 3px 0px #ff6b00; }
+        .grid-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; } /* Forzado a 3 columnas */
+        .card { background: white; border-radius: 20px; border: 3px solid #000; overflow: hidden; box-shadow: 6px 6px 0px #000; transition: 0.3s; display: flex; flex-direction: column; }
         .card:hover { transform: translateY(-10px); box-shadow: 10px 10px 0px #ff6b00; }
         .card-image { width: 100%; height: 230px; object-fit: cover; border-bottom: 3px solid #000; }
         .card-info { padding: 25px; flex-grow: 1; }
-        .card-info h3 { font-family: 'Archivo Black', sans-serif; font-size: 20px; margin-bottom: 10px; text-transform: uppercase; }
         .card-footer { display: flex; justify-content: space-between; align-items: center; padding: 0 25px 25px; }
-        .card-price { color: #ff6b00; font-size: 26px; font-weight: 900; text-shadow: 1.5px 1.5px 0px #000; }
-        
-        .add-btn { background: #fff; color: #000; border: 3px solid #000; padding: 12px 20px; border-radius: 15px; cursor: pointer; font-weight: 900; transition: 0.2s; box-shadow: 4px 4px 0px #000; text-transform: uppercase; font-size: 13px; }
-        .add-btn:hover { transform: scale(1.05) translateY(-2px); background: #ff6b00; color: #fff; box-shadow: 6px 6px 0px #000; }
+        .card-price { color: #ff6b00; font-size: 26px; font-weight: 900; }
+        .add-btn { background: #fff; border: 3px solid #000; padding: 10px 15px; border-radius: 12px; cursor: pointer; font-weight: 900; box-shadow: 3px 3px 0px #000; }
 
-        .main-footer { background-color: #fff; border-top: 5px solid #000; padding: 40px 20px; margin-top: 50px; }
-        .footer-grid { max-width: 800px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; text-align: center; }
-        .footer-col h4 { font-family: 'Archivo Black', sans-serif; font-size: 16px; margin-bottom: 15px; text-transform: uppercase; }
-        .footer-col a { display: block; text-decoration: none; color: #333; font-size: 14px; margin-bottom: 10px; font-weight: 700; transition: 0.2s; }
-        .footer-col a:hover { color: #ff6b00; }
-        .copy { text-align: center; margin-top: 30px; font-size: 13px; font-weight: 900; text-transform: uppercase; border-top: 2px solid #000; padding-top: 20px; }
+        .main-footer { background: #fff; border-top: 5px solid #000; padding: 40px 20px; text-align: center; }
 
-        @media (max-width: 850px) {
+        @media (max-width: 900px) {
+            .grid-container { grid-template-columns: 1fr; }
             .slide-container { grid-template-columns: 1fr; text-align: center; }
-            .slide-text { order: 2; } .slide-image-wrapper { order: 1; }
-            .footer-grid { grid-template-columns: 1fr; }
+            .slide-image-wrapper { order: -1; }
         }
     </style>
 </head>
 <body>
+
+    <div id="cartAlert">¡Pizza añadida con éxito! 🍕</div>
 
     <header class="header">
         <a href="index.html" class="logo-container">
@@ -147,14 +119,10 @@
         <div class="header-right">
             <div style="position: relative;" id="userMenuContainer">
                 <div class="cart-btn" id="userBtn">👤</div>
-                
                 <div class="user-dropdown" id="userDropdown">
-                    <div id="dropdownContent">
-                        <p style="text-align:center; font-size:12px;">Cargando...</p>
-                    </div>
+                    <div id="dropdownContent"></div>
                 </div>
             </div>
-
             <a href="carrito.html" class="cart-btn">
                 🛒<span id="cartBadge" class="cart-badge" style="display: none;">0</span>
             </a>
@@ -167,11 +135,11 @@
                 <div class="slide-container">
                     <div class="slide-text">
                         <h1>Pepperoni <br> Legendario</h1>
-                        <p>Nuestra pizza estrella con pepperoni de corte grueso y una mezcla secreta de quesos derretidos.</p>
-                        <a href="catalogo.html" class="add-btn" style="display: inline-block; text-decoration: none; padding: 15px 25px;">¡ORDENAR YA!</a>
+                        <p>Nuestra pizza estrella con pepperoni de corte grueso y quesos derretidos.</p>
+                        <a href="catalogo.html" class="add-btn" style="text-decoration:none; padding:15px;">¡ORDENAR YA!</a>
                     </div>
                     <div class="slide-image-wrapper">
-                        <img src="imagenes/pizza_pepe.png" class="slide-img" alt="Pizza">
+                        <img src="imagenes/pizza_pepe.png" class="slide-img">
                     </div>
                 </div>
             </div>
@@ -179,17 +147,17 @@
                 <div class="slide-container">
                     <div class="slide-text">
                         <h1>Clásica <br> Margherita</h1>
-                        <p>Mozzarella fresca de búfala, albahaca recién cortada y el mejor aceite de oliva extra virgen.</p>
-                        <a href="catalogo.html" class="add-btn" style="display: inline-block; text-decoration: none; padding: 15px 25px;">VER CATÁLOGO</a>
+                        <p>Mozzarella fresca, albahaca y el mejor aceite de oliva virgen.</p>
+                        <a href="catalogo.html" class="add-btn" style="text-decoration:none; padding:15px;">VER CATÁLOGO</a>
                     </div>
                     <div class="slide-image-wrapper">
-                        <img src="imagenes/pizza_marg.png" class="slide-img" alt="Pizza">
+                        <img src="imagenes/pizza_marg.png" class="slide-img">
                     </div>
                 </div>
             </div>
         </div>
-        <div class="swiper-button-next" style="color: #fff;"></div>
-        <div class="swiper-button-prev" style="color: #fff;"></div>
+        <div class="swiper-button-next" style="color:#000"></div>
+        <div class="swiper-button-prev" style="color:#000"></div>
         <div class="swiper-pagination"></div>
     </section>
 
@@ -197,47 +165,24 @@
         <h2 class="section-title">Especialidades</h2>
         <div class="grid-container">
             <div class="card">
-                <img src="imagenes/pizza_pepe.png" class="card-image" alt="Pepperoni">
-                <div class="card-info">
-                    <h3>Pepperoni Premium</h3>
-                    <p>Corte grueso y extra queso.</p>
-                </div>
-                <div class="card-footer">
-                    <span class="card-price">$121.99</span>
-                    <button class="add-btn" onclick="addToCart('Pepperoni Premium', 121.99, 'imagenes/pizza_pepe.png')">AGREGAR</button>
-                </div>
+                <img src="imagenes/pizza_pepe.png" class="card-image">
+                <div class="card-info"><h3>Pepperoni Premium</h3><p>Corte grueso y extra queso.</p></div>
+                <div class="card-footer"><span class="card-price">$121.99</span><button class="add-btn" onclick="addToCart('Pepperoni Premium', 121.99, 'imagenes/pizza_pepe.png')">AGREGAR</button></div>
             </div>
             <div class="card">
-                <img src="imagenes/pizza_suprema.png" class="card-image" alt="Suprema">
-                <div class="card-info">
-                    <h3>Pizza Suprema</h3>
-                    <p>Pimientos, cebolla y champiñones.</p>
-                </div>
-                <div class="card-footer">
-                    <span class="card-price">$166.99</span>
-                    <button class="add-btn" onclick="addToCart('Pizza Suprema', 166.99, 'imagenes/pizza_suprema.png')">AGREGAR</button>
-                </div>
+                <img src="imagenes/pizza_suprema.png" class="card-image">
+                <div class="card-info"><h3>Pizza Suprema</h3><p>Pimientos, cebolla y carne.</p></div>
+                <div class="card-footer"><span class="card-price">$166.99</span><button class="add-btn" onclick="addToCart('Pizza Suprema', 166.99, 'imagenes/pizza_suprema.png')">AGREGAR</button></div>
             </div>
             <div class="card">
-                <img src="imagenes/pizza_marg.png" class="card-image" alt="Margherita">
-                <div class="card-info">
-                    <h3>Margherita</h3>
-                    <p>Sencillez: mozzarella y albahaca.</p>
-                </div>
-                <div class="card-footer">
-                    <span class="card-price">$158.99</span>
-                    <button class="add-btn" onclick="addToCart('Margherita', 158.99, 'imagenes/pizza_marg.png')">AGREGAR</button>
-                </div>
+                <img src="imagenes/pizza_marg.png" class="card-image">
+                <div class="card-info"><h3>Margherita Real</h3><p>Mozzarella y albahaca fresca.</p></div>
+                <div class="card-footer"><span class="card-price">$158.99</span><button class="add-btn" onclick="addToCart('Margherita Real', 158.99, 'imagenes/pizza_marg.png')">AGREGAR</button></div>
             </div>
         </div>
     </div>
 
     <footer class="main-footer">
-        <div class="footer-grid">
-            <div class="footer-col"><h4>Menú</h4><a href="catalogo.html">Pizzas</a><a href="catalogo.html">Promos</a></div>
-            <div class="footer-col"><h4>Nosotros</h4><a href="contacto.html">Historia</a></div>
-            <div class="footer-col"><h4>Contacto</h4><a href="Conta.html">Atención</a></div>
-        </div>
         <div class="copy">© 2026 FREDDY'S PIZZA. TODOS LOS DERECHOS RESERVADOS.</div>
     </footer>
 
@@ -249,8 +194,10 @@
         document.addEventListener('DOMContentLoaded', () => {
             initAuth();
             updateCartBadge();
+            // Swiper Inicialización corregida
             new Swiper('.hero-swiper', {
-                loop: true, autoplay: { delay: 5000 },
+                loop: true,
+                autoplay: { delay: 4000 },
                 pagination: { el: '.swiper-pagination', clickable: true },
                 navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
             });
@@ -259,41 +206,23 @@
         async function initAuth() {
             const { data: { user } } = await supabaseClient.auth.getUser();
             const userBtn = document.getElementById('userBtn');
-            const userDropdown = document.getElementById('userDropdown');
             const dropdownContent = document.getElementById('dropdownContent');
 
             if (user) {
-                const { data: perfil } = await supabaseClient
-                    .from('perfiles')
-                    .select('rol, nombre, avatar_url')
-                    .eq('id', user.id)
-                    .maybeSingle();
-
-                const rol = perfil ? perfil.rol : 'usuario';
-                const nombre = perfil && perfil.nombre ? perfil.nombre : 'Usuario';
-                const fotoUrl = perfil && perfil.avatar_url ? perfil.avatar_url : 'imagenes/freddy.png';
+                const { data: perfil } = await supabaseClient.from('perfiles').select('*').eq('id', user.id).maybeSingle();
+                const foto = perfil?.avatar_url || 'freddy.png';
+                userBtn.innerHTML = `<img src="${foto}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">`;
                 
-                // Foto en el círculo del Header
-                userBtn.innerHTML = `<img src="${fotoUrl}" style="width:100%; height:100%; object-fit:cover;">`;
-                
-                userBtn.onclick = (e) => { 
-                    e.stopPropagation();
-                    userDropdown.classList.toggle('active'); 
-                };
-
-                // Contenido del Dropdown reconstruido
-                let adminLink = (rol === 'admin') ? `<a href="panelA.html" class="profile-menu-link admin-link">⚙️ PANEL ADMIN</a>` : '';
+                userBtn.onclick = (e) => { e.stopPropagation(); document.getElementById('userDropdown').classList.toggle('active'); };
 
                 dropdownContent.innerHTML = `
                     <div class="user-info-box">
-                        <img src="${fotoUrl}" class="dropdown-avatar">
-                        <div class="user-name">${nombre}</div>
-                        <div style="font-size:11px; color:#666; margin-bottom:5px;">${user.email}</div>
-                        <p class="user-role-badge">${rol}</p>
+                        <img src="${foto}" class="dropdown-avatar">
+                        <div class="user-name">${perfil?.nombre || 'Usuario'}</div>
+                        <p class="user-role-badge">${perfil?.rol || 'Cliente'}</p>
                     </div>
-                    ${adminLink}
+                    ${perfil?.rol === 'admin' ? '<a href="panelA.html" class="profile-menu-link">⚙️ PANEL ADMIN</a>' : ''}
                     <a href="perfil.html" class="profile-menu-link">👤 Mi Perfil</a>
-                    <a href="mis-pedidos.html" class="profile-menu-link">🍕 Mis Pedidos</a>
                     <button onclick="cerrarSesion()" class="logout-btn">CERRAR SESIÓN</button>
                 `;
             } else {
@@ -301,37 +230,29 @@
             }
         }
 
-        async function cerrarSesion() {
-            await supabaseClient.auth.signOut();
-            window.location.reload();
-        }
-
         function addToCart(name, price, img) {
             let cart = JSON.parse(localStorage.getItem('pizzaCart')) || {};
             cart[name] = cart[name] ? {...cart[name], quantity: cart[name].quantity + 1} : {name, price, image: img, quantity: 1};
             localStorage.setItem('pizzaCart', JSON.stringify(cart));
             updateCartBadge();
+            
+            // Mostrar alerta flotante
+            const alert = document.getElementById('cartAlert');
+            alert.style.display = 'block';
+            setTimeout(() => { alert.style.display = 'none'; }, 2000);
         }
 
         function updateCartBadge() {
             let cart = JSON.parse(localStorage.getItem('pizzaCart')) || {};
             let total = Object.values(cart).reduce((s, i) => s + i.quantity, 0);
             const badge = document.getElementById('cartBadge');
-            if (total > 0) {
-                badge.style.display = 'flex';
-                badge.textContent = total;
-            } else {
-                badge.style.display = 'none';
-            }
+            badge.style.display = total > 0 ? 'flex' : 'none';
+            badge.textContent = total;
         }
 
-        window.onclick = (e) => {
-            const container = document.getElementById('userMenuContainer');
-            const dropdown = document.getElementById('userDropdown');
-            if (container && !container.contains(e.target)) {
-                dropdown.classList.remove('active');
-            }
-        };
+        async function cerrarSesion() { await supabaseClient.auth.signOut(); window.location.reload(); }
+
+        window.onclick = () => document.getElementById('userDropdown').classList.remove('active');
     </script>
 </body>
 </html>
