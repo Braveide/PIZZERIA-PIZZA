@@ -3,139 +3,365 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FREDDY'S PIZZA - Mi Perfil</title>
+    <title>Mi Perfil - Freddy's Pizza</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap" rel="stylesheet">
     <style>
-        /* Estilos Generales */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { 
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
-            background: #f5f5f5; 
-            color: #333;
+        :root {
+            --primary: #ff6b00;
+            --secondary: #ffedd5;
+            --dark: #1e293b;
+            --black: #000000;
+            --success: #10b981;
         }
 
-        /* Header Estilizado */
-        .header {
-            background: #ff6b00;
-            padding: 15px 30px;
-            color: white;
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        
+        body { background-color: #f1f5f9; color: var(--dark); padding-bottom: 50px; }
+
+        /* --- NAVEGACIÓN --- */
+        .nav-header {
+            background: var(--dark);
+            padding: 15px 5%;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-bottom: 4px solid var(--black);
         }
 
-        .back-link {
-            color: white;
-            text-decoration: none;
-            font-size: 16px;
-            font-weight: 500;
-        }
+        .logo { font-family: 'Archivo Black', sans-serif; color: var(--primary); text-decoration: none; font-size: 24px; }
 
-        /* Contenedor principal */
-        .profile-container {
-            max-width: 500px;
+        /* --- LAYOUT PRINCIPAL --- */
+        .profile-wrapper {
+            max-width: 1000px;
             margin: 40px auto;
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 25px;
+            padding: 0 20px;
+        }
+
+        /* --- SIDEBAR --- */
+        .sidebar {
             background: white;
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-            text-align: center;
+            border: 3px solid var(--black);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 8px 8px 0px var(--black);
+            height: fit-content;
         }
 
-        .profile-icon {
-            font-size: 60px;
-            color: #ff6b00;
-            margin-bottom: 20px;
+        .profile-card { text-align: center; margin-bottom: 25px; }
+
+        .avatar-container {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 15px;
         }
 
-        h1 { margin-bottom: 10px; font-size: 24px; }
-        .subtitle { color: #666; margin-bottom: 30px; }
-
-        /* Detalles del perfil */
-        .info-card {
-            background: #f9f9f9;
-            border-radius: 10px;
-            padding: 20px;
-            text-align: left;
-            margin-bottom: 20px;
+        .avatar-container img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 4px solid var(--black);
+            object-fit: cover;
+            background: #eee;
         }
 
-        .info-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 0;
-            border-bottom: 1px solid #eee;
-        }
-
-        .info-row:last-child { border-bottom: none; }
-        .label { font-weight: 600; color: #555; }
-        .value { color: #333; font-weight: 400; }
-
-        /* Botones */
-        .btn-logout {
-            display: inline-block;
-            margin-top: 20px;
-            padding: 12px 25px;
-            background: #dc3545;
-            color: white;
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: 600;
+        .btn-edit-photo {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            background: var(--primary);
+            border: 2px solid var(--black);
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
             cursor: pointer;
-            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 2px 2px 0px var(--black);
         }
 
-        @media (max-width: 600px) {
-            .profile-container { margin: 20px; padding: 20px; }
+        .nav-menu { display: flex; flex-direction: column; gap: 10px; }
+
+        .nav-btn {
+            padding: 12px 15px;
+            border: 2px solid transparent;
+            border-radius: 8px;
+            background: none;
+            text-align: left;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-btn:hover { background: var(--secondary); border-color: var(--black); }
+        .nav-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--black);
+            box-shadow: 4px 4px 0px var(--black);
+        }
+
+        /* --- ÁREA DE CONTENIDO --- */
+        .main-content {
+            background: white;
+            border: 3px solid var(--black);
+            border-radius: 15px;
+            padding: 35px;
+            box-shadow: 8px 8px 0px var(--black);
+            min-height: 550px;
+        }
+
+        .tab-panel { display: none; animation: fadeIn 0.3s ease; }
+        .tab-panel.active { display: block; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        h2 { font-family: 'Archivo Black', sans-serif; margin-bottom: 25px; text-transform: uppercase; font-size: 22px; }
+
+        /* --- FORMULARIOS --- */
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .full-width { grid-column: 1 / -1; }
+
+        .input-group { margin-bottom: 20px; }
+        .input-group label { display: block; font-size: 12px; font-weight: bold; margin-bottom: 8px; text-transform: uppercase; }
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--black);
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .btn-action {
+            background: var(--success);
+            color: white;
+            border: 2px solid var(--black);
+            padding: 12px 25px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 4px 4px 0px var(--black);
+            text-transform: uppercase;
+        }
+
+        .btn-action:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0px var(--black); }
+
+        /* --- TARJETAS DE MENSAJES --- */
+        .msg-card {
+            border: 2px solid var(--black);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            background: #fff;
+        }
+
+        .msg-header { display: flex; justify-content: space-between; margin-bottom: 10px; border-bottom: 1px dashed #ccc; padding-bottom: 5px; }
+        .status-pill { font-size: 10px; padding: 3px 8px; border-radius: 5px; border: 1px solid var(--black); font-weight: bold; }
+
+        .admin-reply-box {
+            background: var(--secondary);
+            border-left: 5px solid var(--primary);
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 0 5px 5px 0;
         }
     </style>
 </head>
 <body>
 
-    <header class="header">
-        <a href="menu_cliente.html" class="back-link">← Volver al Menú</a>
-        <h2>Mi Perfil</h2>
-    </header>
+<nav class="nav-header">
+    <a href="index.html" class="logo">FREDDY'S PIZZA</a>
+    <button onclick="cerrarSesion()" style="color: white; border: 2px solid white; background: none; padding: 5px 12px; border-radius: 5px; cursor: pointer;">SALIR</button>
+</nav>
 
-    <div class="profile-container">
-        <div class="profile-icon">👤</div>
-        <h1 id="userName">Cargando...</h1>
-        <p class="subtitle" id="userEmail">Cargando...</p>
-
-        <div class="info-card">
-            <div class="info-row">
-                <span class="label">Rol:</span>
-                <span class="value" id="userRole">Cliente</span>
+<div class="profile-wrapper">
+    <aside class="sidebar">
+        <div class="profile-card">
+            <div class="avatar-container">
+                <img id="userAvatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=Freddy" alt="Avatar">
+                <button class="btn-edit-photo" onclick="document.getElementById('fileInput').click()">✏️</button>
+                <input type="file" id="fileInput" hidden accept="image/*" onchange="subirFoto()">
             </div>
-            <div class="info-row">
-                <span class="label">Método de Login:</span>
-                <span class="value">Google / Demo</span>
-            </div>
+            <h3 id="displayUserName">Cargando...</h3>
+            <p id="displayUserEmail" style="font-size: 12px; color: #666;"></p>
         </div>
 
-        <button class="btn-logout" onclick="cerrarSesion()">Cerrar Sesión</button>
-    </div>
+        <nav class="nav-menu">
+            <button class="nav-btn active" onclick="switchTab(event, 'tab-datos')">👤 MIS DATOS</button>
+            <button class="nav-btn" onclick="switchTab(event, 'tab-buzon')">📩 MI BUZÓN</button>
+            <button class="nav-btn" onclick="switchTab(event, 'tab-pedidos')">🍕 PEDIDOS</button>
+            <button class="nav-btn" onclick="switchTab(event, 'tab-seguridad')">🔒 SEGURIDAD</button>
+        </nav>
+    </aside>
 
-    <script>
-        // 1. Verificar si hay sesión activa
-        const userSession = localStorage.getItem('userPizzaApp');
+    <main class="main-content">
+        
+        <section id="tab-datos" class="tab-panel active">
+            <h2>Configuración de Perfil</h2>
+            <div class="form-grid">
+                <div class="input-group">
+                    <label>Nombre Completo</label>
+                    <input type="text" id="inNombre" placeholder="Ej. Juan Pérez">
+                </div>
+                <div class="input-group">
+                    <label>Teléfono</label>
+                    <input type="text" id="inTelefono" placeholder="Tu celular">
+                </div>
+                <div class="input-group full-width">
+                    <label>Correo Electrónico (No editable)</label>
+                    <input type="email" id="inEmail" disabled style="background: #f1f5f9;">
+                </div>
+                <div class="input-group full-width">
+                    <label>Dirección Predeterminada</label>
+                    <input type="text" id="inDireccion" placeholder="Calle, Número, Colonia">
+                </div>
+            </div>
+            <button class="btn-action" onclick="actualizarPerfil()">Guardar Cambios</button>
+        </section>
 
-        if (!userSession) {
-            // Si no hay sesión, redirigir al login
-            window.location.href = 'login.html';
-        } else {
-            // 2. Cargar datos del usuario
-            const user = JSON.parse(userSession);
-            document.getElementById('userName').textContent = user.name || 'Usuario';
-            document.getElementById('userEmail').textContent = user.email;
-            document.getElementById('userRole').textContent = user.role.toUpperCase();
+        <section id="tab-buzon" class="tab-panel">
+            <h2>Respuestas del Administrador</h2>
+            <p style="font-size: 13px; color: #666; margin-bottom: 20px;">Aquí aparecerán las respuestas a tus quejas o sugerencias.</p>
+            <div id="userInboxContainer">
+                </div>
+        </section>
+
+        <section id="tab-pedidos" class="tab-panel">
+            <h2>Historial de Compras</h2>
+            <p>Próximamente: Podrás ver tus pizzas favoritas aquí.</p>
+        </section>
+
+        <section id="tab-seguridad" class="tab-panel">
+            <h2>Seguridad de la Cuenta</h2>
+            <div class="input-group">
+                <label>Nueva Contraseña</label>
+                <input type="password" id="newPassword" placeholder="Mínimo 6 caracteres">
+            </div>
+            <button class="btn-action" style="background: #ef4444;" onclick="cambiarPassword()">Actualizar Contraseña</button>
+        </section>
+
+    </main>
+</div>
+
+<script>
+    // --- CONFIGURACIÓN SUPABASE ---
+    const SUPABASE_URL = 'https://vndfmcxlifcwzpjbphoy.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZuZGZtY3hsaWZjd3pwamJwaG95Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3OTc3MDIsImV4cCI6MjA4NzM3MzcwMn0.OkQ6aSZsHkyLMgfT-x0w3beJ3Ey95smEujmhT7ZfjuY'; // USA TU CLAVE ANON DE SUPABASE
+    const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    // --- LÓGICA DE PESTAÑAS ---
+    function switchTab(event, tabId) {
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        
+        document.getElementById(tabId).classList.add('active');
+        event.currentTarget.classList.add('active');
+
+        if(tabId === 'tab-buzon') cargarBuzonUsuario();
+    }
+
+    // --- CARGAR DATOS AL INICIAR ---
+    async function inicializarPerfil() {
+        const { data: { user } } = await _supabase.auth.getUser();
+        
+        if (!user) {
+            window.location.href = "login.html";
+            return;
         }
 
-        // 3. Función cerrar sesión
-        function cerrarSesion() {
-            localStorage.removeItem('userPizzaApp');
-            window.location.href = 'login.html';
+        // Llenar campos
+        document.getElementById('displayUserName').innerText = user.user_metadata.full_name || "Cliente Freddy's";
+        document.getElementById('displayUserEmail').innerText = user.email;
+        document.getElementById('inNombre').value = user.user_metadata.full_name || "";
+        document.getElementById('inEmail').value = user.email;
+        
+        // Si tienes datos extra en una tabla 'perfiles'
+        const { data: perfil } = await _supabase.from('perfiles').select('*').eq('id', user.id).single();
+        if(perfil) {
+            document.getElementById('inTelefono').value = perfil.telefono || "";
+            document.getElementById('inDireccion').value = perfil.direccion || "";
+            if(perfil.avatar_url) document.getElementById('userAvatar').src = perfil.avatar_url;
         }
-    </script>
+    }
+
+    // --- LÓGICA DEL BUZÓN (RESPUESTAS DEL ADMIN) ---
+    async function cargarBuzonUsuario() {
+        const { data: { user } } = await _supabase.auth.getUser();
+        const container = document.getElementById('userInboxContainer');
+        container.innerHTML = "Cargando mensajes...";
+
+        const { data, error } = await _supabase
+            .from('mensajes_contacto')
+            .select('*')
+            .eq('correo', user.email)
+            .order('created_at', { ascending: false });
+
+        if(data.length === 0) {
+            container.innerHTML = "<p>No has enviado mensajes de contacto aún.</p>";
+            return;
+        }
+
+        container.innerHTML = data.map(m => `
+            <div class="msg-card">
+                <div class="msg-header">
+                    <span style="font-weight:bold; color:var(--primary);">${m.tipo.toUpperCase()}</span>
+                    <span class="status-pill" style="background: ${m.respuesta_admin ? '#dcfce7' : '#eee'}">
+                        ${m.respuesta_admin ? 'RESPONDIDO' : 'EN ESPERA'}
+                    </span>
+                </div>
+                <p style="font-size: 14px;"><strong>Tú escribiste:</strong> ${m.mensaje}</p>
+                
+                ${m.respuesta_admin ? `
+                    <div class="admin-reply-box">
+                        <p style="font-size:13px;"><strong>Respuesta de Freddy's Pizza:</strong></p>
+                        <p style="font-size:13px; color: #334155; font-style: italic;">"${m.respuesta_admin}"</p>
+                    </div>
+                ` : ''}
+                <div style="font-size: 10px; color: #999; margin-top: 10px;">Enviado el: ${new Date(m.created_at).toLocaleString()}</div>
+            </div>
+        `).join('');
+    }
+
+    // --- ACCIONES ---
+    async function actualizarPerfil() {
+        const { data: { user } } = await _supabase.auth.getUser();
+        const nuevoNombre = document.getElementById('inNombre').value;
+        
+        // 1. Actualizar metadatos de Auth
+        await _supabase.auth.updateUser({ data: { full_name: nuevoNombre } });
+        
+        // 2. Actualizar tabla perfiles
+        const updates = {
+            id: user.id,
+            telefono: document.getElementById('inTelefono').value,
+            direccion: document.getElementById('inDireccion').value,
+            updated_at: new Date()
+        };
+
+        const { error } = await _supabase.from('perfiles').upsert(updates);
+        
+        if(!error) {
+            alert("¡Perfil actualizado con éxito!");
+            location.reload();
+        }
+    }
+
+    async function cerrarSesion() {
+        await _supabase.auth.signOut();
+        window.location.href = "login.html";
+    }
+
+    document.addEventListener('DOMContentLoaded', inicializarPerfil);
+</script>
+
 </body>
 </html>
