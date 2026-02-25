@@ -264,19 +264,18 @@
             });
         });
 
-        // --- AUTENTICACIÓN ---
         async function initAuth() {
             const { data: { user } } = await supabaseClient.auth.getUser();
             const userBtn = document.getElementById('userBtn');
             const userDropdown = document.getElementById('userDropdown');
 
             if (user) {
-                // Intentar obtener el perfil para el rol
-                const { data: perfil } = await supabaseClient.from('perfiles').select('rol, nombre').eq('id', user.id).maybeSingle();
-                const rol = perfil?.rol || 'usuario';
-                const inicial = (perfil?.nombre || user.email).charAt(0).toUpperCase();
+                // Obtener perfil para ver si es admin
+                const { data: perfil } = await supabaseClient.from('perfiles').select('rol').eq('id', user.id).maybeSingle();
+                const rol = perfil ? perfil.rol : 'usuario';
                 
-                // Aplicar la inicial en el círculo manteniendo el estilo
+                // Mostrar inicial con tu estilo original
+                const inicial = user.email.charAt(0).toUpperCase();
                 userBtn.innerHTML = `<div style="width:100%; height:100%; background:#000; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:900; border-radius:50%;">${inicial}</div>`;
                 
                 userBtn.onclick = (e) => { 
@@ -302,7 +301,6 @@
             window.location.reload();
         }
 
-        // --- CARRITO ---
         function addToCart(name, price, img) {
             let cart = JSON.parse(localStorage.getItem('pizzaCart')) || {};
             cart[name] = cart[name] ? {...cart[name], quantity: cart[name].quantity + 1} : {name, price, image: img, quantity: 1};
@@ -325,7 +323,8 @@
         window.onclick = (e) => {
             const container = document.getElementById('userMenuContainer');
             if (container && !container.contains(e.target)) {
-                document.getElementById('userDropdown').classList.remove('active');
+                const dropdown = document.getElementById('userDropdown');
+                if(dropdown) dropdown.classList.remove('active');
             }
         };
     </script>
