@@ -57,7 +57,7 @@
             display: flex; align-items: center; justify-content: center; 
             position: relative; text-decoration: none; font-size: 20px;
             box-shadow: 3px 3px 0px #000; transition: 0.3s;
-            overflow: hidden; /* Importante para la foto circular */
+            overflow: hidden; 
         }
         .cart-btn:hover { background: #ff6b00; transform: scale(1.1); color: #fff; }
 
@@ -82,7 +82,6 @@
         .user-info-box { text-align: center; padding-bottom: 15px; border-bottom: 2px solid #eee; margin-bottom: 15px; }
         .user-role-badge { font-size: 10px; font-weight: 900; color: #ff6b00; text-transform: uppercase; letter-spacing: 1px; margin-top: 5px; }
 
-        /* Estilo para la foto dentro del dropdown */
         .dropdown-avatar {
             width: 60px; height: 60px; border-radius: 50%; border: 3px solid #000;
             margin: 0 auto 10px; object-fit: cover; display: block;
@@ -165,7 +164,7 @@
                     </div>
                     
                     <div id="adminLinkContainer"></div>
-                    <a href="perfil" class="profile-menu-link">👤 Mi Perfil</a>
+                    <a href="perfil.html" class="profile-menu-link">👤 Mi Perfil</a>
                     
                     <button onclick="cerrarSesion()" class="logout-btn">Cerrar Sesión</button>
                 </div>
@@ -223,29 +222,7 @@
                     <button class="add-btn" onclick="addToCart('Pepperoni Premium', 121.99, 'imagenes/pizza_pepe.png')">AGREGAR</button>
                 </div>
             </div>
-            <div class="card">
-                <img src="imagenes/pizza_suprema.png" class="card-image" alt="Suprema">
-                <div class="card-info">
-                    <h3>Pizza Suprema</h3>
-                    <p>Pimientos, cebolla y champiñones.</p>
-                </div>
-                <div class="card-footer">
-                    <span class="card-price">$166.99</span>
-                    <button class="add-btn" onclick="addToCart('Pizza Suprema', 166.99, 'imagenes/pizza_suprema.png')">AGREGAR</button>
-                </div>
             </div>
-            <div class="card">
-                <img src="imagenes/pizza_marg.png" class="card-image" alt="Margherita">
-                <div class="card-info">
-                    <h3>Margherita</h3>
-                    <p>Sencillez: mozzarella y albahaca.</p>
-                </div>
-                <div class="card-footer">
-                    <span class="card-price">$158.99</span>
-                    <button class="add-btn" onclick="addToCart('Margherita', 158.99, 'imagenes/pizza_marg.png')">AGREGAR</button>
-                </div>
-            </div>
-        </div>
     </div>
 
     <footer class="main-footer">
@@ -272,30 +249,29 @@
             });
         });
 
-        // --- AUTENTICACIÓN ---
         async function initAuth() {
-            const { data: { user } } = await supabaseClient.auth.getUser();
+            const { data: { user }, error: authError } = await supabaseClient.auth.getUser();
             const userBtn = document.getElementById('userBtn');
             const userDropdown = document.getElementById('userDropdown');
 
             if (user) {
-                // Obtenemos los datos extendidos del perfil
-                const { data: perfil } = await supabaseClient
+                // Obtener datos del perfil
+                const { data: perfil, error: profileError } = await supabaseClient
                     .from('perfiles')
                     .select('rol, nombre, foto_url')
                     .eq('id', user.id)
-                    .single();
+                    .maybeSingle();
 
-                const rol = perfil ? perfil.rol : 'usuario';
-                const nombre = perfil?.nombre || 'Usuario';
+                const rol = perfil?.rol || 'usuario';
+                const nombre = perfil?.nombre || user.email.split('@')[0];
                 const foto = perfil?.foto_url;
 
-                // 1. Foto o Inicial en el botón del Header
+                // Actualizar Botón Header
                 if (foto) {
                     userBtn.innerHTML = `<img src="${foto}" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">`;
                 } else {
-                    const inicial = user.email.charAt(0).toUpperCase();
-                    userBtn.innerHTML = `<div style="width:100%; height:100%; background:#000; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:900; border-radius:50%;">${inicial}</div>`;
+                    const inicial = nombre.charAt(0).toUpperCase();
+                    userBtn.innerHTML = `<div style="width:100%; height:100%; background:#ff6b00; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:900; border-radius:50%;">${inicial}</div>`;
                 }
                 
                 userBtn.onclick = (e) => { 
@@ -303,7 +279,7 @@
                     userDropdown.classList.toggle('active'); 
                 };
 
-                // 2. Info en la pestaña desplegable
+                // Llenar Dropdown
                 if (foto) {
                     const dropdownAvatar = document.getElementById('userAvatarDropdown');
                     dropdownAvatar.src = foto;
@@ -319,6 +295,7 @@
                     `;
                 }
             } else {
+                // Usuario no logueado
                 userBtn.onclick = () => window.location.href = 'login.html';
             }
         }
