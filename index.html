@@ -50,13 +50,14 @@
 
         .header-right { display: flex; gap: 15px; align-items: center; }
 
-        /* --- BOTONES CIRCULARES (USER & CART) --- */
+        /* --- BOTONES CIRCULARES --- */
         .cart-btn { 
             background: #fff; border: 3px solid #000; color: #000; 
             width: 48px; height: 48px; border-radius: 50%; cursor: pointer; 
             display: flex; align-items: center; justify-content: center; 
             position: relative; text-decoration: none; font-size: 20px;
             box-shadow: 3px 3px 0px #000; transition: 0.3s;
+            overflow: hidden; /* Para que la foto no se salga del círculo */
         }
         .cart-btn:hover { background: #ff6b00; transform: scale(1.1); color: #fff; }
 
@@ -66,10 +67,9 @@
             border-radius: 50%; padding: 2px; min-width: 22px; height: 22px;
             font-size: 11px; font-weight: 900; display: flex; align-items: center; justify-content: center;
             box-shadow: 2px 2px 0px #000; z-index: 10;
-            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        /* --- NUEVO DROPDOWN PERFIL --- */
+        /* --- DROPDOWN PERFIL --- */
         .user-dropdown { 
             display: none; position: absolute; top: 60px; right: 0; 
             background: white; border: 4px solid #000; box-shadow: 8px 8px 0px #000; 
@@ -79,6 +79,8 @@
         .user-dropdown.active { display: block; }
 
         .user-info-box { text-align: center; padding-bottom: 15px; border-bottom: 2px solid #eee; margin-bottom: 15px; }
+        .dropdown-avatar { width: 70px; height: 70px; border-radius: 50%; border: 3px solid #000; margin-bottom: 10px; object-fit: cover; }
+        .user-name { font-family: 'Archivo Black', sans-serif; font-size: 16px; color: #000; margin-bottom: 5px; }
         .user-role-badge { font-size: 10px; font-weight: 900; color: #ff6b00; text-transform: uppercase; letter-spacing: 1px; }
 
         .profile-menu-link {
@@ -88,9 +90,7 @@
             transition: 0.2s; margin-bottom: 5px; background: #f9f9f9;
         }
         .profile-menu-link:hover { background: #ff6b00; color: #fff; transform: translateX(5px); }
-        
         .admin-link { background: #000; color: #fff; }
-        .admin-link:hover { background: #333; color: #ff6b00; }
 
         .logout-btn { 
             width: 100%; padding: 10px; margin-top: 10px;
@@ -147,18 +147,16 @@
         </a>
         <div class="header-right">
             <div style="position: relative;" id="userMenuContainer">
-                <div class="cart-btn" id="userBtn" style="cursor: pointer;">👤</div>
+                <div class="cart-btn" id="userBtn">👤</div>
                 
                 <div class="user-dropdown" id="userDropdown">
-                    <div class="user-info-box">
-                        <h4 id="userEmail" style="font-size:14px; word-break: break-all;">Usuario</h4>
+                    <div class="user-info-box" id="userInfo">
+                        <h4 id="userEmail" style="font-size:12px; color: #666; word-break: break-all;">Cargando...</h4>
                         <p id="userRole" class="user-role-badge"></p>
                     </div>
                     
                     <div id="adminLinkContainer"></div>
-                    <a href="perfil_cliente.html" class="profile-menu-link">👤 Mi Perfil</a>
-                    <a href="pedidos.html" class="profile-menu-link">🍕 Mis Pedidos</a>
-                    
+                    <a href="perfil.html" class="profile-menu-link">👤 Mi Perfil</a>
                     <button onclick="cerrarSesion()" class="logout-btn">Cerrar Sesión</button>
                 </div>
             </div>
@@ -270,21 +268,33 @@
             const userDropdown = document.getElementById('userDropdown');
 
             if (user) {
-                // Obtener perfil para ver si es admin
-                const { data: perfil } = await supabaseClient.from('perfiles').select('rol').eq('id', user.id).maybeSingle();
+                // Obtenemos nombre, rol y avatar de la tabla perfiles
+                const { data: perfil } = await supabaseClient
+                    .from('perfiles')
+                    .select('rol, nombre, avatar_url')
+                    .eq('id', user.id)
+                    .maybeSingle();
+
                 const rol = perfil ? perfil.rol : 'usuario';
+                const nombre = perfil && perfil.nombre ? perfil.nombre : 'Usuario';
+                const fotoUrl = perfil && perfil.avatar_url ? perfil.avatar_url : 'imagenes/freddy.png';
                 
-                // Mostrar inicial con tu estilo original
-                const inicial = user.email.charAt(0).toUpperCase();
-                userBtn.innerHTML = `<div style="width:100%; height:100%; background:#000; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:900; border-radius:50%;">${inicial}</div>`;
+                // 1. Poner tu foto en el círculo del header
+                userBtn.innerHTML = `<img src="${fotoUrl}" style="width:100%; height:100%; object-fit:cover;">`;
                 
                 userBtn.onclick = (e) => { 
                     e.stopPropagation();
                     userDropdown.classList.toggle('active'); 
                 };
 
-                document.getElementById('userEmail').textContent = user.email;
-                document.getElementById('userRole').textContent = rol;
+                // 2. Foto, nombre y email dentro del dropdown
+                const userInfoBox = document.getElementById('userInfo');
+                userInfoBox.innerHTML = `
+                    <img src="${fotoUrl}" class="dropdown-avatar">
+                    <div class="user-name">${nombre}</div>
+                    <div style="font-size:11px; color:#666; margin-bottom:5px;">${user.email}</div>
+                    <p class="user-role-badge">${rol}</p>
+                `;
                 
                 if (rol === 'admin') {
                     document.getElementById('adminLinkContainer').innerHTML = `
