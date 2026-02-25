@@ -50,17 +50,15 @@
 
         .header-right { display: flex; gap: 15px; align-items: center; }
 
-        /* --- BOTONES CIRCULARES --- */
+        /* --- BOTONES CIRCULARES (USER & CART) --- */
         .cart-btn { 
             background: #fff; border: 3px solid #000; color: #000; 
             width: 48px; height: 48px; border-radius: 50%; cursor: pointer; 
             display: flex; align-items: center; justify-content: center; 
             position: relative; text-decoration: none; font-size: 20px;
             box-shadow: 3px 3px 0px #000; transition: 0.3s;
-            overflow: hidden;
         }
         .cart-btn:hover { background: #ff6b00; transform: scale(1.1); color: #fff; }
-        .cart-btn img { width: 100%; height: 100%; object-fit: cover; }
 
         .cart-badge { 
             position: absolute; top: -8px; right: -8px; 
@@ -68,9 +66,10 @@
             border-radius: 50%; padding: 2px; min-width: 22px; height: 22px;
             font-size: 11px; font-weight: 900; display: flex; align-items: center; justify-content: center;
             box-shadow: 2px 2px 0px #000; z-index: 10;
+            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        /* --- DROPDOWN PERFIL --- */
+        /* --- NUEVO DROPDOWN PERFIL --- */
         .user-dropdown { 
             display: none; position: absolute; top: 60px; right: 0; 
             background: white; border: 4px solid #000; box-shadow: 8px 8px 0px #000; 
@@ -101,18 +100,19 @@
         }
         .logout-btn:hover { background: #fff1f1; }
 
-        /* --- HERO --- */
+        /* --- HERO & GRID --- */
         .hero-swiper { width: 100%; min-height: 500px; border-bottom: 5px solid #000; background-image: url('imagenes/carrusel.png'); background-size: cover; background-position: center; }
-        .slide-container { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 40px; width: 100%; max-width: 1100px; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(8px); padding: 30px; border-radius: 30px; border: 2px solid rgba(255,255,255,0.3); }
-        .slide-text h1 { font-family: 'Archivo Black', sans-serif; font-size: clamp(28px, 5vw, 55px); color: #fff; text-shadow: 3px 3px 0px #000; text-transform: uppercase; line-height: 1; }
-        .slide-img { max-height: 350px; width: auto; max-width: 100%; border-radius: 40px; box-shadow: 0 15px 35px rgba(0,0,0,0.4); border: 5px solid #fff; }
+        .swiper-slide { display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .slide-container { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 40px; width: 100%; max-width: 1100px; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(8px); padding: 30px; border-radius: 30px; border: 2px solid rgba(255,255,255,0.3); animation: fadeInUp 0.8s ease-out; }
+        .slide-text h1 { font-family: 'Archivo Black', sans-serif; font-size: clamp(28px, 5vw, 55px); color: #fff; text-shadow: 3px 3px 0px #000; text-transform: uppercase; line-height: 1; margin-bottom: 15px; }
+        .slide-text p { font-size: clamp(14px, 2vw, 18px); font-weight: 600; color: #fff; margin-bottom: 25px; line-height: 1.4; text-shadow: 1px 1px 5px rgba(0,0,0,0.7); }
+        .slide-img { max-height: 350px; width: auto; max-width: 100%; border-radius: 40px; box-shadow: 0 15px 35px rgba(0,0,0,0.4); border: 5px solid #fff; transition: 0.5s ease; }
         
-        /* --- GRID DE PIZZAS --- */
         .container { max-width: 1200px; margin: 0 auto; padding: 50px 20px; }
-        .section-title { font-family: 'Archivo Black', sans-serif; text-align: center; margin-bottom: 40px; font-size: 35px; text-transform: uppercase; text-shadow: 3px 3px 0px #ff6b00; color: #000; }
+        .section-title { font-family: 'Archivo Black', sans-serif; text-align: center; margin-bottom: 40px; font-size: clamp(24px, 5vw, 35px); text-transform: uppercase; text-shadow: 3px 3px 0px #ff6b00; color: #000; }
         
         .grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px; }
-        .card { background: white; border-radius: 20px; border: 3px solid #000; overflow: hidden; box-shadow: 6px 6px 0px #000; transition: 0.3s; display: flex; flex-direction: column; }
+        .card { background: white; border-radius: 20px; border: 3px solid #000; overflow: hidden; box-shadow: 6px 6px 0px #000; transition: 0.3s; display: flex; flex-direction: column; animation: fadeInUp 0.8s ease-out; }
         .card:hover { transform: translateY(-10px); box-shadow: 10px 10px 0px #ff6b00; }
         .card-image { width: 100%; height: 230px; object-fit: cover; border-bottom: 3px solid #000; }
         .card-info { padding: 25px; flex-grow: 1; }
@@ -121,9 +121,21 @@
         .card-price { color: #ff6b00; font-size: 26px; font-weight: 900; text-shadow: 1.5px 1.5px 0px #000; }
         
         .add-btn { background: #fff; color: #000; border: 3px solid #000; padding: 12px 20px; border-radius: 15px; cursor: pointer; font-weight: 900; transition: 0.2s; box-shadow: 4px 4px 0px #000; text-transform: uppercase; font-size: 13px; }
-        .add-btn:hover { background: #ff6b00; color: #fff; }
+        .add-btn:hover { transform: scale(1.05) translateY(-2px); background: #ff6b00; color: #fff; box-shadow: 6px 6px 0px #000; }
 
+        /* --- FOOTER --- */
         .main-footer { background-color: #fff; border-top: 5px solid #000; padding: 40px 20px; margin-top: 50px; }
+        .footer-grid { max-width: 800px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; text-align: center; }
+        .footer-col h4 { font-family: 'Archivo Black', sans-serif; font-size: 16px; margin-bottom: 15px; text-transform: uppercase; }
+        .footer-col a { display: block; text-decoration: none; color: #333; font-size: 14px; margin-bottom: 10px; font-weight: 700; transition: 0.2s; }
+        .footer-col a:hover { color: #ff6b00; }
+        .copy { text-align: center; margin-top: 30px; font-size: 13px; font-weight: 900; text-transform: uppercase; border-top: 2px solid #000; padding-top: 20px; }
+
+        @media (max-width: 850px) {
+            .slide-container { grid-template-columns: 1fr; text-align: center; }
+            .slide-text { order: 2; } .slide-image-wrapper { order: 1; }
+            .footer-grid { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
@@ -135,19 +147,22 @@
         </a>
         <div class="header-right">
             <div style="position: relative;" id="userMenuContainer">
-                <div class="cart-btn" id="userBtn">👤</div>
+                <div class="cart-btn" id="userBtn" style="cursor: pointer;">👤</div>
+                
                 <div class="user-dropdown" id="userDropdown">
                     <div class="user-info-box">
-                        <h4 id="userDisplayName" style="font-size:14px;">Usuario</h4>
-                        <p id="userEmail" style="font-size:11px; color: #666;"></p>
+                        <h4 id="userEmail" style="font-size:14px; word-break: break-all;">Usuario</h4>
                         <p id="userRole" class="user-role-badge"></p>
                     </div>
+                    
                     <div id="adminLinkContainer"></div>
                     <a href="perfil_cliente.html" class="profile-menu-link">👤 Mi Perfil</a>
                     <a href="pedidos.html" class="profile-menu-link">🍕 Mis Pedidos</a>
+                    
                     <button onclick="cerrarSesion()" class="logout-btn">Cerrar Sesión</button>
                 </div>
             </div>
+
             <a href="carrito.html" class="cart-btn">
                 🛒<span id="cartBadge" class="cart-badge" style="display: none;">0</span>
             </a>
@@ -200,7 +215,6 @@
                     <button class="add-btn" onclick="addToCart('Pepperoni Premium', 121.99, 'imagenes/pizza_pepe.png')">AGREGAR</button>
                 </div>
             </div>
-
             <div class="card">
                 <img src="imagenes/pizza_suprema.png" class="card-image" alt="Suprema">
                 <div class="card-info">
@@ -212,7 +226,6 @@
                     <button class="add-btn" onclick="addToCart('Pizza Suprema', 166.99, 'imagenes/pizza_suprema.png')">AGREGAR</button>
                 </div>
             </div>
-
             <div class="card">
                 <img src="imagenes/pizza_marg.png" class="card-image" alt="Margherita">
                 <div class="card-info">
@@ -233,13 +246,13 @@
             <div class="footer-col"><h4>Nosotros</h4><a href="contacto.html">Historia</a></div>
             <div class="footer-col"><h4>Contacto</h4><a href="Conta.html">Atención</a></div>
         </div>
-        <div class="copy">© 2026 FREDDY'S PIZZA.</div>
+        <div class="copy">© 2026 FREDDY'S PIZZA. TODOS LOS DERECHOS RESERVADOS.</div>
     </footer>
 
     <script>
         const SUPABASE_URL = 'https://vndfmcxlifcwzpjbphoy.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZuZGZtY3hsaWZjd3pwamJwaG95Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3OTc3MDIsImV4cCI6MjA4NzM3MzcwMn0.OkQ6aSZsHkyLMgfT-x0w3beJ3Ey95smEujmhT7ZfjuY'; 
-        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         document.addEventListener('DOMContentLoaded', () => {
             initAuth();
@@ -251,30 +264,45 @@
             });
         });
 
+        // --- AUTENTICACIÓN ---
         async function initAuth() {
-            const { data: { user } } = await _supabase.auth.getUser();
+            const { data: { user } } = await supabaseClient.auth.getUser();
             const userBtn = document.getElementById('userBtn');
             const userDropdown = document.getElementById('userDropdown');
 
             if (user) {
-                const { data: perfil } = await _supabase.from('perfiles').select('*').eq('id', user.id).maybeSingle();
-                const nombre = perfil?.nombre || user.email.split('@')[0];
+                // Intentar obtener el perfil para el rol
+                const { data: perfil } = await supabaseClient.from('perfiles').select('rol, nombre').eq('id', user.id).maybeSingle();
                 const rol = perfil?.rol || 'usuario';
+                const inicial = (perfil?.nombre || user.email).charAt(0).toUpperCase();
+                
+                // Aplicar la inicial en el círculo manteniendo el estilo
+                userBtn.innerHTML = `<div style="width:100%; height:100%; background:#000; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:900; border-radius:50%;">${inicial}</div>`;
+                
+                userBtn.onclick = (e) => { 
+                    e.stopPropagation();
+                    userDropdown.classList.toggle('active'); 
+                };
 
-                if(perfil?.foto_url) userBtn.innerHTML = `<img src="${perfil.foto_url}">`;
-                else userBtn.innerText = nombre.charAt(0).toUpperCase();
-
-                document.getElementById('userDisplayName').textContent = nombre;
                 document.getElementById('userEmail').textContent = user.email;
                 document.getElementById('userRole').textContent = rol;
-
-                userBtn.onclick = (e) => { e.stopPropagation(); userDropdown.classList.toggle('active'); };
-                if (rol === 'admin') document.getElementById('adminLinkContainer').innerHTML = `<a href="panelA.html" class="profile-menu-link admin-link">⚙️ PANEL ADMIN</a>`;
+                
+                if (rol === 'admin') {
+                    document.getElementById('adminLinkContainer').innerHTML = `
+                        <a href="panelA.html" class="profile-menu-link admin-link">⚙️ PANEL ADMIN</a>
+                    `;
+                }
             } else {
                 userBtn.onclick = () => window.location.href = 'login.html';
             }
         }
 
+        async function cerrarSesion() {
+            await supabaseClient.auth.signOut();
+            window.location.reload();
+        }
+
+        // --- CARRITO ---
         function addToCart(name, price, img) {
             let cart = JSON.parse(localStorage.getItem('pizzaCart')) || {};
             cart[name] = cart[name] ? {...cart[name], quantity: cart[name].quantity + 1} : {name, price, image: img, quantity: 1};
@@ -286,16 +314,20 @@
             let cart = JSON.parse(localStorage.getItem('pizzaCart')) || {};
             let total = Object.values(cart).reduce((s, i) => s + i.quantity, 0);
             const badge = document.getElementById('cartBadge');
-            badge.style.display = total > 0 ? 'flex' : 'none';
-            badge.textContent = total;
+            if (total > 0) {
+                badge.style.display = 'flex';
+                badge.textContent = total;
+            } else {
+                badge.style.display = 'none';
+            }
         }
 
-        async function cerrarSesion() {
-            await _supabase.auth.signOut();
-            window.location.reload();
-        }
-
-        window.onclick = (e) => { if (!document.getElementById('userMenuContainer').contains(e.target)) document.getElementById('userDropdown').classList.remove('active'); };
+        window.onclick = (e) => {
+            const container = document.getElementById('userMenuContainer');
+            if (container && !container.contains(e.target)) {
+                document.getElementById('userDropdown').classList.remove('active');
+            }
+        };
     </script>
 </body>
 </html>
