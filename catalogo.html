@@ -8,45 +8,51 @@
     <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        /* MANTENGO TUS ESTILOS ORIGINALES */
+        /* ESTILOS UNIFICADOS */
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #fdf2e9; color: #333; }
         
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: #fdf2e9; 
+            color: #333; 
+            overflow-x: hidden;
+        }
+        
+        /* HEADER ESTILO "BANNERIN" */
         .header { 
-            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('imagenes/baner.jpg') center/cover no-repeat;
-            padding: 45px 30px; 
+            background: url('imagenes/bannerin.png') center/cover no-repeat;
+            padding: clamp(35px, 8vw, 65px) 20px; 
             color: white; 
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
-            position: sticky; 
-            top: 0; 
-            z-index: 1000; 
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
 
+        /* PATRÓN DE CUADROS BLANCO Y NEGRO (DE TU SEGUNDO CÓDIGO) */
         .header::after {
             content: "";
             position: absolute;
             bottom: 0;
             left: 0;
             width: 100%;
-            height: 20px;
+            height: 16px;
+            background-color: #ffffff;
             background-image: 
-                linear-gradient(45deg, #fff 25%, transparent 25%), 
-                linear-gradient(-45deg, #fff 25%, transparent 25%),
-                linear-gradient(45deg, transparent 75%, #fff 75%),
-                linear-gradient(-45deg, transparent 75%, #fff 75%);
+                linear-gradient(45deg, #000 25%, transparent 25%, transparent 75%, #000 75%, #000), 
+                linear-gradient(45deg, #000 25%, transparent 25%, transparent 75%, #000 75%, #000);
             background-size: 20px 20px;
-            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
-            background-color: #000;
+            background-position: 0 0, 10px 10px;
         }
 
         .header-title h1 { 
             font-family: 'Archivo Black', sans-serif;
-            font-size: 28px; 
+            font-size: clamp(22px, 6vw, 36px);
             text-transform: uppercase;
-            text-shadow: 3px 3px 0px #000;
-            letter-spacing: 1px;
+            color: #ff4500; /* Naranja Freddy's */
+            text-shadow: 3px 3px 0px #000; 
         }
 
         .header-right { display: flex; gap: 15px; align-items: center; }
@@ -55,108 +61,144 @@
             text-decoration: none; 
             color: #000; 
             font-weight: bold; 
-            padding: 10px 20px; 
+            padding: 10px 25px; 
             background: #fff; 
-            border: 2.5px solid #000;
+            border: 3px solid #000;
             border-radius: 25px; 
-            font-size: 14px; 
-            transition: 0.3s;
-            box-shadow: 3px 3px 0px #000;
+            transition: all 0.3s ease; 
+            box-shadow: 4px 4px 0px #000;
+            text-transform: uppercase;
+            font-size: 13px;
         }
-        .btn-header:hover { 
-            background: #ff6b00; 
-            color: white; 
-            transform: translateY(-2px);
-            box-shadow: 1px 1px 0px #000;
-        }
-        
-        .cart-btn { 
-            background: #fff; 
-            border: 2.5px solid #000;
-            color: #000; 
-            width: 45px; 
-            height: 45px; 
-            border-radius: 50%; 
-            cursor: pointer; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            position: relative; 
-            text-decoration: none; 
-            font-size: 20px;
-            box-shadow: 3px 3px 0px #000;
-            transition: 0.3s;
-        }
-        .cart-btn:hover { background: #ff6b00; transform: scale(1.1); }
-        .cart-badge { position: absolute; top: -5px; right: -5px; background-color: #ff3d00; color: #fff; border: 2px solid #000; border-radius: 50%; padding: 2px 6px; font-size: 10px; font-weight: bold; }
 
+        .btn-header:hover { 
+            background-color: #ff6b00; 
+            color: white; 
+            transform: translateY(-3px);
+            box-shadow: 6px 6px 0px #000;
+        }
+
+        .cart-btn { 
+            background: #fff; border: 3px solid #000; color: #000; 
+            width: 48px; height: 48px; border-radius: 50%; cursor: pointer; 
+            display: flex; align-items: center; justify-content: center; 
+            position: relative; text-decoration: none; font-size: 20px;
+            box-shadow: 4px 4px 0px #000; transition: 0.3s;
+        }
+        .cart-btn:hover { background: #ff6b00; transform: scale(1.1); color: white; }
+
+        .cart-badge { 
+            position: absolute; top: -8px; right: -8px; 
+            background-color: #ff3d00; color: #fff; border: 2px solid #000; 
+            border-radius: 50%; padding: 2px; min-width: 22px; height: 22px;
+            font-size: 11px; font-weight: 900; display: flex; align-items: center; justify-content: center;
+            box-shadow: 2px 2px 0px #000; z-index: 10;
+        }
+
+        /* TABS (BOTONES DE CATEGORÍA) */
         .tabs-container { 
             display: flex; 
             justify-content: center; 
-            background: transparent; 
-            padding: 30px 15px; 
+            padding: 40px 15px 20px; 
             gap: 15px;
+            flex-wrap: wrap;
         }
+
         .tab-btn { 
-            padding: 12px 25px; 
-            border: 2.5px solid #000; 
+            padding: 12px 28px; 
+            border: 3px solid #000; 
             background: white; 
             color: #000; 
-            font-weight: 900; 
             border-radius: 50px; 
             cursor: pointer; 
             transition: 0.3s;
-            font-size: 15px;
-            box-shadow: 4px 4px 0px #000;
+            font-size: 14px;
+            box-shadow: 5px 5px 0px #000;
             text-transform: uppercase;
+            font-family: 'Archivo Black', sans-serif;
         }
-        .tab-btn:hover { background: #ff6b00; color: white; transform: translateY(-3px); }
-        .tab-btn.active { background: #ff6b00; color: white; box-shadow: 2px 2px 0px #000; transform: translateY(2px); }
 
+        .tab-btn:hover, .tab-btn.active { 
+            background: #ff6b00; 
+            color: white; 
+            transform: translateY(-3px); 
+            box-shadow: 7px 7px 0px #000;
+        }
+
+        /* GRID Y TARJETAS (ESTILO SEGUNDO CÓDIGO) */
         .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        
         .grid-container { 
             display: grid; 
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
-            gap: 25px; 
+            gap: 30px; 
         }
         
         .card { 
             background: white; 
             border-radius: 20px; 
-            padding: 0; 
-            box-shadow: 0 10px 20px rgba(0,0,0,0.05); 
+            border: 3px solid #000; 
+            overflow: hidden;
+            box-shadow: 6px 6px 0px #000; 
             display: flex; 
             flex-direction: column; 
             transition: 0.3s; 
-            border: 2.5px solid #000; 
-            overflow: hidden;
-            box-shadow: 5px 5px 0px rgba(0,0,0,0.1); 
+            opacity: 0; /* Para la animación de entrada */
         }
-        .card:hover { transform: translateY(-10px); border-color: #ff6b00; box-shadow: 8px 8px 0px rgba(255,107,0,0.2); }
-        .card-image { width: 100%; height: 200px; object-fit: cover; border-bottom: 2px solid #000; }
+
+        .card:hover { 
+            transform: translateY(-10px); 
+            box-shadow: 10px 10px 0px #ff6b00; 
+        }
+
+        .card-image { width: 100%; height: 210px; object-fit: cover; border-bottom: 3px solid #000; }
         
-        .card-info { padding: 20px; }
-        .card-info h3 { font-size: 20px; margin-bottom: 8px; font-weight: 800; text-transform: uppercase; }
-        .card-description { color: #666; font-size: 14px; margin-bottom: 15px; height: 40px; }
+        .card-info { padding: 25px; flex-grow: 1; }
+        .card-info h3 { 
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 19px; 
+            margin-bottom: 10px; 
+            text-transform: uppercase; 
+        }
+        .card-description { color: #666; font-size: 14px; line-height: 1.4; font-weight: 600; }
         
-        .card-footer { display: flex; justify-content: space-between; align-items: center; padding: 0 20px 20px; margin-top: auto; }
-        .card-price { color: #ff6b00; font-size: 24px; font-weight: 900; text-shadow: 1px 1px 0px #000; }
+        .card-footer { display: flex; justify-content: space-between; align-items: center; padding: 0 25px 25px; }
+        .card-price { color: #ff6b00; font-size: 26px; font-weight: 900; text-shadow: 1.5px 1.5px 0px #000; }
         
         .add-btn { 
             background: #fff; 
             color: #000; 
-            border: 2px solid #000; 
-            padding: 10px 20px; 
-            border-radius: 12px; 
+            border: 3px solid #000; 
+            padding: 12px 20px; 
+            border-radius: 15px; 
             cursor: pointer; 
-            font-weight: bold; 
-            transition: 0.3s;
-            box-shadow: 3px 3px 0px #000;
+            font-weight: 900; 
+            transition: 0.2s;
+            box-shadow: 4px 4px 0px #000;
+            text-transform: uppercase;
+            font-size: 12px;
         }
-        .add-btn:hover { background: #ff6b00; color: white; transform: scale(1.05); box-shadow: 1px 1px 0px #000; }
+
+        .add-btn:hover { 
+            background: #ff6b00; 
+            color: white; 
+            transform: scale(1.05); 
+            box-shadow: 1px 1px 0px #000;
+        }
+
+        /* ANIMACIONES DE ENTRADA */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animar-entrada {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
     </style>
 </head>
 <body>
+
     <header class="header">
         <div class="header-title">
             <h1>FREDDY'S PIZZA</h1>
@@ -169,10 +211,10 @@
         </div>
     </header>
 
-    <div class="tabs-container">
-        <button class="tab-btn active" onclick="cargarCategoria('pizzas')">🍕 Pizzas</button>
-        <button class="tab-btn" onclick="cargarCategoria('bebidas')">🥤 Bebidas</button>
-        <button class="tab-btn" onclick="cargarCategoria('promos')">🎁 Promos</button>
+    <div class="tabs-container animar-entrada">
+        <button class="tab-btn active" onclick="cargarCategoria('pizzas', this)">🍕 Pizzas</button>
+        <button class="tab-btn" onclick="cargarCategoria('bebidas', this)">🥤 Bebidas</button>
+        <button class="tab-btn" onclick="cargarCategoria('promos', this)">🎁 Promos</button>
     </div>
 
     <div class="container">
@@ -181,20 +223,27 @@
     </div>
 
     <script>
-        // 2. CONFIGURACIÓN DE TU SUPABASE
+        // CONFIGURACIÓN DE SUPABASE
         const SUPABASE_URL = 'https://vndfmcxlifcwzpjbphoy.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZuZGZtY3hsaWZjd3pwamJwaG95Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3OTc3MDIsImV4cCI6MjA4NzM3MzcwMn0.OkQ6aSZsHkyLMgfT-x0w3beJ3Ey95smEujmhT7ZfjuY';
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         const CART_KEY = 'pizzaCart';
 
-        // 3. FUNCIÓN PARA CARGAR DESDE LA DB
-        async function cargarCategoria(categoria) {
-            // Estética de las pestañas
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            if (event) event.currentTarget.classList.add('active');
+        // FUNCIÓN CARGAR CATEGORÍA (CON LÓGICA DE SUPABASE)
+        async function cargarCategoria(categoria, btn) {
+            // Manejo de tabs
+            if (btn) {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            } else {
+                // Si se llama por primera vez sin botón, marcar el primero como activo
+                document.querySelector('.tab-btn').classList.add('active');
+            }
 
-            // Consultamos la tabla "productos" filtrando por la categoría
+            const container = document.getElementById('productos-render');
+            container.innerHTML = ""; // Limpiar antes de cargar
+
             const { data: productos, error } = await supabaseClient
                 .from('productos')
                 .select('*')
@@ -205,12 +254,14 @@
                 return;
             }
 
-            const container = document.getElementById('productos-render');
-            
-            // Dibujamos las tarjetas con tu diseño original
-            container.innerHTML = productos.map(p => `
-                <div class="card">
-                    <img src="${p.imagen_url}" class="card-image" style="${categoria === 'bebidas' ? 'object-fit: contain; background: #f8f8f8;' : ''}">
+            // Renderizar tarjetas con el estilo y animación
+            productos.forEach((p, index) => {
+                const card = document.createElement('div');
+                card.className = "card animar-entrada";
+                card.style.animationDelay = `${index * 0.1}s`;
+
+                card.innerHTML = `
+                    <img src="${p.imagen_url}" class="card-image" style="${categoria === 'bebidas' ? 'object-fit: contain; background: #fff;' : ''}">
                     <div class="card-info">
                         <h3>${p.nombre}</h3>
                         <p class="card-description">${p.descripcion}</p>
@@ -219,28 +270,33 @@
                         <span class="card-price">$${p.precio.toFixed(2)}</span>
                         <button class="add-btn" onclick="addToCart('${p.nombre}', ${p.precio})">Agregar</button>
                     </div>
-                </div>
-            `).join('');
+                `;
+                container.appendChild(card);
+            });
         }
 
-        // Lógica del Carrito (Mantenida de tu código)
+        // LÓGICA DEL CARRITO
         function addToCart(name, price) {
             let cart = JSON.parse(localStorage.getItem(CART_KEY)) || {};
             cart[name] = cart[name] ? {...cart[name], quantity: cart[name].quantity + 1} : {name, price, quantity: 1};
             localStorage.setItem(CART_KEY, JSON.stringify(cart));
             updateCartBadge();
-            alert(`¡${name} agregado!`);
+            
+            // Animación pequeña en el icono del carrito
+            const cartIcon = document.querySelector('.cart-btn');
+            cartIcon.style.transform = "scale(1.3)";
+            setTimeout(() => cartIcon.style.transform = "scale(1)", 200);
         }
 
         function updateCartBadge() {
             let cart = JSON.parse(localStorage.getItem(CART_KEY)) || {};
             let total = Object.values(cart).reduce((s, i) => s + i.quantity, 0);
             const badge = document.getElementById('cartBadge');
-            badge.style.display = total > 0 ? 'block' : 'none';
+            badge.style.display = total > 0 ? 'flex' : 'none';
             badge.textContent = total;
         }
 
-        // Al iniciar, cargamos la categoría 'pizzas'
+        // INICIALIZACIÓN
         window.onload = () => {
             cargarCategoria('pizzas');
             updateCartBadge();
