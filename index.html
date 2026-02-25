@@ -1,6 +1,13 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-EVDX4YSVLB"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-EVDX4YSVLB');
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/x-icon" href="freddy.png">
@@ -12,109 +19,145 @@
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
     <style>
-        :root { --freddy-orange: #ff6b00; --freddy-dark: #000; }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
-        body { background: #fdf2e9; overflow-x: hidden; }
+        @keyframes popIn {
+            from { opacity: 0; transform: scale(0.9) translateY(-20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
 
+        :root { --freddy-orange: #ff6b00; --freddy-dark: #000; }
+        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
+        body { font-family: 'Segoe UI', sans-serif; background: #fdf2e9; color: #333; overflow-x: hidden; }
+        
         /* HEADER */
         .header { 
             background: #fff; padding: 15px 25px; display: flex; 
             justify-content: space-between; align-items: center; 
             border-bottom: 4px solid #000; position: sticky; top: 0; z-index: 1000; 
         }
-        .logo-text { font-family: 'Archivo Black', sans-serif; font-size: 22px; color: #ff4500; text-shadow: 2px 2px 0px #000; text-decoration: none; }
+        .logo-container { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+        .logo-text { font-family: 'Archivo Black', sans-serif; font-size: 22px; color: #ff4500; text-shadow: 2px 2px 0px #000; }
 
         .header-right { display: flex; gap: 15px; align-items: center; }
 
-        /* BOTÓN DE PERFIL */
         .user-btn-circle { 
             width: 48px; height: 48px; border-radius: 50%; border: 3px solid #000; 
             cursor: pointer; overflow: hidden; background: #fff; transition: 0.3s;
             box-shadow: 3px 3px 0px #000; display: flex; align-items: center; justify-content: center;
         }
-        .user-btn-circle:hover { transform: scale(1.1); border-color: var(--freddy-orange); }
+        .user-btn-circle:hover { transform: scale(1.1); }
         .user-btn-circle img { width: 100%; height: 100%; object-fit: cover; }
 
-        /* PANEL LATERAL (SIDEBAR DE USUARIO) */
-        .user-sidebar {
-            position: fixed; top: 0; right: -350px; width: 320px; height: 100vh;
-            background: #fff; z-index: 2000; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            border-left: 5px solid #000; padding: 40px 25px;
-            display: flex; flex-direction: column; align-items: center;
-            box-shadow: -10px 0px 30px rgba(0,0,0,0.1);
+        /* VENTANA FLOTANTE (USER MODAL) */
+        .user-modal {
+            display: none; position: absolute; top: 75px; right: 25px; 
+            width: 300px; background: #fff; border: 4px solid #000; 
+            border-radius: 20px; box-shadow: 8px 8px 0px #000; 
+            padding: 25px; z-index: 2000; animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        .user-sidebar.active { right: 0; }
+        .user-modal.active { display: block; }
 
-        .close-sidebar { position: absolute; top: 15px; left: 15px; cursor: pointer; font-size: 24px; font-weight: bold; }
-
-        .sidebar-photo {
-            width: 120px; height: 120px; border-radius: 50%; border: 5px solid var(--freddy-orange);
-            margin-bottom: 20px; object-fit: cover; box-shadow: 5px 5px 0px #000;
+        .modal-header { text-align: center; margin-bottom: 20px; }
+        .modal-photo {
+            width: 90px; height: 90px; border-radius: 50%; border: 4px solid var(--freddy-orange);
+            margin-bottom: 15px; object-fit: cover; box-shadow: 4px 4px 0px #000;
         }
+        .modal-header h3 { font-family: 'Archivo Black', sans-serif; font-size: 18px; margin-bottom: 5px; }
+        .modal-header p { color: #666; font-size: 12px; word-break: break-all; }
 
-        .sidebar-info { text-align: center; margin-bottom: 30px; }
-        .sidebar-info h3 { font-family: 'Archivo Black', sans-serif; font-size: 20px; margin-bottom: 5px; }
-        .sidebar-info p { color: gray; font-size: 14px; }
-        .role-badge { 
-            background: #000; color: #fff; padding: 4px 12px; border-radius: 20px; 
-            font-size: 10px; font-weight: 800; text-transform: uppercase; margin-top: 10px; display: inline-block;
+        .modal-links { display: flex; flex-direction: column; gap: 10px; }
+        .m-link {
+            text-decoration: none; color: #000; font-weight: 800; padding: 12px;
+            border: 3px solid #000; border-radius: 12px; text-align: center;
+            transition: 0.2s; box-shadow: 3px 3px 0px #000; text-transform: uppercase; font-size: 13px;
         }
-
-        /* BOTONES DEL PANEL */
-        .sidebar-links { width: 100%; display: flex; flex-direction: column; gap: 12px; }
-        .s-link {
-            text-decoration: none; color: #000; font-weight: 800; padding: 15px;
-            border: 3px solid #000; border-radius: 15px; text-align: center;
-            transition: 0.2s; box-shadow: 4px 4px 0px #000; text-transform: uppercase;
-        }
-        .s-link:hover { background: var(--freddy-orange); color: #fff; transform: translate(-2px, -2px); box-shadow: 6px 6px 0px #000; }
+        .m-link:hover { background: var(--freddy-orange); color: #fff; transform: translate(-2px, -2px); box-shadow: 5px 5px 0px #000; }
         
         .btn-logout { 
-            margin-top: auto; color: #ff3d00; font-weight: 900; cursor: pointer; 
-            border: none; background: none; text-transform: uppercase; border-bottom: 2px solid transparent;
+            margin-top: 15px; color: #ff3d00; font-weight: 900; cursor: pointer; 
+            border: none; background: none; text-transform: uppercase; font-size: 11px;
+            width: 100%; text-align: center;
         }
-        .btn-logout:hover { border-color: #ff3d00; }
 
-        /* OVERLAY (Fondo oscuro) */
-        .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: none; z-index: 1999; backdrop-filter: blur(3px); }
-        .overlay.active { display: block; }
-
-        /* Resto de tus estilos se mantienen... */
+        /* HERO & CONTENT */
+        .hero-swiper { width: 100%; min-height: 500px; border-bottom: 5px solid #000; background-image: url('imagenes/carrusel.png'); background-size: cover; background-position: center; }
+        .swiper-slide { display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .slide-container { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 40px; width: 100%; max-width: 1100px; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(8px); padding: 30px; border-radius: 30px; border: 2px solid rgba(255,255,255,0.3); }
+        .slide-text h1 { font-family: 'Archivo Black', sans-serif; font-size: clamp(28px, 5vw, 55px); color: #fff; text-shadow: 3px 3px 0px #000; text-transform: uppercase; line-height: 1; margin-bottom: 15px; }
+        .slide-text p { font-size: 18px; font-weight: 600; color: #fff; margin-bottom: 25px; text-shadow: 1px 1px 5px rgba(0,0,0,0.7); }
+        .slide-img { max-height: 350px; width: auto; max-width: 100%; border-radius: 40px; box-shadow: 0 15px 35px rgba(0,0,0,0.4); border: 5px solid #fff; }
+        
+        .container { max-width: 1200px; margin: 0 auto; padding: 50px 20px; }
+        .section-title { font-family: 'Archivo Black', sans-serif; text-align: center; margin-bottom: 40px; font-size: 35px; text-transform: uppercase; color: #000; }
+        .grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px; }
+        
+        .card { 
+            background: white; border-radius: 20px; border: 3px solid #000; overflow: hidden; 
+            box-shadow: 6px 6px 0px #000; transition: 0.3s;
+        }
+        .card-image { width: 100%; height: 200px; object-fit: cover; border-bottom: 3px solid #000; }
+        .card-info { padding: 20px; }
+        .add-btn { background: #fff; border: 3px solid #000; padding: 10px 15px; border-radius: 12px; cursor: pointer; font-weight: 900; box-shadow: 3px 3px 0px #000; }
     </style>
 </head>
 <body>
 
     <header class="header">
-        <a href="index.html" class="logo-container" style="text-decoration:none">
+        <a href="index.html" class="logo-container">
             <span class="logo-text">FREDDY'S PIZZA</span>
         </a>
         <div class="header-right">
-            <div class="user-btn-circle" id="openUserBtn">
-                <span id="userInitial">👤</span>
+            <div style="position: relative;">
+                <div class="user-btn-circle" id="userBtn">
+                    <span id="userInitial">👤</span>
+                </div>
+
+                <div class="user-modal" id="userModal">
+                    <div class="modal-header">
+                        <img src="https://via.placeholder.com/90" id="modalPhoto" class="modal-photo">
+                        <h3 id="modalName">Cargando...</h3>
+                        <p id="modalEmail">email@ejemplo.com</p>
+                    </div>
+                    <div class="modal-links">
+                        <div id="adminArea"></div>
+                        <a href="perfil_cliente.html" class="m-link">👤 Mi Perfil</a>
+                    </div>
+                    <button class="btn-logout" onclick="cerrarSesion()">Cerrar Sesión</button>
+                </div>
             </div>
 
-            <a href="carrito.html" class="cart-btn" style="text-decoration:none; font-size: 24px;">🛒</a>
+            <a href="carrito.html" class="user-btn-circle" style="text-decoration:none; font-size: 20px;">🛒</a>
         </div>
     </header>
 
-    <div class="overlay" id="overlay"></div>
-    <div class="user-sidebar" id="userSidebar">
-        <span class="close-sidebar" id="closeSidebar">×</span>
-        
-        <img src="https://via.placeholder.com/120" id="sidePhoto" class="sidebar-photo">
-        
-        <div class="sidebar-info">
-            <h3 id="sideName">Cargando...</h3>
-            <p id="sideEmail">email@ejemplo.com</p>
-            <span id="sideRole" class="role-badge">USUARIO</span>
+    <section class="swiper hero-swiper">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide">
+                <div class="slide-container">
+                    <div class="slide-text">
+                        <h1>Pepperoni <br> Legendario</h1>
+                        <p>Nuestra pizza estrella con pepperoni de corte grueso y mezcla secreta de quesos.</p>
+                        <button class="m-link" style="background:#fff">¡ORDENAR YA!</button>
+                    </div>
+                    <img src="imagenes/pizza_pepe.png" class="slide-img">
+                </div>
+            </div>
         </div>
+    </section>
 
-        <div class="sidebar-links">
-            <div id="adminLinkArea"></div> <a href="perfil_cliente.html" class="s-link">👤 Mi Perfil</a>
-            <a href="mis_pedidos.html" class="s-link">📦 Mis Pedidos</a>
+    <div class="container">
+        <h2 class="section-title">Especialidades</h2>
+        <div class="grid-container">
+            <div class="card">
+                <img src="imagenes/pizza_pepe.png" class="card-image">
+                <div class="card-info">
+                    <h3>Pepperoni Premium</h3>
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:15px;">
+                        <span style="font-weight:900; color:var(--freddy-orange);">$121.99</span>
+                        <button class="add-btn">AGREGAR</button>
+                    </div>
+                </div>
+            </div>
         </div>
-
-        <button class="btn-logout" onclick="cerrarSesion()">Cerrar Sesión Segura</button>
     </div>
 
     <script>
@@ -122,21 +165,16 @@
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZuZGZtY3hsaWZjd3pwamJwaG95Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3OTc3MDIsImV4cCI6MjA4NzM3MzcwMn0.OkQ6aSZsHkyLMgfT-x0w3beJ3Ey95smEujmhT7ZfjuY'; 
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        const openBtn = document.getElementById('openUserBtn');
-        const closeBtn = document.getElementById('closeSidebar');
-        const sidebar = document.getElementById('userSidebar');
-        const overlay = document.getElementById('overlay');
+        const userBtn = document.getElementById('userBtn');
+        const userModal = document.getElementById('userModal');
 
-        // Abrir y cerrar panel
-        openBtn.onclick = () => { 
-            sidebar.classList.add('active'); 
-            overlay.classList.add('active');
+        userBtn.onclick = (e) => {
+            e.stopPropagation();
+            userModal.classList.toggle('active');
         };
-        closeBtn.onclick = () => { 
-            sidebar.classList.remove('active'); 
-            overlay.classList.remove('active');
-        };
-        overlay.onclick = () => closeBtn.onclick();
+
+        window.onclick = () => userModal.classList.remove('active');
+        userModal.onclick = (e) => e.stopPropagation();
 
         async function initAuth() {
             const { data: { user } } = await _supabase.auth.getUser();
@@ -144,32 +182,27 @@
             if (user) {
                 const { data: perfil } = await _supabase.from('perfiles').select('*').eq('id', user.id).single();
                 
-                const nombre = perfil?.nombre || 'Usuario Freddy';
+                const nombre = perfil?.nombre || 'Usuario';
                 const foto = perfil?.foto_url || null;
                 const rol = perfil?.rol || 'usuario';
 
-                // 1. Actualizar el botoncito del Header
                 if (foto) {
-                    openBtn.innerHTML = `<img src="${foto}">`;
+                    userBtn.innerHTML = `<img src="${foto}">`;
+                    document.getElementById('modalPhoto').src = foto;
                 } else {
                     document.getElementById('userInitial').innerText = user.email.charAt(0).toUpperCase();
                 }
 
-                // 2. Llenar el Panel Lateral
-                document.getElementById('sideName').innerText = nombre;
-                document.getElementById('sideEmail').innerText = user.email;
-                document.getElementById('sideRole').innerText = rol;
-                if (foto) document.getElementById('sidePhoto').src = foto;
+                document.getElementById('modalName').innerText = nombre;
+                document.getElementById('modalEmail').innerText = user.email;
 
-                // 3. Si es Admin, mostrar botón especial
                 if (rol === 'admin') {
-                    document.getElementById('adminLinkArea').innerHTML = `
-                        <a href="panelA.html" class="s-link" style="background:#000; color:#fff; border-color:#000">⚙️ Panel Admin</a>
+                    document.getElementById('adminArea').innerHTML = `
+                        <a href="panelA.html" class="m-link" style="background:#000; color:#fff">⚙️ Panel Admin</a>
                     `;
                 }
             } else {
-                // Si no hay usuario, el botón manda a login
-                openBtn.onclick = () => window.location.href = 'login.html';
+                userBtn.onclick = () => window.location.href = 'login.html';
             }
         }
 
@@ -178,7 +211,10 @@
             window.location.reload();
         }
 
-        initAuth();
+        document.addEventListener('DOMContentLoaded', () => {
+            initAuth();
+            new Swiper('.hero-swiper', { loop: true, autoplay: { delay: 4000 } });
+        });
     </script>
 </body>
 </html>
