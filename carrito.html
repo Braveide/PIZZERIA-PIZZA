@@ -5,100 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tu Carrito - Freddy's Pizza</title>
     <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap" rel="stylesheet">
+    
+    <script src="https://sdk.mercadopago.com/js/v2"></script>
+
     <style>
-        /* ESTILOS BASE (ESTILO CONTACTO) */
+        /* ESTILOS FREDDY'S PIZZA */
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background: #fdf2e9; 
-            color: #333; 
-            overflow-x: hidden;
-        }
-        
-        /* HEADER (IGUAL A CONTACTO) */
-        .header { 
-            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('imagenes/bannerin.png') center/cover no-repeat;
-            padding: clamp(30px, 8vw, 60px) 20px; 
-            color: white; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            position: relative;
-        }
-
-        .header::after {
-            content: "";
-            position: absolute;
-            bottom: 0; left: 0; width: 100%; height: 15px;
-            background-image: 
-                linear-gradient(45deg, #fff 25%, transparent 25%), 
-                linear-gradient(-45deg, #fff 25%, transparent 25%),
-                linear-gradient(45deg, transparent 75%, #fff 75%),
-                linear-gradient(-45deg, transparent 75%, #fff 75%);
-            background-size: 20px 20px;
-            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
-            background-color: #000;
-        }
-
-        .header-title h1 { 
-            font-family: 'Archivo Black', sans-serif;
-            font-size: clamp(20px, 6vw, 32px);
-            text-transform: uppercase;
-            text-shadow: 3px 3px 0px #000;
-        }
-
-        .btn-inicio { 
-            text-decoration: none; color: #000; font-weight: bold; 
-            padding: 10px 25px; background: #fff; border: 2.5px solid #000;
-            border-radius: 25px; transition: all 0.3s ease; box-shadow: 3px 3px 0px #000;
-            text-transform: uppercase; font-size: 13px;
-        }
-
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #fdf2e9; color: #333; overflow-x: hidden; }
+        .header { background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('imagenes/bannerin.png') center/cover no-repeat; padding: clamp(30px, 8vw, 60px) 20px; color: white; display: flex; justify-content: space-between; align-items: center; position: relative; }
+        .header::after { content: ""; position: absolute; bottom: 0; left: 0; width: 100%; height: 15px; background-image: linear-gradient(45deg, #fff 25%, transparent 25%), linear-gradient(-45deg, #fff 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #fff 75%), linear-gradient(-45deg, transparent 75%, #fff 75%); background-size: 20px 20px; background-position: 0 0, 0 10px, 10px -10px, -10px 0px; background-color: #000; }
+        .header-title h1 { font-family: 'Archivo Black', sans-serif; font-size: clamp(20px, 6vw, 32px); text-transform: uppercase; text-shadow: 3px 3px 0px #000; }
+        .btn-inicio { text-decoration: none; color: #000; font-weight: bold; padding: 10px 25px; background: #fff; border: 2.5px solid #000; border-radius: 25px; transition: all 0.3s ease; box-shadow: 3px 3px 0px #000; text-transform: uppercase; font-size: 13px; }
         .btn-inicio:hover { background-color: #ff6b00; color: white; transform: translateY(-3px); box-shadow: 5px 5px 0px #000; }
-
-        /* CONTENEDOR PRINCIPAL */
-        .main-container { 
-            max-width: 800px; width: 92%; margin: 30px auto; 
-            background: white; padding: clamp(20px, 5vw, 40px); 
-            border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); 
-            display: flex; flex-direction: column; gap: 30px;
-        }
-
-        h2 { 
-            font-family: 'Archivo Black', sans-serif; color: #ff6b00; 
-            text-transform: uppercase; margin-bottom: 20px;
-            font-size: clamp(18px, 4vw, 24px); border-bottom: 2px solid #fdf2e9; padding-bottom: 10px;
-        }
-
-        /* PRODUCTOS */
-        .cart-item {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 15px; border: 2.5px solid #000; border-radius: 15px; margin-bottom: 15px;
-        }
+        .main-container { max-width: 800px; width: 92%; margin: 30px auto; background: white; padding: clamp(20px, 5vw, 40px); border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); display: flex; flex-direction: column; gap: 30px; }
+        h2 { font-family: 'Archivo Black', sans-serif; color: #ff6b00; text-transform: uppercase; margin-bottom: 20px; font-size: clamp(18px, 4vw, 24px); border-bottom: 2px solid #fdf2e9; padding-bottom: 10px; }
+        .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; border: 2.5px solid #000; border-radius: 15px; margin-bottom: 15px; }
         .item-info strong { font-family: 'Archivo Black', sans-serif; text-transform: uppercase; font-size: 14px; }
-
-        /* MÉTODOS DE PAGO Y FORMULARIO */
-        .payment-option {
-            padding: 15px; border: 2.5px solid #eee; border-radius: 12px;
-            margin-bottom: 10px; cursor: pointer; transition: 0.3s;
-            display: flex; align-items: center; gap: 10px;
-        }
+        .payment-option { padding: 15px; border: 2.5px solid #eee; border-radius: 12px; margin-bottom: 10px; cursor: pointer; transition: 0.3s; display: flex; align-items: center; gap: 10px; }
         .payment-option.active { border-color: #ff6b00; background: #fff9f5; border-width: 2.5px; }
-
-        .api-container { display: none; padding: 15px; border-radius: 12px; margin-bottom: 10px; background: #f9f9f9; border: 2px dashed #000; }
-        .card-input { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 8px; border: 1px solid #ddd; }
-
-        /* BOTÓN FINAL */
-        .checkout-btn {
-            width: 100%; padding: 18px; background: #ff6b00; color: white; border: 3px solid #000;
-            border-radius: 50px; font-family: 'Archivo Black', sans-serif; font-size: 18px;
-            text-transform: uppercase; cursor: pointer; box-shadow: 5px 5px 0px #000; transition: 0.3s;
-        }
+        .checkout-btn { width: 100%; padding: 18px; background: #ff6b00; color: white; border: 3px solid #000; border-radius: 50px; font-family: 'Archivo Black', sans-serif; font-size: 18px; text-transform: uppercase; cursor: pointer; box-shadow: 5px 5px 0px #000; transition: 0.3s; }
         .checkout-btn:hover { transform: translateY(-3px); box-shadow: 7px 7px 0px #000; }
-
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        .animar-entrada { animation: fadeInUp 0.6s ease-out forwards; }
+        
+        /* Contenedor del botón de Mercado Pago */
+        #wallet_container { margin-top: 15px; display: none; }
     </style>
 </head>
 <body>
@@ -108,7 +37,7 @@
         <div class="header-right"><a href="index.html" class="btn-inicio">Inicio</a></div>
     </header>
 
-    <div class="main-container animar-entrada">
+    <div class="main-container">
         <div id="emptyCart" style="display: none; text-align: center; padding: 40px 0;">
             <div style="font-size: 60px; margin-bottom: 20px;">🍕</div>
             <h2 style="border:none;">Tu carrito está vacío</h2>
@@ -128,21 +57,6 @@
                     <span>💵</span> <strong>Efectivo</strong>
                 </div>
                 
-                <div class="payment-option" onclick="setPay(this, 'card')">
-                    <span>💳</span> <strong>Tarjeta</strong>
-                </div>
-                <div id="box-card" class="api-container">
-                    <input type="text" class="card-input" placeholder="Número de Tarjeta (16 dígitos)" maxlength="16">
-                    <div style="display:flex; gap:10px;">
-                        <input type="text" class="card-input" placeholder="MM/AA">
-                        <input type="text" class="card-input" placeholder="CVV" maxlength="3">
-                    </div>
-                </div>
-
-                <div class="payment-option" onclick="setPay(this, 'paypal')">
-                    <span>💙</span> <strong>PayPal</strong>
-                </div>
-
                 <div class="payment-option" onclick="setPay(this, 'mercadopago')">
                     <span>🤝</span> <strong>Mercado Pago</strong>
                 </div>
@@ -150,7 +64,10 @@
 
             <div style="margin-top: 30px; text-align: right;">
                 <h2 style="border: none;">Total: <span id="finalTotal">$0.00</span></h2>
-                <button class="checkout-btn" onclick="confirmOrder()">Finalizar Pedido</button>
+                
+                <button id="btn-confirmar" class="checkout-btn" onclick="confirmOrder()">Finalizar Pedido</button>
+                
+                <div id="wallet_container"></div>
             </div>
         </div>
     </div>
@@ -159,10 +76,14 @@
         const CART_KEY = 'pizzaCart';
         let currentMethod = 'cash';
 
+        // 2. INICIALIZAR MERCADO PAGO CON TU PUBLIC KEY
+        const mp = new MercadoPago('APP_USR-faa5dc31-6f41-45d6-b7f3-ac4b772213a6', {
+            locale: 'es-MX'
+        });
+
         function updateCart() {
             const cart = JSON.parse(localStorage.getItem(CART_KEY)) || {};
             const items = Object.values(cart);
-
             const emptyDiv = document.getElementById('emptyCart');
             const contentDiv = document.getElementById('cartContent');
 
@@ -172,7 +93,6 @@
                 return;
             }
 
-            // Mostrar contenido si hay productos
             emptyDiv.style.display = 'none';
             contentDiv.style.display = 'block';
 
@@ -191,6 +111,11 @@
 
             const total = items.reduce((s, i) => s + (i.price * i.quantity), 0);
             document.getElementById('finalTotal').textContent = `$${total.toFixed(2)}`;
+            
+            // Si editan el carrito, reseteamos el botón de Mercado Pago
+            document.getElementById('wallet_container').innerHTML = '';
+            document.getElementById('wallet_container').style.display = 'none';
+            document.getElementById('btn-confirmar').style.display = 'block';
         }
 
         function changeQty(name, delta) {
@@ -205,22 +130,60 @@
 
         function setPay(el, method) {
             document.querySelectorAll('.payment-option').forEach(o => o.classList.remove('active'));
-            // Solo mostrar el formulario si elige 'tarjeta'
-            document.getElementById('box-card').style.display = (method === 'card') ? 'block' : 'none';
             el.classList.add('active');
             currentMethod = method;
+            
+            // Limpiar botón de pago anterior si cambian de opción
+            document.getElementById('wallet_container').style.display = 'none';
+            document.getElementById('btn-confirmar').style.display = 'block';
         }
 
-        function confirmOrder() {
-            if(currentMethod === 'paypal') { 
-                window.location.href = "https://www.paypal.com/checkout"; 
-                return; 
+        async function confirmOrder() {
+            if (currentMethod === 'mercadopago') {
+                const btnOriginal = document.getElementById('btn-confirmar');
+                btnOriginal.innerText = "Preparando Pago...";
+                btnOriginal.disabled = true;
+
+                const cart = JSON.parse(localStorage.getItem(CART_KEY)) || {};
+                
+                // Formateamos los productos para que Mercado Pago los entienda
+                const itemsMP = Object.values(cart).map(item => ({
+                    title: item.name,
+                    unit_price: Number(item.price),
+                    quantity: Number(item.quantity),
+                    currency_id: "MXN"
+                }));
+
+                try {
+                    // LLAMADA A TU EDGE FUNCTION EN SUPABASE
+                    const response = await fetch("https://vndfmcxlifcwzpjbphoy.supabase.co/functions/v1/clever-api", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ items: itemsMP })
+                    });
+
+                    const preference = await response.json();
+
+                    // Ocultamos el botón naranja y mostramos el contenedor del botón azul de MP
+                    btnOriginal.style.display = 'none';
+                    document.getElementById('wallet_container').style.display = 'block';
+
+                    // CREACIÓN DEL BOTÓN DE MERCADO PAGO
+                    mp.bricks().create("wallet", "wallet_container", {
+                        initialization: {
+                            preferenceId: preference.id,
+                        },
+                    });
+
+                } catch (e) {
+                    alert("Error al conectar con Mercado Pago");
+                    btnOriginal.innerText = "Finalizar Pedido";
+                    btnOriginal.disabled = false;
+                }
+                return;
             }
-            if(currentMethod === 'mercadopago') { 
-                window.location.href = "https://www.mercadopago.com.mx/checkout"; 
-                return; 
-            }
-            
+
+            // Lógica para Efectivo
             alert("🍕 ¡Pedido confirmado! Freddy está preparando tu entrega.");
             localStorage.removeItem(CART_KEY);
             window.location.href = 'index.html';
