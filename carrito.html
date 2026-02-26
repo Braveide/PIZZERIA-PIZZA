@@ -9,18 +9,13 @@
     <script src="https://sdk.mercadopago.com/js/v2"></script>
 
     <style>
-        /* ESTILOS FREDDY'S PIZZA - TUS ESTILOS ORIGINALES */
+        /* TUS ESTILOS ORIGINALES SE MANTIENEN IGUAL */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #fdf2e9; color: #333; overflow-x: hidden; }
         
         .header { 
             background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('imagenes/bannerin.png') center/cover no-repeat; 
-            padding: clamp(30px, 8vw, 60px) 20px; 
-            color: white; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            position: relative; 
+            padding: clamp(30px, 8vw, 60px) 20px; color: white; display: flex; justify-content: space-between; align-items: center; position: relative; 
         }
         
         .header::after { 
@@ -29,60 +24,16 @@
             background-size: 20px 20px; background-color: #000; 
         }
 
-        .header-title h1 { 
-            font-family: 'Archivo Black', sans-serif; 
-            font-size: clamp(20px, 6vw, 32px); 
-            text-transform: uppercase; 
-            text-shadow: 3px 3px 0px #000; 
-        }
-
-        .btn-inicio { 
-            text-decoration: none; color: #000; font-weight: bold; 
-            padding: 10px 25px; background: #fff; border: 2.5px solid #000; 
-            border-radius: 25px; transition: all 0.3s ease; 
-            box-shadow: 3px 3px 0px #000; text-transform: uppercase; font-size: 13px; 
-        }
-
+        .header-title h1 { font-family: 'Archivo Black', sans-serif; font-size: clamp(20px, 6vw, 32px); text-transform: uppercase; text-shadow: 3px 3px 0px #000; }
+        .btn-inicio { text-decoration: none; color: #000; font-weight: bold; padding: 10px 25px; background: #fff; border: 2.5px solid #000; border-radius: 25px; transition: 0.3s; box-shadow: 3px 3px 0px #000; text-transform: uppercase; font-size: 13px; }
         .btn-inicio:hover { background-color: #ff6b00; color: white; transform: translateY(-3px); box-shadow: 5px 5px 0px #000; }
-
-        .main-container { 
-            max-width: 800px; width: 92%; margin: 30px auto; 
-            background: white; padding: clamp(20px, 5vw, 40px); 
-            border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); 
-            display: flex; flex-direction: column; gap: 30px; 
-        }
-
-        h2 { 
-            font-family: 'Archivo Black', sans-serif; color: #ff6b00; 
-            text-transform: uppercase; margin-bottom: 20px; 
-            font-size: clamp(18px, 4vw, 24px); border-bottom: 2px solid #fdf2e9; 
-            padding-bottom: 10px; 
-        }
-
-        .cart-item { 
-            display: flex; justify-content: space-between; align-items: center; 
-            padding: 15px; border: 2.5px solid #000; border-radius: 15px; 
-            margin-bottom: 15px; 
-        }
-
+        .main-container { max-width: 800px; width: 92%; margin: 30px auto; background: white; padding: clamp(20px, 5vw, 40px); border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); display: flex; flex-direction: column; gap: 30px; }
+        h2 { font-family: 'Archivo Black', sans-serif; color: #ff6b00; text-transform: uppercase; margin-bottom: 20px; font-size: clamp(18px, 4vw, 24px); border-bottom: 2px solid #fdf2e9; padding-bottom: 10px; }
+        .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; border: 2.5px solid #000; border-radius: 15px; margin-bottom: 15px; }
         .item-info strong { font-family: 'Archivo Black', sans-serif; text-transform: uppercase; font-size: 14px; }
-
-        .payment-option { 
-            padding: 15px; border: 2.5px solid #eee; border-radius: 12px; 
-            margin-bottom: 10px; cursor: pointer; transition: 0.3s; 
-            display: flex; align-items: center; gap: 10px; 
-        }
-
+        .payment-option { padding: 15px; border: 2.5px solid #eee; border-radius: 12px; margin-bottom: 10px; cursor: pointer; transition: 0.3s; display: flex; align-items: center; gap: 10px; }
         .payment-option.active { border-color: #ff6b00; background: #fff9f5; border-width: 2.5px; }
-
-        .checkout-btn { 
-            width: 100%; padding: 18px; background: #ff6b00; color: white; 
-            border: 3px solid #000; border-radius: 50px; 
-            font-family: 'Archivo Black', sans-serif; font-size: 18px; 
-            text-transform: uppercase; cursor: pointer; 
-            box-shadow: 5px 5px 0px #000; transition: 0.3s; 
-        }
-
+        .checkout-btn { width: 100%; padding: 18px; background: #ff6b00; color: white; border: 3px solid #000; border-radius: 50px; font-family: 'Archivo Black', sans-serif; font-size: 18px; text-transform: uppercase; cursor: pointer; box-shadow: 5px 5px 0px #000; transition: 0.3s; }
         .checkout-btn:hover { transform: translateY(-3px); box-shadow: 7px 7px 0px #000; }
         .checkout-btn:disabled { background: #ccc; cursor: not-allowed; box-shadow: none; transform: none; }
     </style>
@@ -129,7 +80,7 @@
         const CART_KEY = 'pizzaCart';
         let currentMethod = 'cash';
 
-        // 1. INICIALIZAR MERCADO PAGO
+        // 1. INICIALIZAR MERCADO PAGO (USA TU CLAVE PÚBLICA)
         const mp = new MercadoPago('APP_USR-faa5dc31-6f41-45d6-b7f3-ac4b772213a6', {
             locale: 'es-MX'
         });
@@ -182,6 +133,7 @@
             currentMethod = method;
         }
 
+        // --- LA FUNCIÓN CLAVE ---
         async function confirmOrder() {
             const btnOriginal = document.getElementById('btn-confirmar');
 
@@ -193,37 +145,31 @@
                 const itemsMP = Object.values(cart).map(item => ({
                     title: item.name,
                     unit_price: Number(item.price),
-                    quantity: Number(item.quantity),
-                    currency_id: "MXN"
+                    quantity: Number(item.quantity)
                 }));
 
                 try {
-                    // LLAMADA A TU FUNCIÓN EN SUPABASE
                     const response = await fetch("https://vndfmcxlifcwzpjbphoy.supabase.co/functions/v1/clever-api", {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({ items: itemsMP })
                     });
 
-                    if (!response.ok) throw new Error("Error en el servidor");
-
                     const result = await response.json();
 
-                    // LA CORRECCIÓN ESTÁ AQUÍ: Usamos el enlace directo que manda tu API
+                    // Aquí usamos el init_point que configuramos en Supabase
                     if (result.init_point) {
                         window.location.href = result.init_point;
-                    } else if (result.id) {
-                        // Respaldo si solo llega el ID
-                        window.location.href = `https://www.mercadopago.com.mx/checkout/v1/redirect?pref_id=${result.id}`;
                     } else {
-                        alert("Error al generar el pago.");
+                        console.error("Error detalle:", result);
+                        alert("Hubo un problema al conectar con Mercado Pago.");
                         btnOriginal.innerText = "Finalizar Pedido";
                         btnOriginal.disabled = false;
                     }
 
                 } catch (e) {
                     console.error(e);
-                    alert("No se pudo conectar con Mercado Pago.");
+                    alert("Error de conexión con el servidor.");
                     btnOriginal.innerText = "Finalizar Pedido";
                     btnOriginal.disabled = false;
                 }
