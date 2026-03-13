@@ -3,62 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/x-icon" href="freddy.png">
-    <title>FREDDY'S PIZZA - Inicio</title>
+    <title>FREDDY'S PIZZA</title>
     <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
     <style>
-        /* --- ESTILOS BASE --- */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', sans-serif; background: #fdf2e9; color: #333; }
-        
-        .header { 
-            background: #fff; padding: 15px 25px; display: flex; justify-content: space-between; 
-            align-items: center; border-bottom: 5px solid #000; position: sticky; top: 0; z-index: 999; 
-        }
-        .logo { font-family: 'Archivo Black'; font-size: 26px; color: #ff4500; text-shadow: 2px 2px 0px #000; text-decoration: none; }
-
-        /* --- BOTÓN FLOTANTE (LA PIZZA) --- */
+        /* Estilos rápidos para asegurar que el botón se vea y el chat funcione */
+        body { font-family: sans-serif; background: #fdf2e9; margin: 0; }
         #chat-trigger { 
             position: fixed; bottom: 20px; right: 20px; background: #ff6b00; 
             border: 4px solid #000; width: 70px; height: 70px; border-radius: 50%; 
             display: flex; align-items: center; justify-content: center; 
-            font-size: 35px; cursor: pointer; z-index: 10001; 
-            box-shadow: 6px 6px 0px #000; transition: 0.2s;
-            user-select: none; -webkit-tap-highlight-color: transparent;
+            font-size: 35px; cursor: pointer; z-index: 10001; box-shadow: 6px 6px 0px #000;
         }
-        #chat-trigger:hover { transform: scale(1.1) rotate(10deg); }
-        #chat-trigger:active { transform: scale(0.9); box-shadow: 2px 2px 0px #000; }
-
-        /* --- VENTANA DE CHAT --- */
         #chat-window { 
-            display: none; position: fixed; bottom: 100px; right: 20px; width: 350px; height: 500px; 
-            background: #fff; border: 5px solid #000; border-radius: 20px; flex-direction: column; 
-            z-index: 10000; box-shadow: 15px 15px 0px rgba(0,0,0,0.2); overflow: hidden;
-            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: none; position: fixed; bottom: 100px; right: 20px; width: 320px; height: 450px; 
+            background: #fff; border: 4px solid #000; border-radius: 20px; flex-direction: column; 
+            z-index: 10000; box-shadow: 10px 10px 0px rgba(0,0,0,0.2); overflow: hidden;
         }
-        @keyframes popIn { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-
-        .chat-header { background: #000; color: #fff; padding: 15px; font-family: 'Archivo Black'; display: flex; justify-content: space-between; align-items: center; }
-        #chat-messages { flex-grow: 1; padding: 15px; overflow-y: auto; background: #fdf2e9; display: flex; flex-direction: column; gap: 10px; }
-        
-        /* BURBUJAS */
-        .msg { padding: 12px; border-radius: 15px; border: 3px solid #000; max-width: 85%; font-size: 14px; font-weight: 600; line-height: 1.4; position: relative; }
-        .bot { background: #fff; align-self: flex-start; box-shadow: 4px 4px 0px rgba(0,0,0,0.1); }
-        .user { background: #ff6b00; color: #fff; align-self: flex-end; box-shadow: -4px 4px 0px rgba(0,0,0,0.1); }
-
-        /* FOOTER Y INPUT */
-        .chat-footer { padding: 10px; border-top: 4px solid #000; display: flex; gap: 8px; background: #fff; }
-        .chat-input { flex: 1; padding: 12px; border: 3px solid #000; border-radius: 10px; outline: none; font-weight: bold; }
-        .send-btn { background: #ff6b00; border: 3px solid #000; padding: 0 15px; border-radius: 10px; cursor: pointer; font-weight: 900; box-shadow: 3px 3px 0px #000; }
-        
-        .quick-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; padding: 10px; background: #f0f0f0; border-top: 3px solid #000; }
-        .q-btn { background: #fff; border: 2px solid #000; padding: 6px; font-size: 12px; font-weight: 900; cursor: pointer; border-radius: 8px; text-transform: uppercase; }
-        .q-btn:hover { background: #ff6b00; color: #fff; }
-
-        /* ELEMENTOS DE AUDIO */
-        #music-notice { background: #ffeb3b; border: 2px solid #000; padding: 5px; font-size: 11px; text-align: center; font-weight: bold; margin-bottom: 5px; cursor: pointer; }
+        .chat-header { background: #000; color: #fff; padding: 10px; font-family: 'Archivo Black'; display: flex; justify-content: space-between; }
+        #chat-messages { flex-grow: 1; padding: 10px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; background: #f9f9f9; }
+        .msg { padding: 8px 12px; border-radius: 12px; border: 2px solid #000; max-width: 80%; font-size: 14px; }
+        .bot { background: #fff; align-self: flex-start; }
+        .user { background: #ff6b00; color: #fff; align-self: flex-end; }
+        .music-btn { background: #ffeb3b; border: 2px solid #000; padding: 5px; cursor: pointer; font-weight: bold; font-size: 12px; text-align: center; }
     </style>
 </head>
 <body>
@@ -67,163 +34,87 @@
         <source src="imagenes/cancion.mp3" type="audio/mpeg">
     </audio>
 
-    <header class="header">
-        <a href="#" class="logo">FREDDY'S PIZZA</a>
-        <button onclick="window.location.href='login.html'" style="padding: 10px; border: 3px solid #000; background: #fff; font-weight: 900; cursor: pointer; box-shadow: 4px 4px 0px #000;">ENTRAR</button>
-    </header>
-
-    <main style="padding: 40px 20px; text-align: center;">
-        <h1 style="font-family: 'Archivo Black'; font-size: 40px; margin-bottom: 20px;">¡BIENVENIDO! 🍕</h1>
-        <p style="font-weight: bold;">Haz clic en la pizza de la derecha para hablar con Freddy.</p>
-        <div id="pizzas-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; margin-top: 40px;">
-            </div>
-    </main>
-
-    <div id="chat-trigger" title="Habla con Freddy">🍕</div>
+    <div id="chat-trigger">🍕</div>
 
     <div id="chat-window">
-        <div class="chat-header">
-            <span>FREDDY'S BOT 🤖</span>
-            <span id="close-chat" style="cursor:pointer; font-size: 24px;">×</span>
-        </div>
-        
-        <div id="chat-messages">
-            </div>
-
-        <div id="music-notice" onclick="playMusic()">🎵 HAZ CLIC AQUÍ PARA ACTIVAR LA MÚSICA 🎵</div>
-
-        <div class="quick-btns">
-            <button class="q-btn" onclick="askMenu()">🍕 Menú</button>
-            <button class="q-btn" onclick="addBotMsg('⏰ Abrimos todos los días de 11:00 AM a 10:00 PM.')">⏰ Horario</button>
-            <button class="q-btn" onclick="window.location.href='Conta.html'">📞 Contacto</button>
-            <button class="q-btn" onclick="clearChat()">🗑️ Limpiar</button>
-        </div>
-
-        <div class="chat-footer">
-            <input type="text" id="chat-input" class="chat-input" placeholder="Dime algo...">
-            <button id="send-btn" class="send-btn">></button>
+        <div class="chat-header"><span>FREDDY BOT</span><span id="close-chat" style="cursor:pointer">X</span></div>
+        <div id="music-btn" class="music-btn">🎵 CLIC AQUÍ PARA LA MÚSICA 🎵</div>
+        <div id="chat-messages"></div>
+        <div style="padding:10px; border-top:2px solid #000; display:flex;">
+            <input type="text" id="chat-input" style="flex:1; padding:8px;" placeholder="Dime algo...">
+            <button id="send-btn" style="background:#ff6b00; border:2px solid #000; margin-left:5px; cursor:pointer;">></button>
         </div>
     </div>
 
     <script>
-        // 1. CONEXIÓN SUPABASE
-        const SUPABASE_URL = 'https://vndfmcxlifcwzpjbphoy.supabase.co';
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZuZGZtY3hsaWZjd3pwamJwaG95Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3OTc3MDIsImV4cCI6MjA4NzM3MzcwMn0.OkQ6aSZsHkyLMgfT-x0w3beJ3Ey95smEujmhT7ZfjuY'; 
-        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        const supabaseClient = supabase.createClient('https://vndfmcxlifcwzpjbphoy.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZuZGZtY3hsaWZjd3pwamJwaG95Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3OTc3MDIsImV4cCI6MjA4NzM3MzcwMn0.OkQ6aSZsHkyLMgfT-x0w3beJ3Ey95smEujmhT7ZfjuY');
 
-        const trigger = document.getElementById('chat-trigger');
-        const windowChat = document.getElementById('chat-window');
-        const closeChat = document.getElementById('close-chat');
-        const chatInput = document.getElementById('chat-input');
-        const sendBtn = document.getElementById('send-btn');
-        const chatMsgs = document.getElementById('chat-messages');
-        const bgMusic = document.getElementById('bgMusic');
+        const chistes = [
+            "¿Por qué la pizza lloraba? Porque tenía mucha masa emocional. 😂",
+            "¿Qué le dice una pizza a otra? '¡Qué buena masa tienes!' 🍕",
+            "Soy un robot, pero mi corazón es de pepperoni. Pregúntame por el menú.",
+            "No entendí eso, pero... ¿sabías que la pizza redonda viene en caja cuadrada y se come en triángulos? ¡Es magia! ✨",
+            "Mi vocabulario es limitado, pero mi hambre es infinita. ¡Pide una pizza!"
+        ];
 
-        let botIniciado = false;
-
-        // 2. ABRIR / CERRAR CHAT
-        trigger.addEventListener('click', () => {
-            windowChat.style.display = 'flex';
-            if(!botIniciado) {
-                saludoConNombre();
-                botIniciado = true;
+        document.getElementById('chat-trigger').onclick = () => {
+            document.getElementById('chat-window').style.display = 'flex';
+            if(document.getElementById('chat-messages').innerHTML === "") {
+                addBotMsg("¡Hola! Soy Freddy. Escribe 'menu' para ver qué tenemos hoy.");
             }
-        });
+        };
 
-        closeChat.addEventListener('click', () => {
-            windowChat.style.display = 'none';
-        });
+        document.getElementById('close-chat').onclick = () => document.getElementById('chat-window').style.display = 'none';
 
-        // 3. MÚSICA (SOLUCIÓN DEFINITIVA)
-        function playMusic() {
-            bgMusic.play();
-            document.getElementById('music-notice').style.display = 'none';
-        }
-
-        // 4. LÓGICA DEL BOT
-        async function saludoConNombre() {
-            const { data: { user } } = await supabaseClient.auth.getUser();
-            let nombre = "Amigo";
-            if(user) {
-                const { data } = await supabaseClient.from('perfiles').select('nombre').eq('id', user.id).maybeSingle();
-                if(data?.nombre) nombre = data.nombre;
-            }
-            addBotMsg(`¡Hola **${nombre}**! 🍕 Soy Freddy Bot. ¿Tienes hambre? Pregúntame por las **pizzas**, el **horario** o lo que quieras.`);
-        }
+        document.getElementById('music-btn').onclick = function() {
+            const audio = document.getElementById('bgMusic');
+            audio.play();
+            this.innerHTML = "🔊 MÚSICA ACTIVA";
+            this.style.background = "#8bc34a";
+        };
 
         async function handleChat() {
-            const userText = chatInput.value.trim();
-            if(!userText) return;
+            const input = document.getElementById('chat-input');
+            const text = input.value.toLowerCase().trim();
+            if(!text) return;
 
-            addUserMsg(userText);
-            chatInput.value = '';
+            addUserMsg(input.value);
+            input.value = '';
 
-            const input = userText.toLowerCase();
-
-            setTimeout(async () => {
-                // Inteligencia por palabras clave
-                if(input.match(/pizza|menu|tienen|lista|precios|hambre|especialidades/)) {
-                    await askMenu();
-                } else if(input.match(/hola|buenos|tal|freddy/)) {
-                    addBotMsg("¡Hola, hola! Aquí estoy listo para tomar tu pedido espiritual (o real).");
-                } else if(input.match(/horario|abierto|cierran/)) {
-                    addBotMsg("⏰ Estamos activos de **11:00 AM a 10:00 PM**. ¡Vente ya!");
-                } else if(input.match(/gracias|adios|bye|ok/)) {
-                    addBotMsg("¡A ti! Disfruta tu pizza. 🍕✨");
+            // LÓGICA DE RESPUESTAS
+            if(text.includes("menu") || text.includes("pizza") || text.includes("bebida") || text.includes("tienen")) {
+                const { data, error } = await supabaseClient.from('productos').select('nombre, precio');
+                if(error) {
+                    addBotMsg("¡Ups! Mi conexión con la cocina falló (revisa si tu Supabase está pausado).");
                 } else {
-                    addBotMsg("No te entendí muy bien... 😅 pero prueba con 'pizzas' o usa los botones de arriba.");
+                    let lista = data.map(p => `• ${p.nombre} ($${p.precio})`).join('<br>');
+                    addBotMsg(`**Esto tenemos para ti:**<br>${lista}`);
                 }
-            }, 600);
-        }
-
-        async function askMenu() {
-            const { data } = await supabaseClient.from('pizzas').select('nombre, precio');
-            if(data) {
-                const lista = data.map(p => `• ${p.nombre} ($${p.precio})`).join('<br>');
-                addBotMsg(`**Nuestro Menú:**<br>${lista}`);
+            } 
+            else if(text.includes("hola")) {
+                addBotMsg("¡Hola! ¿Buscas pizza o solo vienes a saludar?");
+            }
+            else {
+                // RESPUESTA ALEATORIA CUANDO NO ENTIENDE
+                const chisteAzar = chistes[Math.floor(Math.random() * chistes.length)];
+                addBotMsg(chisteAzar);
             }
         }
 
-        function addBotMsg(text) {
-            const div = document.createElement('div');
-            div.className = 'msg bot';
-            div.innerHTML = text;
-            chatMsgs.appendChild(div);
-            chatMsgs.scrollTop = chatMsgs.scrollHeight;
+        function addBotMsg(t) {
+            const d = document.createElement('div'); d.className = 'msg bot'; d.innerHTML = t;
+            document.getElementById('chat-messages').appendChild(d);
+            document.getElementById('chat-messages').scrollTop = 9999;
         }
 
-        function addUserMsg(text) {
-            const div = document.createElement('div');
-            div.className = 'msg user';
-            div.textContent = text;
-            chatMsgs.appendChild(div);
-            chatMsgs.scrollTop = chatMsgs.scrollHeight;
+        function addUserMsg(t) {
+            const d = document.createElement('div'); d.className = 'msg user'; d.textContent = t;
+            document.getElementById('chat-messages').appendChild(d);
+            document.getElementById('chat-messages').scrollTop = 9999;
         }
 
-        function clearChat() {
-            chatMsgs.innerHTML = '';
-            botIniciado = false;
-            saludoConNombre();
-        }
-
-        // EVENTOS
-        sendBtn.addEventListener('click', handleChat);
-        chatInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') handleChat(); });
-
-        // CARGAR PIZZAS EN EL FONDO
-        async function loadInitialPizzas() {
-            const { data } = await supabaseClient.from('pizzas').select('*');
-            if(data) {
-                document.getElementById('pizzas-grid').innerHTML = data.map(p => `
-                    <div style="background:#fff; border:3px solid #000; padding:10px; border-radius:10px; box-shadow:4px 4px 0px #000;">
-                        <img src="${p.imagen_url}" style="width:100%; border-radius:5px;">
-                        <h4 style="font-family:'Archivo Black'; margin:5px 0;">${p.nombre}</h4>
-                        <p style="font-weight:900; color:#ff6b00;">$${p.precio}</p>
-                    </div>
-                `).join('');
-            }
-        }
-        loadInitialPizzas();
+        document.getElementById('send-btn').onclick = handleChat;
+        document.getElementById('chat-input').onkeypress = (e) => { if(e.key==='Enter') handleChat(); };
     </script>
 </body>
 </html>
