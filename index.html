@@ -3,151 +3,125 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FREDDY'S PIZZA - Inicio</title>
-    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap" rel="stylesheet">
+    <title>Freddy Fazbear's Pizza - Bot Panel</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        /* --- ESTILOS ORIGINALES RECUPERADOS --- */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', sans-serif; background: #fdf2e9; overflow-x: hidden; }
+        :root { --pizzared: #8b0000; --fnafgold: #dbb400; }
+        body { background: #1a1a1a; color: white; font-family: 'Courier New', Courier, monospace; margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
         
-        .header { background: #fff; padding: 15px 25px; display: flex; justify-content: space-between; align-items: center; border-bottom: 5px solid #000; position: sticky; top: 0; z-index: 1000; }
-        .logo-text { font-family: 'Archivo Black'; font-size: 24px; color: #ff4500; text-shadow: 2px 2px 0px #000; text-decoration: none; }
-        .auth-buttons { display: flex; gap: 10px; }
-        .btn-header { padding: 8px 15px; border: 3px solid #000; background: #fff; font-weight: bold; cursor: pointer; box-shadow: 3px 3px 0px #000; text-decoration: none; color: #000; }
-
-        /* HERO SLIDER ORIGINAL */
-        .hero { background: #fff; padding: 60px 20px; border-bottom: 5px solid #000; display: flex; align-items: center; justify-content: center; gap: 40px; min-height: 450px; }
-        .hero-content h1 { font-family: 'Archivo Black'; font-size: 50px; line-height: 1; margin-bottom: 20px; }
-        .hero-img { width: 400px; border-radius: 20px; border: 5px solid #000; box-shadow: 10px 10px 0px #ff6b00; }
-        .btn-order { display: inline-block; padding: 15px 30px; background: #ff6b00; color: #fff; border: 4px solid #000; font-family: 'Archivo Black'; text-decoration: none; box-shadow: 5px 5px 0px #000; }
-
-        /* CHATBOT FNAF STYLE */
-        #chat-trigger { position: fixed; bottom: 20px; right: 20px; background: #ff6b00; border: 4px solid #000; width: 70px; height: 70px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 35px; cursor: pointer; z-index: 10001; box-shadow: 6px 6px 0px #000; }
-        #chat-window { display: none; position: fixed; bottom: 100px; right: 20px; width: 350px; height: 500px; background: #fff; border: 5px solid #000; border-radius: 20px; flex-direction: column; z-index: 10000; box-shadow: 15px 15px 0px rgba(0,0,0,0.2); overflow: hidden; }
-        .chat-header { background: #000; color: #fff; padding: 12px; font-family: 'Archivo Black'; display: flex; justify-content: space-between; }
-        #chat-messages { flex-grow: 1; padding: 15px; overflow-y: auto; background: #fdf2e9; display: flex; flex-direction: column; gap: 10px; }
-        .msg { padding: 10px 15px; border-radius: 15px; border: 3px solid #000; max-width: 85%; font-size: 14px; font-weight: bold; }
-        .bot { background: #fff; align-self: flex-start; }
-        .user { background: #ff6b00; color: #fff; align-self: flex-end; }
+        #chat-container { width: 90%; max-width: 500px; background: #2a2a2a; border: 4px solid var(--pizzared); border-radius: 10px; margin-top: 20px; display: flex; flex-direction: column; height: 500px; box-shadow: 0 0 20px rgba(139, 0, 0, 0.5); }
+        #messages { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; }
         
-        .chat-footer { padding: 10px; border-top: 4px solid #000; display: flex; gap: 5px; background: #fff; }
-        .chat-input { flex: 1; padding: 10px; border: 3px solid #000; border-radius: 10px; }
-        .send-btn { background: #ff6b00; border: 3px solid #000; padding: 10px; border-radius: 10px; cursor: pointer; font-weight: bold; }
+        .msg { padding: 10px; border-radius: 8px; max-width: 80%; }
+        .bot { background: #444; border-left: 4px solid var(--fnafgold); align-self: flex-start; }
+        .user { background: var(--pizzared); align-self: flex-end; }
 
-        /* BOTONES DE CONTROL DENTRO DEL CHAT */
-        .chat-control-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; padding: 10px; background: #eee; border-top: 3px solid #000; }
-        .c-btn { background: #fff; border: 2px solid #000; padding: 5px; font-size: 12px; font-weight: bold; cursor: pointer; border-radius: 5px; }
-        .music-bar { background: #ffeb3b; padding: 5px; text-align: center; font-weight: bold; font-size: 11px; border-bottom: 2px solid #000; cursor: pointer; }
+        #input-area { display: flex; padding: 10px; border-top: 1px solid #444; }
+        input { flex: 1; padding: 10px; border: none; border-radius: 5px; background: #333; color: white; outline: none; }
+        button { padding: 10px 15px; margin-left: 5px; background: var(--fnafgold); border: none; cursor: pointer; font-weight: bold; border-radius: 5px; }
+        
+        #soporte-btn { background: #0066cc; color: white; margin-top: 5px; width: 100%; border-radius: 5px; border: none; padding: 8px; cursor: pointer; }
     </style>
 </head>
-<body>
+<body onclick="iniciarMusica()">
 
-    <audio id="bgMusic" loop>
-        <source src="https://www.myinstants.com/media/sounds/fnaf-sister-location-night-start-50502.mp3" type="audio/mpeg">
-    </audio>
+    <h1>Freddy's Pizza Hub</h1>
+    <p id="welcome-text">Iniciando sistema...</p>
 
-    <header class="header">
-        <a href="index.html" class="logo-text">FREDDY'S PIZZA</a>
-        <div class="auth-buttons">
-            <a href="perfil.html" class="btn-header">👤 Mi Perfil</a>
-            <button class="btn-header" onclick="location.reload()">Cerrar Sesión</button>
+    <div id="chat-container">
+        <div id="messages">
+            <div class="msg bot">¡Hola! Soy FazBot. ¿Cómo te llamas para poder atenderte mejor?</div>
         </div>
-    </header>
-
-    <section class="hero">
-        <div class="hero-content">
-            <h1>PEPPERONI<br>LEGENDARIO</h1>
-            <p>Nuestra pizza estrella con ingredientes frescos y el toque secreto de Freddy.</p>
-            <a href="catalogo.html" class="btn-order">¡ORDENAR YA!</a>
-        </div>
-        <img src="imagenes/pizza_pepe.png" class="hero-img">
-    </section>
-
-    <div id="chat-trigger">🍕</div>
-
-    <div id="chat-window">
-        <div class="chat-header"><span>FREDDY'S BOT 🤖</span><span onclick="toggleChat()" style="cursor:pointer">✕</span></div>
-        <div id="music-btn" class="music-bar" onclick="playMusic()">🎵 CLIC AQUÍ PARA ACTIVAR SONIDO 🎵</div>
-        <div id="chat-messages"></div>
-        
-        <div class="chat-control-btns">
-            <button class="c-btn" onclick="fetchMenu('pizzas')">🍕 Ver Pizzas</button>
-            <button class="c-btn" onclick="fetchMenu('bebidas')">🥤 Bebidas</button>
-            <button class="c-btn" onclick="addBotMsg('⏰ Horario: 11:00 AM - 10:00 PM')">⏰ Horarios</button>
-            <button class="c-btn" onclick="document.getElementById('chat-messages').innerHTML=''">🗑️ Limpiar</button>
-        </div>
-
-        <div class="chat-footer">
-            <input type="text" id="chat-input" placeholder="Dime algo...">
-            <button onclick="handleChat()" class="send-btn">></button>
+        <div id="input-area">
+            <input type="text" id="userInput" placeholder="Escribe aquí..." onkeypress="handleEnter(event)">
+            <button onclick="sendMessage()">Enviar</button>
         </div>
     </div>
 
+    <audio id="fnafMusic" loop>
+        <source src="https://www.myinstants.com/media/sounds/fnaf-1-music-box.mp3" type="audio/mpeg">
+    </audio>
+
     <script>
-        // Configuración Supabase (Asegúrate de darle a "RESUME" en el panel)
-        const supabaseClient = supabase.createClient('https://vndfmcxlifcwzpjbphoy.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZuZGZtY3hsaWZjd3pwamJwaG95Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3OTc3MDIsImV4cCI6MjA4NzM3MzcwMn0.OkQ6aSZsHkyLMgfT-x0w3beJ3Ey95smEujmhT7ZfjuY');
+        // 1. CONFIGURACIÓN SUPABASE (Reemplaza con tus llaves reales)
+        const SUPABASE_URL = 'TU_URL_DE_SUPABASE';
+        const SUPABASE_KEY = 'TU_KEY_DE_SUPABASE';
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        const chistes = [
-            "¿Por qué la pizza fue al médico? Porque le faltaba masa emocional. 😂",
-            "¿Qué le dice una pizza a otra? ¡Qué buena masa tienes!",
-            "No entendí eso... pero si tienes hambre, ¡pide una pizza!"
-        ];
+        let userName = "";
+        let musicStarted = false;
 
-        function toggleChat() {
-            const win = document.getElementById('chat-window');
-            win.style.display = win.style.display === 'flex' ? 'none' : 'flex';
-            if(document.getElementById('chat-messages').innerHTML === "") addBotMsg("¡Hola! Soy Freddy. ¿Qué te apetece hoy?");
-        }
-
-        document.getElementById('chat-trigger').onclick = toggleChat;
-
-        function playMusic() {
-            const m = document.getElementById('bgMusic');
-            m.play();
-            document.getElementById('music-btn').innerHTML = "🔊 MÚSICA ACTIVA";
-            document.getElementById('music-btn').style.background = "#8bc34a";
-        }
-
-        async function fetchMenu(cat) {
-            const { data, error } = await supabaseClient.from('productos').select('nombre, precio').eq('categoria', cat);
-            if(error || !data || data.length === 0) {
-                addBotMsg("⚠️ ¡Error de conexión! Por favor, verifica que tu proyecto de Supabase esté ACTIVO (no en pausa).");
-            } else {
-                let lista = data.map(p => `• ${p.nombre} ($${p.precio})`).join('<br>');
-                addBotMsg(`**${cat.toUpperCase()}:**<br>${lista}`);
+        // 2. ACTIVAR MÚSICA (Solo tras interacción del usuario)
+        function iniciarMusica() {
+            if (!musicStarted) {
+                const audio = document.getElementById('fnafMusic');
+                audio.play();
+                musicStarted = true;
             }
         }
 
-        function handleChat() {
-            const input = document.getElementById('chat-input');
-            const txt = input.value.toLowerCase().trim();
-            if(!txt) return;
+        async function sendMessage() {
+            const input = document.getElementById('userInput');
+            const text = input.value.trim();
+            if (!text) return;
 
-            addUserMsg(input.value);
+            addMessage(text, 'user');
             input.value = '';
 
-            setTimeout(() => {
-                if(txt.includes("pizza")) fetchMenu('pizzas');
-                else if(txt.includes("bebida")) fetchMenu('bebidas');
-                else if(txt.includes("hola")) addBotMsg("¡Hola! ¿Buscas comida o solo vienes a saludar?");
-                else addBotMsg(chistes[Math.floor(Math.random()*chistes.length)]);
-            }, 600);
+            // Lógica del Bot
+            let response = "";
+
+            // A. Registrar nombre si no existe
+            if (!userName) {
+                userName = text;
+                response = `¡Mucho gusto, **${userName}**! ¿En qué puedo ayudarte hoy? Puedes preguntar por el menú, la pizza más barata o pedir soporte.`;
+                document.getElementById('welcome-text').innerText = `Usuario activo: ${userName}`;
+            } 
+            // B. Lógica de Soporte
+            else if (text.toLowerCase().includes("soporte") || text.toLowerCase().includes("ayuda")) {
+                response = `Entendido ${userName}, te he generado un botón de contacto directo abajo.`;
+                addSoporteBtn();
+            }
+            // C. Lógica de Pizza más barata (Consulta BD)
+            else if (text.toLowerCase().includes("barata") || text.toLowerCase().includes("económica")) {
+                const { data } = await supabase.from('productos').select('*').eq('categoria', 'pizzas').order('precio', { ascending: true }).limit(1);
+                if (data && data.length > 0) {
+                    response = `¡Oferta especial para ti, ${userName}! La pizza más barata es la **${data[0].nombre}** a tan solo **$${data[0].precio}**.`;
+                } else {
+                    response = "Lo siento, no pude acceder a los precios ahora mismo.";
+                }
+            }
+            // D. Consulta de Menú
+            else if (text.toLowerCase().includes("pizzas") || text.toLowerCase().includes("menú")) {
+                const { data } = await supabase.from('productos').select('nombre').eq('categoria', 'pizzas');
+                const lista = data.map(p => p.nombre).join(", ");
+                response = `Claro ${userName}, tenemos: ${lista}. ¿Cuál te gustaría?`;
+            }
+            // E. Fallback (Humor Freddy)
+            else {
+                response = `${userName}, no entiendo eso, pero recuerda: "The show must go on". ¡Prueba preguntando por el menú!`;
+            }
+
+            setTimeout(() => addMessage(response, 'bot'), 600);
         }
 
-        function addBotMsg(t) {
-            const d = document.createElement('div'); d.className = 'msg bot'; d.innerHTML = t;
-            document.getElementById('chat-messages').appendChild(d);
-            document.getElementById('chat-messages').scrollTop = 9999;
+        function addMessage(text, sender) {
+            const msgDiv = document.createElement('div');
+            msgDiv.className = `msg ${sender}`;
+            msgDiv.innerHTML = text;
+            document.getElementById('messages').appendChild(msgDiv);
+            document.getElementById('messages').scrollTop = document.getElementById('messages').scrollHeight;
         }
 
-        function addUserMsg(t) {
-            const d = document.createElement('div'); d.className = 'msg user'; d.textContent = t;
-            document.getElementById('chat-messages').appendChild(d);
-            document.getElementById('chat-messages').scrollTop = 9999;
+        function addSoporteBtn() {
+            const btn = document.createElement('button');
+            btn.id = "soporte-btn";
+            btn.innerText = "Click aquí para Soporte Técnico";
+            btn.onclick = () => window.open('https://wa.me/TUNUMERO', '_blank');
+            document.getElementById('messages').appendChild(btn);
         }
 
-        document.getElementById('chat-input').onkeypress = (e) => { if(e.key==='Enter') handleChat(); };
+        function handleEnter(e) { if (e.key === 'Enter') sendMessage(); }
     </script>
 </body>
 </html>
