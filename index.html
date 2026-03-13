@@ -140,85 +140,122 @@
 </head>
 <body>
 
- <audio id="chat-sound" src="https://www.myinstants.com/media/sounds/scream_6.mp3" preload="auto"></audio>
+ <audio id="chat-sound" src="https://www.myinstants.com/media/sounds/fnaf-sister-location-night-start.mp3" preload="auto"></audio>
 
-<div id="chat-btn" onclick="toggleChat()" style="position: fixed; bottom: 30px; right: 30px; background: #ff6b00; color: white; width: 70px; height: 70px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 35px; cursor: pointer; box-shadow: 0 0 20px rgba(255,107,0,0.4), 5px 5px 0px #000; z-index: 3000; border: 4px solid #000; transition: 0.3s;">
-    🐻
+<div id="chat-btn" onclick="toggleChat()" style="position: fixed; bottom: 30px; right: 30px; background: #ff6b00; color: white; width: 75px; height: 75px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 40px; cursor: pointer; box-shadow: 0 0 25px rgba(255,107,0,0.5), 6px 6px 0px #000; z-index: 3000; border: 4px solid #000; transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
+    🐼
 </div>
 
-<div id="chat-window" style="display: none; position: fixed; bottom: 110px; right: 30px; width: 360px; height: 580px; background: white; border: 4px solid #000; border-radius: 20px; flex-direction: column; overflow: hidden; z-index: 3000; box-shadow: 15px 15px 0px rgba(0,0,0,0.3);">
+<div id="chat-window" style="display: none; position: fixed; bottom: 115px; right: 30px; width: 380px; height: 600px; background: #fff; border: 4px solid #000; border-radius: 24px; flex-direction: column; overflow: hidden; z-index: 3000; box-shadow: 18px 18px 0px rgba(0,0,0,0.3); animation: slideUp 0.4s ease;">
     
-    <div style="background: #000; color: white; padding: 15px; font-family: 'Archivo Black', sans-serif; display: flex; justify-content: space-between; align-items: center; border-bottom: 4px solid #ff6b00;">
-        <div style="display: flex; align-items: center; gap: 10px;">
-            <div style="width: 12px; height: 12px; background: #00ff00; border-radius: 50%; box-shadow: 0 0 10px #00ff00;"></div>
-            <span style="letter-spacing: 1px;">FREDDY AI SUPPORT</span>
+    <div style="background: #000; color: white; padding: 18px; font-family: 'Archivo Black', sans-serif; display: flex; justify-content: space-between; align-items: center; border-bottom: 5px solid #ff6b00;">
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <div style="width: 14px; height: 14px; background: #00ff00; border-radius: 50%; box-shadow: 0 0 12px #00ff00;"></div>
+            <span style="letter-spacing: 1.5px; font-size: 14px;">FREDDY'S SYSTEM v4.0</span>
         </div>
         <div style="display: flex; gap: 15px;">
-            <span onclick="clearChat()" title="Borrar historial" style="cursor:pointer; font-size: 18px; hover: scale(1.2);">🗑️</span>
-            <span onclick="toggleChat()" style="cursor:pointer; font-size: 22px;">×</span>
+            <span onclick="clearChat()" title="Borrar" style="cursor:pointer; font-size: 18px; opacity: 0.7;">🗑️</span>
+            <span onclick="toggleChat()" style="cursor:pointer; font-size: 24px;">×</span>
         </div>
     </div>
 
-    <div id="chat-messages" style="flex: 1; padding: 15px; overflow-y: auto; background: #fdf2e9; display: flex; flex-direction: column; gap: 15px; font-family: 'Segoe UI', sans-serif; scroll-behavior: smooth;">
+    <div id="chat-messages" style="flex: 1; padding: 20px; overflow-y: auto; background: #fdf2e9; display: flex; flex-direction: column; gap: 18px; font-family: 'Segoe UI', sans-serif;">
         <div class="chat-msg-bot">
-            <strong>Freddy:</strong> ¡GRRRR! Bienvenido a Freddy's Pizza. 🍕 Soy tu asistente virtual. ¿Qué aventura culinaria quieres hoy?
+            <strong>Freddy:</strong> Iniciando sesión... 🌙 ¡Bienvenido! Soy tu asistente Fazbear. ¿En qué puedo apoyarte hoy?
         </div>
-        <div id="options-container" class="options-grid">
-            </div>
+        <div class="options-container">
+            <button class="opt-btn" onclick="handleInput('🍕 Ver Menú')">🍕 Ver Menú</button>
+            <button class="opt-btn" onclick="handleInput('🛠️ Reportar Falla')">🛠️ Reportar Falla</button>
+            <button class="opt-btn" onclick="handleInput('📞 Contacto')">📞 Contacto</button>
+        </div>
     </div>
 
-    <div style="padding: 15px; border-top: 4px solid #000; display: flex; gap: 10px; background: #fff;">
-        <input type="text" id="chat-input" placeholder="Pregúntame lo que sea..." style="flex: 1; border: 3px solid #000; padding: 12px; border-radius: 12px; font-family: 'Segoe UI'; font-weight: bold; outline: none;">
-        <button onclick="sendMessage()" style="background: #ff6b00; border: 3px solid #000; color: white; width: 50px; height: 50px; border-radius: 12px; cursor: pointer; box-shadow: 3px 3px 0px #000; font-size: 20px;">➤</button>
+    <div style="padding: 18px; border-top: 4px solid #000; display: flex; gap: 10px; background: #fff;">
+        <input type="text" id="chat-input" placeholder="Escribe tu duda..." style="flex: 1; border: 3px solid #000; padding: 12px; border-radius: 12px; font-weight: bold; outline: none;">
+        <button onclick="sendMessage()" style="background: #ff6b00; border: 3px solid #000; color: white; width: 50px; height: 50px; border-radius: 12px; cursor: pointer; box-shadow: 3px 3px 0px #000;">➤</button>
     </div>
 </div>
 
 <style>
-    .options-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 5px; }
-    .opt-btn { background: #fff; border: 2.5px solid #000; padding: 8px 12px; border-radius: 10px; cursor: pointer; font-size: 13px; font-weight: 800; box-shadow: 3px 3px 0px #000; transition: 0.2s; font-family: 'Archivo Black', sans-serif; }
-    .opt-btn:hover { background: #ff6b00; color: #fff; transform: translate(-2px, -2px); box-shadow: 5px 5px 0px #000; }
-    .chat-msg-user { align-self: flex-end; background: #ff6b00; color: white; padding: 12px; border-radius: 15px 15px 0 15px; border: 3px solid #000; box-shadow: 4px 4px 0px #000; max-width: 80%; }
-    .chat-msg-bot { align-self: flex-start; background: #fff; color: #000; padding: 12px; border-radius: 15px 15px 15px 0; border: 3px solid #000; box-shadow: 4px 4px 0px #000; max-width: 85%; }
-    .pizza-card { border: 2px solid #eee; padding: 8px; border-radius: 8px; margin-top: 5px; background: #fafafa; }
+    @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    .options-container { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 5px; }
+    .opt-btn { background: #fff; border: 3px solid #000; padding: 8px 14px; border-radius: 10px; cursor: pointer; font-size: 12px; font-weight: 900; box-shadow: 4px 4px 0px #000; transition: 0.2s; font-family: 'Archivo Black', sans-serif; }
+    .opt-btn:hover { background: #ff6b00; color: #fff; transform: translate(-2px, -2px); box-shadow: 6px 6px 0px #000; }
+    .chat-msg-user { align-self: flex-end; background: #ff6b00; color: white; padding: 12px; border-radius: 15px 15px 2px 15px; border: 3px solid #000; box-shadow: 4px 4px 0px #000; max-width: 80%; }
+    .chat-msg-bot { align-self: flex-start; background: #fff; color: #000; padding: 12px; border-radius: 15px 15px 15px 2px; border: 3px solid #000; box-shadow: 4px 4px 0px #000; max-width: 85%; }
+    .menu-card { background: white; border: 2px solid #000; padding: 10px; border-radius: 10px; margin-top: 10px; }
+    .menu-item { display: flex; justify-content: space-between; border-bottom: 1px dashed #ccc; padding: 5px 0; font-size: 13px; }
 </style>
 
 <script>
     const chatMessages = document.getElementById('chat-messages');
     
-    // Configuración de respuestas profesionales
-    const responses = {
-        menu: {
-            text: "¡Mira nuestras especialidades! Son de miedo: 🍕",
-            content: `
-                <div class="pizza-card"><b>⭐ Pizza Suprema:</b> Ingredientes premium y borde de queso ($166.99)</div>
-                <div class="pizza-card"><b>🔥 Pepperoni Blast:</b> Doble porción de pepperoni crujiente ($121.99)</div>
-                <div class="pizza-card"><b>🌿 Margherita:</b> Albahaca fresca y mozzarella de búfala ($158.99)</div>
-            `,
-            options: ["Pedir Ahora 🛒", "Ver Promociones 🎁", "Volver"]
-        },
-        pagos: {
-            text: "Aceptamos <b>Mercado Pago</b> y Efectivo. Si ves un error de 'Error al generar el pago', revisa que tus credenciales de integración estén activas o intenta recargar el carrito.",
-            options: ["¿Cómo pagar?", "Falla en pago", "Volver"]
-        },
-        reportes: {
-            text: "¿Algo no va bien? Aquí soluciones rápidas: <br>1. Si el botón de pago no carga, limpia el caché.<br>2. Si no ves tu pizza, refresca con F5.<br>3. ¿Persiste el error? Contáctanos.",
-            options: ["Hablar con Soporte 📞", "Reportar Error 🛠️", "Volver"]
-        },
-        contacto: {
-            text: "Mis circuitos no dan para más. Te envío con un humano experto. Pulsa aquí: <a href='Conta.html' style='color:#ff6b00; font-weight:bold;'>CENTRO DE AYUDA</a>",
-            options: ["Horarios", "Ubicación", "Adiós"]
-        }
-    };
-
     function toggleChat() {
         const win = document.getElementById('chat-window');
         win.style.display = (win.style.display === 'none' || win.style.display === '') ? 'flex' : 'none';
-        if(win.style.display === 'flex') renderOptions(["🍕 Menú", "💳 Pagos", "🛠️ Reportes", "📞 Contacto"]);
+        if(win.style.display === 'flex') playSound();
+    }
+
+    function playSound() {
+        const audio = document.getElementById('chat-sound');
+        audio.currentTime = 0;
+        audio.play().catch(e => console.log("Audio ready"));
+    }
+
+    const responses = {
+        "menu": {
+            text: "¡Aquí tienes nuestro menú especial! Calidad garantizada por Fazbear Entertainment: 🍕",
+            content: `
+                <div class="menu-card">
+                    <div class="menu-item"><span>Suprema Premium</span> <b>$166.99</b></div>
+                    <div class="menu-item"><span>Pepperoni Doble</span> <b>$121.99</b></div>
+                    <div class="menu-item"><span>Margherita Special</span> <b>$158.99</b></div>
+                </div>`,
+            next: ["🛒 Comprar", "🏠 Volver"]
+        },
+        "reporte": {
+            text: "🛠️ <b>Protocolo de Errores:</b><br>1. Si el pago falla, revisa tu conexión.<br>2. Si la web se traba, presiona F5.<br>3. ¿No carga el carrito? Borra cookies.",
+            next: ["📞 Soporte Humano", "🏠 Volver"]
+        },
+        "pago": {
+            text: "Aceptamos Mercado Pago y Efectivo. Tu seguridad es nuestra prioridad (después de la pizza).",
+            next: ["💳 Métodos", "🏠 Volver"]
+        }
+    };
+
+    function handleInput(text) {
+        addMessage('Tú', text, 'chat-msg-user');
+        const val = text.toLowerCase();
+
+        setTimeout(() => {
+            playSound();
+            let resText = "";
+            let nextOpts = ["🍕 Ver Menú", "🛠️ Reportar Falla", "📞 Contacto"];
+
+            if (val.includes("menú") || val.includes("pizza")) {
+                resText = responses.menu.text + responses.menu.content;
+                nextOpts = responses.menu.next;
+            } else if (val.includes("falla") || val.includes("error") || val.includes("reporte")) {
+                resText = responses.reporte.text;
+                nextOpts = responses.reporte.next;
+            } else if (val.includes("contacto") || val.includes("humano")) {
+                resText = "Nuestros guardias están ocupados. Por favor, ve a la sección de <a href='Conta.html'><b>Contacto</b></a>.";
+                nextOpts = ["🏠 Volver"];
+            } else if (val.includes("volver") || val.includes("inicio") || val.includes("gracias")) {
+                resText = "¿En qué más puedo servirte hoy?";
+                nextOpts = ["🍕 Ver Menú", "🛠️ Reportar Falla", "📞 Contacto"];
+            } else {
+                resText = "No tengo registros sobre eso. Prueba seleccionando una opción del menú:";
+            }
+
+            addMessage('Freddy', resText, 'chat-msg-bot');
+            renderOptions(nextOpts);
+        }, 600);
     }
 
     function renderOptions(opts) {
         const container = document.createElement('div');
-        container.className = "options-grid";
+        container.className = "options-container";
         opts.forEach(opt => {
             const btn = document.createElement('button');
             btn.className = "opt-btn";
@@ -228,34 +265,6 @@
         });
         chatMessages.appendChild(container);
         chatMessages.scrollTop = chatMessages.scrollHeight;
-    }
-
-    function handleInput(text) {
-        addMessage('Tú', text, 'chat-msg-user');
-        const val = text.toLowerCase();
-        
-        setTimeout(() => {
-            document.getElementById('chat-sound').play();
-            if(val.includes("menú") || val.includes("pizza")) {
-                addMessage('Freddy', responses.menu.text + responses.menu.content, 'chat-msg-bot');
-                renderOptions(responses.menu.options);
-            } else if(val.includes("pago") || val.includes("pagar")) {
-                addMessage('Freddy', responses.pagos.text, 'chat-msg-bot');
-                renderOptions(responses.pagos.options);
-            } else if(val.includes("reporte") || val.includes("error") || val.includes("falla")) {
-                addMessage('Freddy', responses.reportes.text, 'chat-msg-bot');
-                renderOptions(responses.reportes.options);
-            } else if(val.includes("contacto") || val.includes("soporte") || val.includes("humano")) {
-                addMessage('Freddy', responses.contacto.text, 'chat-msg-bot');
-                renderOptions(responses.contacto.options);
-            } else if(val.includes("adiós") || val.includes("gracias")) {
-                addMessage('Freddy', "¡De nada! ¡Grrr-acias por elegirnos! No mires debajo de la mesa... 👋", 'chat-msg-bot');
-                renderOptions(["Volver al Inicio"]);
-            } else {
-                addMessage('Freddy', "Mis sensores no entienden eso. ¿Usamos el menú de ayuda?", 'chat-msg-bot');
-                renderOptions(["🍕 Menú", "🛠️ Reportes", "📞 Contacto"]);
-            }
-        }, 600);
     }
 
     function sendMessage() {
@@ -274,8 +283,8 @@
     }
 
     function clearChat() {
-        chatMessages.innerHTML = `<div class="chat-msg-bot"><strong>Freddy:</strong> Memoria reseteada. ¿Qué necesitas?</div>`;
-        renderOptions(["🍕 Menú", "💳 Pagos", "🛠️ Reportes", "📞 Contacto"]);
+        chatMessages.innerHTML = `<div class="chat-msg-bot"><strong>Freddy:</strong> Datos borrados. Sistema listo.</div>`;
+        renderOptions(["🍕 Ver Menú", "🛠️ Reportar Falla", "📞 Contacto"]);
     }
 
     document.getElementById('chat-input').addEventListener('keypress', (e) => { if(e.key === 'Enter') sendMessage(); });
