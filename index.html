@@ -112,7 +112,14 @@ background:#000;
 color:white;
 cursor:pointer;
 }
-        
+       @keyframes shake {
+  0% { transform: translate(1px, 1px) rotate(0deg); }
+  20% { transform: translate(-3px, 0px) rotate(-1deg); }
+  40% { transform: translate(3px, 2px) rotate(1deg); }
+  60% { transform: translate(-3px, 1px) rotate(0deg); }
+  80% { transform: translate(3px, 1px) rotate(-1deg); }
+  100% { transform: translate(1px, -2px) rotate(1deg); }
+} 
         /* --- ANIMACIONES --- */
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(30px); }
@@ -380,159 +387,150 @@ FreddyBot 🍕
     </footer>
 
     <script>
-        /* =========================
-CHATBOT FREDDY
-========================= */
+        /* =========================================
+   FREDDY FAZBEAR'S OS - V3.0 (GLITCH EDITION)
+   ========================================= */
 
-let chatOpen=false
-let userName=""
+let chatOpen = false;
+let userName = "";
 
-const toggleBtn=document.getElementById("chatbotToggle")
-const chatBox=document.getElementById("chatbotBox")
-const messages=document.getElementById("chatMessages")
-const input=document.getElementById("chatInput")
-const sound=document.getElementById("chatSound")
-const music=document.getElementById("chatMusic")
+const toggleBtn = document.getElementById("chatbotToggle");
+const chatBox = document.getElementById("chatbotBox");
+const messages = document.getElementById("chatMessages");
+const input = document.getElementById("chatInput");
+const sound = document.getElementById("chatSound");
+const music = document.getElementById("chatMusic");
 
-toggleBtn.onclick=()=>{
+// Diccionario de Inteligencia Fazbear
+const fazbearBrain = {
+    menu: ["pisa", "piza", "pizaa", "hambre", "comida", "carta", "catalogo", "especialidades"],
+    horario: ["hora", "abierto", "cierran", "tiempo", "cuando"],
+    contacto: ["hablar", "ayuda", "administrador", "humano", "telefono", "llama"],
+    falla: ["error", "no sirve", "bug", "problema", "reportar", "mal"],
+    prohibido: ["matar", "sangre", "miedo", "asesino", "maldito", "idiota", "estupido", "muerte"] // Palabras que activan el glitch
+};
 
-chatOpen=!chatOpen
+toggleBtn.onclick = () => {
+    chatOpen = !chatOpen;
+    chatBox.style.display = chatOpen ? "flex" : "none";
+    if (chatOpen) {
+        music.volume = 0.15;
+        music.play().catch(e => console.log("Audio interactivo activado"));
+        initChat();
+    }
+};
 
-chatBox.style.display=chatOpen?"flex":"none"
-
-if(chatOpen){
-music.volume=0.2
-music.play()
-initChat()
+function playSound() {
+    sound.currentTime = 0;
+    sound.play();
 }
 
+function triggerGlitch() {
+    // Sonido de estática o grito corto (opcional)
+    playSound(); 
+    chatBox.style.animation = "shake 0.2s ease-in-out 3";
+    messages.style.filter = "invert(1) hue-rotate(90deg)";
+    
+    setTimeout(() => {
+        messages.style.filter = "none";
+        chatBox.style.animation = "none";
+    }, 500);
 }
 
-function playSound(){
-sound.currentTime=0
-sound.play()
+function addMessage(text, type) {
+    const div = document.createElement("div");
+    div.className = type === "user" ? "message-user" : "message-bot";
+    
+    if (type === "bot") {
+        div.style.background = "#f0f0f0";
+        div.style.padding = "10px";
+        div.style.borderRadius = "10px";
+        div.style.borderLeft = "5px solid #ff6b00";
+        div.style.fontFamily = "'Courier New', Courier, monospace"; // Toque robótico
+    }
+
+    div.innerText = text;
+    messages.appendChild(div);
+    messages.scrollTop = messages.scrollHeight;
 }
 
-function addMessage(text,type){
+function initChat() {
+    if (messages.innerHTML !== "") return;
+    const nombreEnPantalla = document.getElementById("userName")?.textContent;
+    userName = (nombreEnPantalla && nombreEnPantalla.trim() !== "") ? nombreEnPantalla : "Invitado";
 
-const div=document.createElement("div")
-div.className=type==="user"?"message-user":"message-bot"
-div.innerText=text
-
-messages.appendChild(div)
-
-messages.scrollTop=messages.scrollHeight
+    addMessage(`[SISTEMA CARGADO] ¡Hola, ${userName}! 🐻 Soy Freddy. ¿En qué puedo servirte hoy? Recordatorio: La pizzería no se hace responsable de desapariciones. ¡A comer!`, "bot");
 }
 
-function initChat(){
+function sendMessage() {
+    const text = input.value.trim();
+    if (!text) return;
 
-if(messages.innerHTML!=="")return
+    playSound();
+    addMessage(text, "user");
+    input.value = "";
 
-const nombre=document.getElementById("userName")?.textContent
-
-userName=nombre || "Invitado"
-
-addMessage(`Hola ${userName} 👋 soy FreddyBot ¿En qué puedo ayudarte?`,"bot")
-
+    setTimeout(() => { botResponse(text); }, 600);
 }
 
-function sendMessage(){
+function botResponse(text) {
+    const msg = text.toLowerCase();
+    let reply = "";
+    let targetPage = "";
 
-const text=input.value.trim()
+    const checkMatch = (keys) => keys.some(key => msg.includes(key));
 
-if(!text)return
+    // VERIFICAR PALABRAS PROHIBIDAS (GLITCH)
+    if (checkMatch(fazbearBrain.prohibido)) {
+        triggerGlitch();
+        reply = "ERROR: Comportamiento no familiar detectado. Por favor, mantén la diversión. No hables de eso... ⚠️";
+    } 
+    else if (checkMatch(fazbearBrain.menu)) {
+        reply = "¡Nuestra pizza es la mejor del mundo! 🍕 Mira el catálogo aquí:";
+        targetPage = "catalogo.html";
+    } 
+    else if (checkMatch(fazbearBrain.horario)) {
+        reply = "Estamos aquí de día, pero de noche... bueno, las puertas se cierran. 🕒 Mira los horarios:";
+        targetPage = "horarios.html";
+    } 
+    else if (checkMatch(fazbearBrain.contacto)) {
+        reply = "Si necesitas ayuda humana, contacta a nuestro personal de seguridad. 📞";
+        targetPage = "Conta.html";
+    } 
+    else if (checkMatch(fazbearBrain.falla)) {
+        reply = "¡Incluso los animatrónicos fallamos! 🛠️ Reporta el error aquí:";
+        targetPage = "reporte.html";
+    } 
+    else {
+        reply = "No tengo eso en mi base de datos, pero puedo ayudarte con Pizzas, Horarios o Reportes. ¿Qué prefieres?";
+    }
 
-playSound()
-
-addMessage(text,"user")
-
-input.value=""
-
-setTimeout(()=>{
-
-botResponse(text)
-
-},400)
-
+    addMessage(reply, "bot");
+    if (targetPage) showLinkButton(targetPage);
 }
 
-function botResponse(text){
-
-const msg=text.toLowerCase()
-
-let reply=""
-
-if(msg.includes("menu")||msg.includes("pizza")){
-
-reply="Puedes ver nuestro menú aquí 🍕"
-goSuggestion("catalogo.html")
-
+function showLinkButton(url) {
+    const btnDiv = document.createElement("div");
+    btnDiv.style.textAlign = "center";
+    btnDiv.style.margin = "8px 0";
+    const pageName = url.replace(".html", "").toUpperCase();
+    btnDiv.innerHTML = `<button onclick="goPage('${url}')" style="background:#ff6b00; color:white; border:3px solid #000; padding:8px 15px; cursor:pointer; font-weight:bold; border-radius:10px; box-shadow:3px 3px 0px #000;">VER ${pageName}</button>`;
+    messages.appendChild(btnDiv);
+    messages.scrollTop = messages.scrollHeight;
 }
 
-else if(msg.includes("horario")){
-
-reply="Puedes ver nuestros horarios aquí 🕒"
-goSuggestion("horarios.html")
-
+function goPage(url) {
+    playSound();
+    window.location.href = url;
 }
 
-else if(msg.includes("contacto")||msg.includes("hablar")){
+input.addEventListener("keypress", (e) => { if (e.key === "Enter") sendMessage(); });
 
-reply="Puedes contactarnos aquí 📞"
-goSuggestion("Conta.html")
+document.getElementById("clearChat").onclick = () => {
+    messages.innerHTML = "";
+    initChat();
+};
 
-}
-
-else if(msg.includes("error")||msg.includes("falla")){
-
-reply="Puedes reportar el problema aquí 🛠"
-goSuggestion("reporte.html")
-
-}
-
-else{
-
-reply="Puedo ayudarte con el menú, pedidos, horarios o contacto."
-
-}
-
-addMessage(reply,"bot")
-
-}
-
-function goSuggestion(url){
-
-const link=document.createElement("div")
-
-link.innerHTML=`<a href="${url}" style="color:#ff6b00;font-weight:bold">Ir ahora</a>`
-
-messages.appendChild(link)
-
-}
-
-function goPage(url){
-
-playSound()
-
-window.location.href=url
-
-}
-
-document.getElementById("clearChat").onclick=()=>{
-
-messages.innerHTML=""
-
-initChat()
-
-}
-
-/* borrar chat al salir */
-
-window.addEventListener("beforeunload",()=>{
-
-messages.innerHTML=""
-
-})
         const SUPABASE_URL = 'https://vndfmcxlifcwzpjbphoy.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZuZGZtY3hsaWZjd3pwamJwaG95Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3OTc3MDIsImV4cCI6MjA4NzM3MzcwMn0.OkQ6aSZsHkyLMgfT-x0w3beJ3Ey95smEujmhT7ZfjuY'; 
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
