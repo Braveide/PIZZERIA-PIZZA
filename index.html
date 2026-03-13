@@ -2,130 +2,128 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Freddy's Pizza - Bot Inteligente</title>
+    <title>Freddy's Pizza - Original Style</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        /* Mantenemos tu estilo original de las capturas */
-        :root { --fnaf-orange: #ff6600; --fnaf-bg: #f5f5dc; }
-        body { font-family: 'Segoe UI', sans-serif; background-color: var(--fnaf-bg); margin: 0; }
+        /* ESTILO EXACTO DE TU CAPTURA */
+        body { font-family: 'Arial', sans-serif; background-color: #f5f5dc; margin: 0; padding: 20px; }
         
-        /* Estilo del Chat que ya tenías */
-        #chat-window { 
-            position: fixed; bottom: 80px; right: 20px; 
-            width: 350px; height: 450px; 
-            background: white; border-radius: 15px; 
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        .chat-container {
+            position: fixed; bottom: 90px; right: 20px;
+            width: 350px; height: 500px;
+            background: white; border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
             display: flex; flex-direction: column; overflow: hidden;
-            border: 2px solid black;
+            border: 1px solid #ddd;
         }
-        .chat-header { background: black; color: white; padding: 10px; font-weight: bold; display: flex; justify-content: space-between; }
-        #chat-messages { flex: 1; padding: 10px; overflow-y: auto; background: #fff; display: flex; flex-direction: column; gap: 8px; }
+
+        .chat-header { background: #000; color: white; padding: 15px; font-weight: bold; text-align: center; }
         
-        /* Burbujas de mensaje estilo Vercel */
-        .msg { padding: 8px 12px; border-radius: 15px; max-width: 80%; font-size: 14px; }
-        .bot-msg { background: #f1f1f1; align-self: flex-start; border: 1px solid #ccc; }
-        .user-msg { background: var(--fnaf-orange); color: white; align-self: flex-end; }
+        #music-status { background: #d4edda; color: #155724; font-size: 12px; padding: 5px; text-align: center; display: none; }
 
-        .input-area { border-top: 1px solid #eee; padding: 10px; display: flex; }
+        .chat-messages { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: #fff; }
+
+        /* Tus burbujas originales */
+        .message { padding: 10px 15px; border-radius: 18px; max-width: 80%; font-size: 14px; }
+        .bot { background: #f1f1f1; align-self: flex-start; color: #333; }
+        .user { background: #ff6600; align-self: flex-end; color: white; }
+
+        .chat-input { padding: 15px; border-top: 1px solid #eee; display: flex; gap: 10px; }
         input { flex: 1; border: 1px solid #ccc; border-radius: 20px; padding: 8px 15px; outline: none; }
-        .send-btn { background: var(--fnaf-orange); border: none; color: white; border-radius: 50%; width: 35px; margin-left: 5px; cursor: pointer; }
+        
+        .btn-pizza { position: fixed; bottom: 20px; right: 20px; width: 60px; height: 60px; cursor: pointer; }
 
-        /* El botón flotante de la pizza */
-        .pizza-floater { position: fixed; bottom: 20px; right: 20px; width: 60px; height: 60px; cursor: pointer; transition: transform 0.3s; }
-        .pizza-floater:hover { transform: scale(1.1); }
-
-        /* Banner de música activa */
-        #music-banner { background: #94ad4b; color: white; text-align: center; font-size: 10px; padding: 2px; display: none; }
+        /* Los botones de abajo que tenías */
+        .quick-actions { display: flex; justify-content: space-around; padding: 10px; background: #fafafa; border-top: 1px solid #eee; }
+        .quick-actions button { background: none; border: none; font-size: 12px; cursor: pointer; color: #666; }
     </style>
 </head>
 <body>
 
-    <img src="https://cdn-icons-png.flaticon.com/512/1404/1404945.png" class="pizza-floater" onclick="toggleChat()">
+    <div id="chat-window" class="chat-container" style="display: none;">
+        <div class="chat-header">FREDDY'S PIZZA</div>
+        <div id="music-status">🎵 Música de ambiente activada</div>
+        <div class="chat-messages" id="chatMsgs">
+            <div class="message bot">¡Hola! Soy el asistente de Freddy's. ¿Con quién tengo el gusto de hablar?</div>
+        </div>
+        
+        <div class="quick-actions">
+            <button onclick="enviarRapido('Menú')">🍕 Menú</button>
+            <button onclick="enviarRapido('Soporte')">🛠️ Soporte</button>
+            <button onclick="enviarRapido('La más barata')">💰 Ofertas</button>
+        </div>
 
-    <div id="chat-window" style="display: none;">
-        <div class="chat-header">
-            <span>FREDDY'S BOT 🤖</span>
-            <span style="cursor:pointer" onclick="toggleChat()">✖</span>
-        </div>
-        <div id="music-banner">🔊 MÚSICA DE FNAF ACTIVA</div>
-        <div id="chat-messages">
-            <div class="msg bot-msg">¡Hola! Bienvenido a Freddy's. ¿Cómo te llamas para darte una mejor atención?</div>
-        </div>
-        <div class="input-area">
-            <input type="text" id="userInput" placeholder="Escribe tu duda...">
-            <button class="send-btn" onclick="handleSend()">></button>
+        <div class="chat-input">
+            <input type="text" id="userInput" placeholder="Escribe un mensaje...">
+            <button onclick="handleSendMessage()" style="background:none; border:none; font-size:20px; cursor:pointer;">➡️</button>
         </div>
     </div>
 
-    <audio id="bg-music" loop>
+    <img src="https://cdn-icons-png.flaticon.com/512/1404/1404945.png" class="btn-pizza" onclick="toggleChat()">
+
+    <audio id="audioFnaf" loop>
         <source src="https://www.myinstants.com/media/sounds/fnaf-1-music-box.mp3" type="audio/mpeg">
     </audio>
 
     <script>
-        // CONFIGURACIÓN DE TU SUPABASE
         const _URL = "TU_SUPABASE_URL";
         const _KEY = "TU_SUPABASE_KEY";
         const supabase = supabase.createClient(_URL, _KEY);
 
-        let nombreUsuario = "";
+        let user_name = "";
 
         function toggleChat() {
             const chat = document.getElementById('chat-window');
-            chat.style.display = chat.style.display === 'none' ? 'flex' : 'none';
-            // Iniciar música al abrir por primera vez
-            const music = document.getElementById('bg-music');
-            music.play().then(() => {
-                document.getElementById('music-banner').style.display = 'block';
-            }).catch(e => console.log("Esperando interacción"));
+            const audio = document.getElementById('audioFnaf');
+            const isHidden = chat.style.display === 'none';
+            
+            chat.style.display = isHidden ? 'flex' : 'none';
+            
+            if (isHidden) {
+                audio.play().then(() => {
+                    document.getElementById('music-status').style.display = 'block';
+                }).catch(() => console.log("Clic necesario para audio"));
+            }
         }
 
-        async function handleSend() {
+        async function handleSendMessage() {
             const input = document.getElementById('userInput');
-            const texto = input.value.trim();
-            if(!texto) return;
+            const text = input.value.trim();
+            if (!text) return;
 
-            renderMsg(texto, 'user-msg');
+            addMsg(text, 'user');
             input.value = "";
 
-            let respuesta = "";
+            let reply = "";
 
-            // 1. Lógica para capturar el nombre
-            if(!nombreUsuario) {
-                nombreUsuario = texto;
-                respuesta = `¡Un placer, **${nombreUsuario}**! ¿Qué te gustaría ordenar? Puedes preguntar por las pizzas, bebidas o la más barata.`;
-            } 
-            // 2. Lógica de Soporte con botón
-            else if(texto.toLowerCase().includes("soporte")) {
-                respuesta = `${nombreUsuario}, te he generado un botón de soporte. <br><button onclick="window.open('https://wa.me/tu_numero')" style="background:blue; color:white; border:none; padding:5px; border-radius:5px; margin-top:5px; cursor:pointer;">Hablar con Humano</button>`;
-            }
-            // 3. Lógica de BD: Pizza más barata
-            else if(texto.toLowerCase().includes("barata") || texto.toLowerCase().includes("económica")) {
-                const { data } = await supabase.from('productos').select('*').eq('categoria', 'pizzas').order('precio', {ascending: true}).limit(1);
-                if(data.length > 0) {
-                    respuesta = `Para ti ${nombreUsuario}, la opción más económica es la **${data[0].nombre}** a solo **$${data[0].precio}**.`;
-                }
-            }
-            // 4. Lógica de Menú
-            else if(texto.toLowerCase().includes("pizzas") || texto.toLowerCase().includes("menú")) {
-                const { data } = await supabase.from('productos').select('nombre').eq('categoria', 'pizzas');
-                const lista = data.map(p => p.nombre).join(", ");
-                respuesta = `Claro ${nombreUsuario}, nuestras pizzas son: ${lista}.`;
-            }
-            // 5. Fallback (Chiste/Error)
-            else {
-                respuesta = `No te entendí muy bien, ${nombreUsuario}... 😅 pero si tienes hambre, ¡pide una pizza!`;
+            // Lógica inteligente sin romper el diseño
+            if (!user_name) {
+                user_name = text;
+                reply = `¡Mucho gusto, **${user_name}**! ¿Qué te gustaría saber hoy?`;
+            } else if (text.toLowerCase().includes("barata")) {
+                const { data } = await supabase.from('productos').select('*').order('precio', {ascending: true}).limit(1);
+                reply = data.length > 0 ? `La más económica es la ${data[0].nombre} a $${data[0].precio}` : "No tengo precios ahora.";
+            } else if (text.toLowerCase().includes("soporte")) {
+                reply = `Claro ${user_name}, aquí tienes el botón de soporte: <br><button onclick="alert('Llamando a soporte...')">Contactar</button>`;
+            } else {
+                reply = `${user_name}, ¿quieres que te cuente un chiste o prefieres ver el menú?`;
             }
 
-            setTimeout(() => renderMsg(respuesta, 'bot-msg'), 500);
+            setTimeout(() => addMsg(reply, 'bot'), 600);
         }
 
-        function renderMsg(text, tipo) {
-            const container = document.getElementById('chat-messages');
+        function enviarRapido(txt) {
+            document.getElementById('userInput').value = txt;
+            handleSendMessage();
+        }
+
+        function addMsg(txt, type) {
+            const box = document.getElementById('chatMsgs');
             const div = document.createElement('div');
-            div.className = `msg ${tipo}`;
-            div.innerHTML = text;
-            container.appendChild(div);
-            container.scrollTop = container.scrollHeight;
+            div.className = `message ${type}`;
+            div.innerHTML = txt;
+            box.appendChild(div);
+            box.scrollTop = box.scrollHeight;
         }
     </script>
 </body>
