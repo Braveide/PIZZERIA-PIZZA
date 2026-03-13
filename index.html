@@ -20,184 +20,187 @@
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
     <style>
-
-        /* ===================== CHATBOT ===================== */
+        /* ===================== CHATBOT - FREDDY'S RESPONDE VA ===================== */
+        @keyframes pulseBot {
+            0%,100% { box-shadow: 0 0 0 0 rgba(255,0,128,0.5), 5px 5px 0px #000; }
+            50%      { box-shadow: 0 0 0 10px rgba(255,0,128,0), 5px 5px 0px #000; }
+        }
+        @keyframes slideInUp {
+            from { opacity:0; transform: translateY(20px); }
+            to   { opacity:1; transform: translateY(0); }
+        }
+        @keyframes bounceDot {
+            0%,60%,100% { transform: translateY(0); }
+            30% { transform: translateY(-7px); }
+        }
+        @keyframes rainbowBorder {
+            0%   { border-color: #ff0080; }
+            25%  { border-color: #ff6b00; }
+            50%  { border-color: #ffe000; }
+            75%  { border-color: #00e5ff; }
+            100% { border-color: #ff0080; }
+        }
 
         #chatbotContainer {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 5000;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 10px;
+            position: fixed; bottom: 20px; right: 20px;
+            z-index: 5000; display: flex; flex-direction: column;
+            align-items: flex-end; gap: 12px;
         }
 
         #chatbotToggle {
-            width: 64px;
-            height: 64px;
-            border-radius: 50%;
-            background: #ff6b00;
-            border: 3px solid #000;
-            font-size: 28px;
-            cursor: pointer;
-            box-shadow: 5px 5px 0px #000;
-            transition: 0.2s;
+            width: 68px; height: 68px; border-radius: 50%;
+            background: linear-gradient(135deg, #ff0080, #ff6b00);
+            border: 3px solid #000; font-size: 30px;
+            cursor: pointer; animation: pulseBot 2s infinite;
+            transition: 0.2s; position: relative;
         }
-        #chatbotToggle:hover { transform: scale(1.1) rotate(-10deg); }
+        #chatbotToggle:hover { transform: scale(1.15) rotate(-15deg); }
+        #chatNotif {
+            position: absolute; top: -4px; right: -4px;
+            background: #ffe000; color: #000; border: 2px solid #000;
+            border-radius: 50%; width: 20px; height: 20px;
+            font-size: 10px; font-weight: 900;
+            display: flex; align-items: center; justify-content: center;
+        }
 
         #chatbotBox {
-            display: none;
-            width: 330px;
-            height: 460px;
-            background: white;
-            border: 4px solid #000;
-            border-radius: 15px;
-            box-shadow: 8px 8px 0px #000;
-            flex-direction: column;
-            overflow: hidden;
+            display: none; width: 340px; height: 500px;
+            background: #0a0a0a; border: 4px solid #ff0080;
+            border-radius: 18px; box-shadow: 8px 8px 0px #ff0080;
+            flex-direction: column; overflow: hidden;
+            animation: slideInUp 0.3s ease-out;
+            animation: rainbowBorder 3s linear infinite;
         }
 
         .chat-header {
-            background: #111;
-            color: #fff;
+            background: linear-gradient(90deg, #ff0080, #ff6b00, #ffe000);
             padding: 10px 14px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            display: flex; justify-content: space-between; align-items: center;
         }
         .chat-header-info { display: flex; align-items: center; gap: 8px; }
         .chat-avatar {
-            width: 34px; height: 34px;
-            background: #ff6b00;
-            border-radius: 50%;
-            border: 2px solid #fff;
+            width: 38px; height: 38px;
+            background: #000; border-radius: 50%;
+            border: 3px solid #fff;
             display: flex; align-items: center; justify-content: center;
-            font-size: 17px;
+            font-size: 20px; flex-shrink: 0;
         }
-        .chat-title { font-weight: 700; font-size: 13px; letter-spacing: 1px; }
-        .chat-status { font-size: 10px; color: #ff6b00; letter-spacing: 2px; }
-
+        .chat-title { font-weight: 900; font-size: 12px; letter-spacing: 1px; color: #000; text-transform: uppercase; }
+        .chat-subtitle { font-size: 9px; color: #000; opacity: 0.8; letter-spacing: 1px; }
         #clearChat {
-            background: none; border: none; color: #fff;
-            cursor: pointer; opacity: 0.6; font-size: 16px;
+            background: #000; border: 2px solid #fff; color: #fff;
+            cursor: pointer; font-size: 12px; border-radius: 6px;
+            padding: 4px 8px; font-weight: 900;
         }
-        #clearChat:hover { opacity: 1; }
+        #clearChat:hover { background: #fff; color: #000; }
+
+        /* Preguntas de cajón */
+        .quick-questions {
+            background: #111; padding: 8px 10px;
+            display: flex; gap: 6px; flex-wrap: wrap;
+            border-bottom: 2px solid #ff0080;
+        }
+        .quick-btn {
+            background: #1a1a1a; color: #ff0080; border: 1.5px solid #ff0080;
+            border-radius: 20px; padding: 5px 10px; font-size: 10px;
+            font-weight: 900; cursor: pointer; transition: 0.15s;
+            white-space: nowrap;
+        }
+        .quick-btn:hover { background: #ff0080; color: #000; transform: scale(1.05); }
 
         #chatMessages {
-            flex: 1;
-            padding: 12px;
-            overflow-y: auto;
-            font-size: 13px;
-            background: #fdf2e9;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
+            flex: 1; padding: 12px; overflow-y: auto; font-size: 13px;
+            background: #0a0a0a;
+            display: flex; flex-direction: column; gap: 10px;
         }
+        #chatMessages::-webkit-scrollbar { width: 4px; }
+        #chatMessages::-webkit-scrollbar-track { background: #1a1a1a; }
+        #chatMessages::-webkit-scrollbar-thumb { background: #ff0080; border-radius: 2px; }
 
-        .message-user { text-align: right; }
+        .message-user { text-align: right; animation: slideInUp 0.2s; }
         .message-user span {
-            background: #000;
-            color: #fff;
-            border-radius: 14px 14px 4px 14px;
-            padding: 9px 13px;
-            display: inline-block;
-            max-width: 80%;
-            word-wrap: break-word;
+            background: linear-gradient(135deg, #ff0080, #ff6b00);
+            color: #fff; border-radius: 18px 18px 4px 18px;
+            padding: 10px 14px; display: inline-block;
+            max-width: 82%; word-wrap: break-word; font-weight: 600;
+            border: 2px solid #000;
         }
 
-        .message-bot {
-            background: white;
-            border: 2px solid #000;
-            border-left: 4px solid #ff6b00;
-            border-radius: 4px 14px 14px 14px;
-            padding: 10px 12px;
-            font-family: 'Courier New', monospace;
-            max-width: 90%;
-            word-wrap: break-word;
+        .message-bot { animation: slideInUp 0.2s; max-width: 88%; }
+        .message-bot-bubble {
+            background: #1a1a1a; color: #fff;
+            border: 2px solid #ff0080; border-left: 5px solid #ffe000;
+            border-radius: 4px 18px 18px 18px;
+            padding: 10px 13px; font-family: 'Courier New', monospace;
+            word-wrap: break-word; line-height: 1.5;
         }
         .message-bot-label {
-            font-size: 10px;
-            color: #ff6b00;
-            font-weight: 900;
-            letter-spacing: 1px;
-            margin-bottom: 4px;
+            font-size: 9px; color: #ffe000; font-weight: 900;
+            letter-spacing: 2px; margin-bottom: 5px; text-transform: uppercase;
         }
 
-        .typing-indicator { display: flex; gap: 5px; padding: 4px 2px; }
-        .typing-indicator span {
-            width: 8px; height: 8px;
-            background: #ff6b00;
-            border-radius: 50%;
-            animation: bounce 1s infinite;
+        .typing-bubble {
+            background: #1a1a1a; border: 2px solid #ff0080; border-left: 5px solid #ffe000;
+            border-radius: 4px 18px 18px 18px; padding: 12px 16px;
+            display: inline-flex; gap: 6px; align-items: center;
         }
-        .typing-indicator span:nth-child(2) { animation-delay: 0.15s; }
-        .typing-indicator span:nth-child(3) { animation-delay: 0.3s; }
-        @keyframes bounce {
-            0%,60%,100% { transform: translateY(0); }
-            30% { transform: translateY(-6px); }
+        .typing-bubble span {
+            width: 8px; height: 8px; background: #ff0080;
+            border-radius: 50%; animation: bounceDot 1s infinite;
         }
+        .typing-bubble span:nth-child(2) { animation-delay: 0.15s; background: #ff6b00; }
+        .typing-bubble span:nth-child(3) { animation-delay: 0.3s; background: #ffe000; }
 
         .chat-link-btn {
-            display: inline-block;
-            margin-top: 8px;
-            background: #ff6b00;
-            color: white;
-            border: 2px solid #000;
-            padding: 6px 14px;
-            border-radius: 8px;
-            font-weight: 900;
-            font-size: 11px;
-            cursor: pointer;
-            box-shadow: 3px 3px 0px #000;
+            display: inline-block; margin-top: 8px;
+            background: linear-gradient(90deg, #ff0080, #ff6b00);
+            color: #fff; border: 2px solid #000;
+            padding: 7px 16px; border-radius: 20px;
+            font-weight: 900; font-size: 11px; cursor: pointer;
+            box-shadow: 3px 3px 0px #000; letter-spacing: 1px;
             text-transform: uppercase;
-            letter-spacing: 1px;
         }
-        .chat-link-btn:hover { background: #000; color: #ff6b00; }
+        .chat-link-btn:hover { background: #ffe000; color: #000; }
+
+        .chat-product-card {
+            background: #222; border: 2px solid #ff6b00;
+            border-radius: 12px; padding: 10px; margin-top: 8px;
+        }
+        .chat-product-name { color: #ffe000; font-weight: 900; font-size: 13px; }
+        .chat-product-price { color: #ff0080; font-size: 16px; font-weight: 900; }
+        .chat-product-desc { color: #aaa; font-size: 11px; margin-top: 2px; }
 
         .chat-buttons {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 6px;
-            padding: 8px;
-            background: white;
-            border-top: 2px solid #000;
+            display: grid; grid-template-columns: 1fr 1fr;
+            gap: 6px; padding: 8px 10px;
+            background: #111; border-top: 2px solid #ff0080;
         }
         .chat-buttons button {
-            border: 2px solid #000;
-            padding: 8px 6px;
-            font-weight: 900;
-            cursor: pointer;
-            border-radius: 8px;
-            font-size: 11px;
-            letter-spacing: 0.5px;
-            transition: 0.15s;
+            border: 2px solid #000; padding: 9px 6px;
+            font-weight: 900; cursor: pointer; border-radius: 10px;
+            font-size: 11px; letter-spacing: 0.5px; transition: 0.15s;
+            text-transform: uppercase;
         }
-        .chat-btn-primary { background: #ff6b00; color: white; }
-        .chat-btn-dark    { background: #000;    color: #ff6b00; }
-        .chat-buttons button:hover { transform: translateY(-2px); box-shadow: 2px 2px 0px #000; }
+        .cb1 { background: linear-gradient(90deg,#ff0080,#ff6b00); color:#fff; }
+        .cb2 { background: linear-gradient(90deg,#ff6b00,#ffe000); color:#000; }
+        .cb3 { background: linear-gradient(90deg,#ffe000,#00e5ff); color:#000; }
+        .cb4 { background: linear-gradient(90deg,#00e5ff,#a855f7); color:#fff; }
+        .chat-buttons button:hover { transform: translateY(-2px) scale(1.03); box-shadow: 3px 3px 0px #000; }
 
-        .chat-input { display: flex; border-top: 2px solid #000; }
+        .chat-input { display: flex; border-top: 2px solid #ff0080; background: #111; }
         .chat-input input {
-            flex: 1; border: none;
-            padding: 11px 13px;
-            font-size: 13px;
-            background: #fdf2e9;
-            outline: none;
+            flex: 1; border: none; padding: 12px 14px; font-size: 13px;
+            background: #1a1a1a; color: #fff; outline: none;
         }
+        .chat-input input::placeholder { color: #555; }
         .chat-input button {
-            width: 52px; border: none;
-            border-left: 2px solid #000;
-            background: #ff6b00;
-            color: white;
-            cursor: pointer;
-            font-size: 18px;
-            transition: 0.15s;
+            width: 54px; border: none; border-left: 2px solid #ff0080;
+            background: linear-gradient(135deg,#ff0080,#ff6b00);
+            color: white; cursor: pointer; font-size: 20px; transition: 0.15s;
         }
-        .chat-input button:hover { background: #000; }
+        .chat-input button:hover { background: #ffe000; color: #000; }
 
-        /* ===================== ANIMACIONES ===================== */
+        /* ===================== ANIMACIONES GLOBALES ===================== */
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(30px); }
             to   { opacity: 1; transform: translateY(0); }
@@ -213,20 +216,15 @@
 
         /* ===================== HEADER ===================== */
         .header {
-            background: #fff;
-            padding: 15px 25px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 4px solid #000;
-            position: sticky; top: 0; z-index: 1000;
+            background: #fff; padding: 15px 25px;
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 4px solid #000; position: sticky; top: 0; z-index: 1000;
         }
         .logo-container { display: flex; align-items: center; gap: 12px; text-decoration: none; }
         .logo-img { height: 45px; width: auto; transition: 0.3s; }
         .logo-text { font-family: 'Archivo Black', sans-serif; font-size: 22px; color: #ff4500; text-shadow: 2px 2px 0px #000; }
         .header-right { display: flex; gap: 15px; align-items: center; }
 
-        /* ===================== BOTONES CIRCULARES ===================== */
         .cart-btn {
             background: #fff; border: 3px solid #000; color: #000;
             width: 48px; height: 48px; border-radius: 50%; cursor: pointer;
@@ -235,7 +233,6 @@
             box-shadow: 3px 3px 0px #000; transition: 0.3s;
         }
         .cart-btn:hover { background: #ff6b00; transform: scale(1.1); color: #fff; }
-
         .cart-badge {
             position: absolute; top: -5px; right: -5px;
             background-color: #ff3d00; color: #fff; border: 2px solid #000;
@@ -245,7 +242,7 @@
             box-shadow: 2px 2px 0px #000; z-index: 10;
         }
 
-        /* ===================== DROPDOWN PERFIL ===================== */
+        /* ===================== DROPDOWN ===================== */
         .user-dropdown {
             display: none; position: absolute; top: 60px; right: 0;
             background: white; border: 4px solid #000; box-shadow: 8px 8px 0px #000;
@@ -253,11 +250,9 @@
             animation: slideDown 0.3s ease-out;
         }
         .user-dropdown.active { display: block; }
-
         .user-info-box { text-align: center; padding-bottom: 15px; border-bottom: 2px solid #eee; margin-bottom: 15px; }
         .dropdown-avatar { width: 65px; height: 65px; border-radius: 50%; border: 3px solid #000; margin: 0 auto 10px; object-fit: cover; display: block; }
         .user-role-badge { font-size: 10px; font-weight: 900; color: #ff6b00; text-transform: uppercase; letter-spacing: 1px; margin-top: 5px; }
-
         .profile-menu-link {
             display: flex; align-items: center; gap: 10px;
             padding: 12px; border-radius: 10px; text-decoration: none;
@@ -267,7 +262,6 @@
         .profile-menu-link:hover { background: #ff6b00; color: #fff; transform: translateX(5px); }
         .admin-link { background: #000; color: #fff; }
         .admin-link:hover { background: #333; color: #ff6b00; }
-
         .logout-btn {
             width: 100%; padding: 10px; margin-top: 10px;
             background: none; border: none; color: #ff3d00;
@@ -276,7 +270,7 @@
         }
         .logout-btn:hover { background: #fff1f1; }
 
-        /* ===================== HERO & SECCIONES ===================== */
+        /* ===================== HERO ===================== */
         .hero-swiper { width: 100%; min-height: 500px; border-bottom: 5px solid #000; background-image: url('imagenes/carrusel.png'); background-size: cover; background-position: center; }
         .swiper-slide { display: flex; align-items: center; justify-content: center; padding: 20px; }
         .slide-container { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 40px; width: 100%; max-width: 1100px; background: rgba(255,255,255,0.15); backdrop-filter: blur(8px); padding: 30px; border-radius: 30px; border: 2px solid rgba(255,255,255,0.3); animation: fadeInUp 0.8s ease-out; }
@@ -284,9 +278,9 @@
         .slide-text p { font-size: clamp(14px, 2vw, 18px); font-weight: 600; color: #fff; margin-bottom: 25px; line-height: 1.4; text-shadow: 1px 1px 5px rgba(0,0,0,0.7); }
         .slide-img { max-height: 350px; width: auto; max-width: 100%; border-radius: 40px; box-shadow: 0 15px 35px rgba(0,0,0,0.4); border: 5px solid #fff; }
 
+        /* ===================== CARDS ===================== */
         .container { max-width: 1200px; margin: 0 auto; padding: 50px 20px; }
         .section-title { font-family: 'Archivo Black', sans-serif; text-align: center; margin-bottom: 40px; font-size: clamp(24px, 5vw, 35px); text-transform: uppercase; text-shadow: 3px 3px 0px #ff6b00; color: #000; }
-
         .grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px; }
         .card { background: white; border-radius: 20px; border: 3px solid #000; overflow: hidden; box-shadow: 6px 6px 0px #000; transition: 0.3s; display: flex; flex-direction: column; animation: fadeInUp 0.8s ease-out; }
         .card:hover { transform: translateY(-10px); box-shadow: 10px 10px 0px #ff6b00; }
@@ -295,10 +289,10 @@
         .card-info h3 { font-family: 'Archivo Black', sans-serif; font-size: 20px; margin-bottom: 10px; text-transform: uppercase; }
         .card-footer { display: flex; justify-content: space-between; align-items: center; padding: 0 25px 25px; }
         .card-price { color: #ff6b00; font-size: 26px; font-weight: 900; text-shadow: 1.5px 1.5px 0px #000; }
-
         .add-btn { background: #fff; color: #000; border: 3px solid #000; padding: 12px 20px; border-radius: 15px; cursor: pointer; font-weight: 900; transition: 0.2s; box-shadow: 4px 4px 0px #000; text-transform: uppercase; font-size: 13px; }
         .add-btn:hover { transform: scale(1.05) translateY(-2px); background: #ff6b00; color: #fff; box-shadow: 6px 6px 0px #000; }
 
+        /* ===================== FOOTER ===================== */
         .main-footer { background-color: #fff; border-top: 5px solid #000; padding: 40px 20px; margin-top: 50px; }
         .footer-grid { max-width: 800px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; text-align: center; }
         .footer-col h4 { font-family: 'Archivo Black', sans-serif; font-size: 16px; margin-bottom: 15px; text-transform: uppercase; }
@@ -316,40 +310,57 @@
 </head>
 <body>
 
-    <!-- ===================== CHATBOT ===================== -->
+    <!-- ===================== FREDDY'S RESPONDE VA ===================== -->
     <div id="chatbotContainer">
-
         <div id="chatbotBox">
             <div class="chat-header">
                 <div class="chat-header-info">
                     <div class="chat-avatar">🐻</div>
                     <div>
-                        <div class="chat-title">FREDDYBOT</div>
-                        <div class="chat-status">● EN LÍNEA</div>
+                        <div class="chat-title">🔥 Freddy's Responde Va</div>
+                        <div class="chat-subtitle">● Tu cuate animatrónico</div>
                     </div>
                 </div>
-                <button id="clearChat">✕</button>
+                <button id="clearChat">🗑 Limpiar</button>
+            </div>
+
+            <!-- Preguntas de cajón -->
+            <div class="quick-questions">
+                <button class="quick-btn" onclick="quickAsk('¿Cuáles son sus pizzas?')">🍕 El menú</button>
+                <button class="quick-btn" onclick="quickAsk('¿Cuánto cuestan?')">💰 Precios</button>
+                <button class="quick-btn" onclick="quickAsk('¿Cómo los contacto?')">📞 Contacto</button>
+                <button class="quick-btn" onclick="quickAsk('¿Dónde están?')">📍 Ubicación</button>
+                <button class="quick-btn" onclick="quickAsk('¿Tienen promos?')">🎉 Promos</button>
             </div>
 
             <div id="chatMessages"></div>
 
             <div class="chat-buttons">
-                <button class="chat-btn-primary" onclick="goPage('Conta.html')">Contáctanos</button>
-                <button class="chat-btn-primary" onclick="goPage('reporte.html')">Reportar fallas</button>
-                <button class="chat-btn-primary" onclick="goPage('catalogo.html')">Ver menú</button>
-                <button class="chat-btn-dark"    onclick="goPage('nosotros.html')">Nosotros</button>
+                <button class="cb1" onclick="goPage('contacto.html')">📞 Contáctanos</button>
+                <button class="cb2" onclick="goPage('reporte.html')">🛠 Reportar</button>
+                <button class="cb3" onclick="goPage('catalogo.html')">🍕 Ver menú</button>
+                <button class="cb4" onclick="goPage('nosotros.html')">🐻 Nosotros</button>
             </div>
 
             <div class="chat-input">
-                <input id="chatInput" placeholder="Escribe tu pregunta..." />
+                <input id="chatInput" placeholder="Pregúntale a Freddy, wey..." />
                 <button onclick="sendMessage()">➤</button>
             </div>
         </div>
 
-        <button id="chatbotToggle">🐻</button>
-
+        <button id="chatbotToggle">
+            🐻
+            <div id="chatNotif">1</div>
+        </button>
     </div>
-    <!-- ===================== FIN CHATBOT ===================== -->
+
+    <!-- Audios -->
+    <audio id="chatSound">
+        <source src="https://www.myinstants.com/media/sounds/freddys-honk-nose.mp3">
+    </audio>
+    <audio id="chatMusic" loop>
+        <source src="https://www.myinstants.com/media/sounds/fnaf-sister-location-night-start.mp3">
+    </audio>
 
     <header class="header">
         <a href="index.html" class="logo-container">
@@ -359,7 +370,6 @@
         <div class="header-right">
             <div style="position: relative;" id="userMenuContainer">
                 <div class="cart-btn" id="userBtn">👤</div>
-
                 <div class="user-dropdown" id="userDropdown">
                     <div class="user-info-box">
                         <img id="userAvatarDropdown" src="" class="dropdown-avatar" style="display: none;">
@@ -373,7 +383,6 @@
                     <button onclick="cerrarSesion()" class="logout-btn">Cerrar Sesión</button>
                 </div>
             </div>
-
             <a href="carrito.html" class="cart-btn">
                 🛒<span id="cartBadge" class="cart-badge" style="display: none;">0</span>
             </a>
@@ -454,28 +463,58 @@
     <footer class="main-footer">
         <div class="footer-grid">
             <div class="footer-col"><h4>Menú</h4><a href="catalogo.html">Pizzas</a><a href="catalogo.html">Promos</a></div>
-            <div class="footer-col"><h4>Nosotros</h4><a href="contacto.html">Historia</a></div>
-            <div class="footer-col"><h4>Contacto</h4><a href="Conta.html">Atención</a></div>
+            <div class="footer-col"><h4>Nosotros</h4><a href="nosotros.html">Historia</a></div>
+            <div class="footer-col"><h4>Contacto</h4><a href="contacto.html">Atención</a></div>
         </div>
         <div class="copy">© 2026 FREDDY'S PIZZA. TODOS LOS DERECHOS RESERVADOS.</div>
     </footer>
 
     <script>
-        /* =========================================
-           FREDDYBOT V4.0 — POWERED BY CLAUDE AI
-           ========================================= */
+        /* =============================================
+           FREDDY'S RESPONDE VA — Motor de Respuestas
+           ============================================= */
+
+        const SUPABASE_URL = 'https://vndfmcxlifcwzpjbphoy.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZuZGZtY3hsaWZjd3pwamJwaG95Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3OTc3MDIsImV4cCI6MjA4NzM3MzcwMn0.OkQ6aSZsHkyLMgfT-x0w3beJ3Ey95smEujmhT7ZfjuY';
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         let chatOpen = false;
+        let productosDB = []; // Cache de productos desde Supabase
 
         const toggleBtn   = document.getElementById("chatbotToggle");
         const chatBox     = document.getElementById("chatbotBox");
         const messagesDiv = document.getElementById("chatMessages");
         const inputEl     = document.getElementById("chatInput");
+        const sound       = document.getElementById("chatSound");
+        const music       = document.getElementById("chatMusic");
+        const notif       = document.getElementById("chatNotif");
 
+        // ── Cargar productos desde Supabase al iniciar ──
+        async function cargarProductos() {
+            try {
+                const { data } = await supabaseClient
+                    .from('productos')
+                    .select('nombre, precio, descripcion, categoria')
+                    .eq('disponible', true);
+                if (data && data.length > 0) productosDB = data;
+            } catch(e) {
+                // Si falla, usamos los datos hardcoded de respaldo
+            }
+        }
+
+        // ── Toggle chatbot ──
         toggleBtn.onclick = () => {
             chatOpen = !chatOpen;
             chatBox.style.display = chatOpen ? "flex" : "none";
-            if (chatOpen && messagesDiv.innerHTML === "") initChat();
+            notif.style.display = "none";
+            if (chatOpen) {
+                music.volume = 0.1;
+                music.play().catch(() => {});
+                if (messagesDiv.innerHTML === "") initChat();
+            } else {
+                music.pause();
+                music.currentTime = 0;
+            }
         };
 
         document.getElementById("clearChat").onclick = () => {
@@ -483,15 +522,206 @@
             initChat();
         };
 
-        function initChat() {
-            const nombre = document.getElementById("userName")?.textContent?.trim() || "amigo";
-            addBotMessage(`¡Hola, ${nombre}! 🐻 Soy Freddy, el asistente de Freddy's Pizza. Puedo ayudarte con el menú, precios, horarios o lo que necesites. ¿Qué se te ofrece?`);
+        function playClick() {
+            sound.currentTime = 0;
+            sound.play().catch(() => {});
         }
 
+        // ── Mensaje de bienvenida ──
+        function initChat() {
+            const nombre = document.getElementById("userName")?.textContent?.trim() || "wey";
+            const saludos = [
+                `¡Ey ey ey, ${nombre}! 🐻🔥 ¡Ya llegó Freddy, tu cuate de las pizzas! ¿Qué se te antoja o en qué te echo la mano?`,
+                `¡Órale ${nombre}! 🍕 Soy Freddy Fazbear, pero aquí todos me dicen el Rey de la Pizza 👑 ¿Qué onda, en qué te ayudo?`,
+                `¡Arre ${nombre}! 🐻 El mero mero Freddy a tus órdenes. ¿Vienes por pizza o qué pex?`
+            ];
+            addBotMessage(saludos[Math.floor(Math.random() * saludos.length)]);
+        }
+
+        // ── Preguntas de cajón ──
+        function quickAsk(pregunta) {
+            playClick();
+            addUserMessage(pregunta);
+            setTimeout(() => procesarRespuesta(pregunta), 500);
+        }
+
+        // ── Enviar mensaje ──
+        function sendMessage() {
+            const text = inputEl.value.trim();
+            if (!text) return;
+            playClick();
+            inputEl.value = "";
+            addUserMessage(text);
+            showTyping();
+            setTimeout(() => {
+                removeTyping();
+                procesarRespuesta(text);
+            }, 800 + Math.random() * 600);
+        }
+
+        // ══════════════════════════════════════════
+        //   MOTOR DE RESPUESTAS — PALABRAS CLAVE
+        // ══════════════════════════════════════════
+        function procesarRespuesta(texto) {
+            const msg = texto.toLowerCase()
+                .normalize("NFD").replace(/[\u0300-\u036f]/g, ""); // quita acentos
+
+            // ── Saludos ──
+            if (/^(hola|buenas|ey|arre|que onda|qué onda|q onda|hey|hello|hi|buenas tardes|buenos dias|buenas noches|wey|wee|oye)/.test(msg)) {
+                const r = [
+                    "¡Ey ey! 🐻🔥 ¿Qué onda? ¡Aquí Freddy, el animatrónico más chido de la pizzería! ¿Qué necesitas, cuate?",
+                    "¡Órale! 👊 ¡Qué bueno que jalaste! ¿En qué te echo la mano hoy?",
+                    "¡Arre! 🍕 ¡Ya llegaste! Freddy a tus órdenes, ¿qué se te antoja?"
+                ];
+                addBotMessage(random(r)); return;
+            }
+
+            // ── Menú / Pizzas desde Supabase o respaldo ──
+            if (/pizza|menu|menú|carta|comer|antoj|especialidad|que tienen|que venden|productos/.test(msg)) {
+                mostrarProductos(); return;
+            }
+
+            // ── Precios ──
+            if (/precio|cuanto|cuánto|cuesta|vale|cobran|dinero|lana|feria|billete/.test(msg)) {
+                mostrarPrecios(); return;
+            }
+
+            // ── Pepperoni específico ──
+            if (/pepperoni|pepe|pepper/.test(msg)) {
+                addBotMessage("🍕 ¡La Pepperoni Premium está de pelos, wey! Pepperoni de corte grueso, extra queso y esa mezcla secreta que te vuela la cabeza.");
+                addProductCard("Pepperoni Premium", "$121.99", "Corte grueso, extra queso 🧀🔥"); return;
+            }
+
+            // ── Margherita ──
+            if (/margherita|margarita|marg|albahaca|italiana/.test(msg)) {
+                addBotMessage("🍕 ¡La Margherita es para los que saben lo que es bueno! Mozzarella fresca de búfala y albahaca recién cortada. Bien clásica pero bien buena.");
+                addProductCard("Margherita", "$158.99", "Mozzarella búfala + albahaca 🌿"); return;
+            }
+
+            // ── Suprema ──
+            if (/suprema|supreme|pimiento|cebolla|champinon|champiñon|verdura/.test(msg)) {
+                addBotMessage("🍕 ¡La Suprema es para los que quieren el desmadre completo! Pimientos, cebolla y champiñones encima. ¡Está cabrona buena!");
+                addProductCard("Pizza Suprema", "$166.99", "Pimientos + cebolla + champiñones 🌶️"); return;
+            }
+
+            // ── Contacto ──
+            if (/contacto|contactar|hablar|llamar|telefono|teléfono|whatsapp|numero|número|comunicar/.test(msg)) {
+                addBotMessage("📞 ¡Claro que sí, wey! Para hablar con mi raza de Freddy's, aquí puedes contactarlos:");
+                addLinkBtn("Ir a Contacto", "contacto.html"); return;
+            }
+
+            // ── Reportar ──
+            if (/reportar|reporte|falla|error|problema|queja|mal|bug|no sirve/.test(msg)) {
+                addBotMessage("🛠️ ¡Noo, qué gacho! Si algo salió chueco, aquí puedes reportarlo y mi raza lo arregla en chinga:");
+                addLinkBtn("Reportar ahorita", "reporte.html"); return;
+            }
+
+            // ── Nosotros / historia ──
+            if (/quien|quién|son ustedes|nosotros|historia|freddy|animatronico|animatrónico|como nacieron/.test(msg)) {
+                addBotMessage("🐻 ¡Somos Freddy's Pizza, wey! La pizzería más chida del barrio. Nacimos con ganas de darle de comer rico a toda la raza. ¡Aquí puedes saber más:");
+                addLinkBtn("Ver quiénes somos", "nosotros.html"); return;
+            }
+
+            // ── Pedido / orden ──
+            if (/pedir|ordenar|orden|pedido|quiero|me das|me pones|lleva|domicilio|delivery|envio|envío/.test(msg)) {
+                addBotMessage("🛵 ¡Arre! Para hacer tu pedido entra al catálogo y le das en 'Agregar'. Está bien fácil, ni se te va a complicar:");
+                addLinkBtn("Ir al catálogo", "catalogo.html"); return;
+            }
+
+            // ── Promos / descuentos ──
+            if (/promo|promocion|promoción|descuento|oferta|2x1|gratis|barato|deal/.test(msg)) {
+                addBotMessage("🎉 ¡Ey! Las promos están en el catálogo, wey. A veces hay deals bien chidos, no te los pierdas:");
+                addLinkBtn("Ver promos", "catalogo.html"); return;
+            }
+
+            // ── Horarios ──
+            if (/horario|hora|abierto|cierran|cuando abren|cuándo abren|a qué hora|disponible/.test(msg)) {
+                addBotMessage("🕒 ¡Ey! Por los horarios exactos te mando pa' la página de contacto porque a veces cambian, wey. ¡Ahí encuentras todo:");
+                addLinkBtn("Ver horarios / contacto", "contacto.html"); return;
+            }
+
+            // ── Ubicación ──
+            if (/donde|dónde|ubicacion|ubicación|direccion|dirección|mapa|local|sucursal|estan/.test(msg)) {
+                addBotMessage("📍 ¡Para saber dónde encontrarnos, wey, entra a contacto! Ahí está el mapa y todo:");
+                addLinkBtn("Ver ubicación", "contacto.html"); return;
+            }
+
+            // ── Insultos / groserías → respuesta naca pero positiva ──
+            if (/idiota|estupido|tonto|malo|feo|odio|asco|basura|mierda|puto|puta/.test(msg)) {
+                const r = [
+                    "¡Ey ey, cálmate! 😅 Aquí somos familia, wey. ¿Qué te hice? ¡Mejor cuéntame qué pizza se te antoja y ya armamos la paz! 🍕",
+                    "¡Órale pues! 😂 No te enojes, cuate. ¿Te mandaron con hambre? ¡Una buena pizza te regresa el buen humor, confía en Freddy!",
+                    "¡Jajaja wey! 😂 No te me pongas así. Freddy te quiere aunque no lo creas 🐻 ¿Qué se te ofrece?"
+                ];
+                addBotMessage(random(r)); return;
+            }
+
+            // ── Gracias ──
+            if (/gracias|gracia|thank|cheers|de nada|ok cool|perfecto|excelente/.test(msg)) {
+                const r = [
+                    "¡De nada, wey! 🐻 Para eso estoy. ¿Algo más en que te eche la mano?",
+                    "¡Arre! 👊 Freddy siempre a tus órdenes. ¿Algo más?",
+                    "¡Con gusto, cuate! 🔥 ¿Algo más o ya te quedaste a gusto?"
+                ];
+                addBotMessage(random(r)); return;
+            }
+
+            // ── Adios ──
+            if (/adios|adiós|bye|chao|hasta luego|nos vemos|me voy|chau/.test(msg)) {
+                const r = [
+                    "¡Arre! 👋 ¡Cuídate, wey! Vuelve pronto que aquí siempre hay pizza esperándote 🍕",
+                    "¡Hasta luego, cuate! 🐻 Freddy siempre va a estar aquí. ¡No me extrañes mucho!",
+                    "¡Órale, nos vemos! 👊 ¡Regresa con hambre!"
+                ];
+                addBotMessage(random(r)); return;
+            }
+
+            // ── Respuesta genérica naca ──
+            const genericas = [
+                "¡Ey wey! 🤔 No le entendí muy bien, pero aquí Freddy pa' lo que necesites. ¿Me preguntas sobre el menú, precios, pedidos o qué?",
+                "¡Arre! 😅 Esa no me la sabía, cuate. Pero sobre pizzas, precios y pedidos sí soy un chingón. ¿En qué te echo la mano?",
+                "¡Jajaja! 🐻 Freddy tiene sus límites, wey. ¡Pregúntame del menú o de los pedidos y ahí sí te mato!"
+            ];
+            addBotMessage(random(genericas));
+        }
+
+        // ── Mostrar productos desde Supabase o respaldo ──
+        async function mostrarProductos() {
+            let productos = productosDB;
+            if (productos.length === 0) {
+                // Respaldo hardcoded
+                productos = [
+                    { nombre: "Pepperoni Premium", precio: 121.99, descripcion: "Corte grueso y extra queso" },
+                    { nombre: "Pizza Suprema",     precio: 166.99, descripcion: "Pimientos, cebolla y champiñones" },
+                    { nombre: "Margherita",        precio: 158.99, descripcion: "Mozzarella y albahaca fresca" }
+                ];
+            }
+            addBotMessage(`🍕 ¡Órale! Aquí está lo que tenemos, wey. Todo está de pelos:`);
+            productos.slice(0, 5).forEach(p => {
+                addProductCard(p.nombre, `$${Number(p.precio).toFixed(2)}`, p.descripcion || "");
+            });
+            addLinkBtn("Ver catálogo completo 🔥", "catalogo.html");
+        }
+
+        async function mostrarPrecios() {
+            let productos = productosDB;
+            if (productos.length === 0) {
+                productos = [
+                    { nombre: "Pepperoni Premium", precio: 121.99 },
+                    { nombre: "Pizza Suprema",     precio: 166.99 },
+                    { nombre: "Margherita",        precio: 158.99 }
+                ];
+            }
+            const lista = productos.slice(0,5).map(p => `• ${p.nombre}: $${Number(p.precio).toFixed(2)}`).join("\n");
+            addBotMessage(`💰 ¡Te digo los precios ahorita, wey! Aquí van:\n\n${lista}\n\n¡Todo está bien chido de precio!`);
+            addLinkBtn("Ver todo el menú", "catalogo.html");
+        }
+
+        // ── Helpers de UI ──
         function addUserMessage(text) {
             const div = document.createElement("div");
             div.className = "message-user";
-            div.innerHTML = `<span>${text}</span>`;
+            div.innerHTML = `<span>${escapeHtml(text)}</span>`;
             messagesDiv.appendChild(div);
             messagesDiv.scrollTop = messagesDiv.scrollHeight;
         }
@@ -499,17 +729,42 @@
         function addBotMessage(text) {
             const div = document.createElement("div");
             div.className = "message-bot";
-            div.innerHTML = `<div class="message-bot-label">[FREDDY]</div>${text}`;
+            div.innerHTML = `
+                <div class="message-bot-bubble">
+                    <div class="message-bot-label">🐻 FREDDY'S RESPONDE VA</div>
+                    ${escapeHtml(text).replace(/\n/g, '<br>')}
+                </div>`;
             messagesDiv.appendChild(div);
             messagesDiv.scrollTop = messagesDiv.scrollHeight;
             return div;
+        }
+
+        function addProductCard(nombre, precio, desc) {
+            const div = document.createElement("div");
+            div.className = "message-bot";
+            div.innerHTML = `
+                <div class="chat-product-card">
+                    <div class="chat-product-name">🍕 ${nombre}</div>
+                    <div class="chat-product-price">${precio}</div>
+                    <div class="chat-product-desc">${desc}</div>
+                </div>`;
+            messagesDiv.appendChild(div);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        function addLinkBtn(label, url) {
+            const div = document.createElement("div");
+            div.className = "message-bot";
+            div.innerHTML = `<button class="chat-link-btn" onclick="goPage('${url}')">${label} →</button>`;
+            messagesDiv.appendChild(div);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
         }
 
         function showTyping() {
             const div = document.createElement("div");
             div.className = "message-bot";
             div.id = "typingIndicator";
-            div.innerHTML = `<div class="typing-indicator"><span></span><span></span><span></span></div>`;
+            div.innerHTML = `<div class="typing-bubble"><span></span><span></span><span></span></div>`;
             messagesDiv.appendChild(div);
             messagesDiv.scrollTop = messagesDiv.scrollHeight;
         }
@@ -519,74 +774,19 @@
             if (t) t.remove();
         }
 
-        async function sendMessage() {
-            const text = inputEl.value.trim();
-            if (!text) return;
-            inputEl.value = "";
-            addUserMessage(text);
-            showTyping();
-
-            try {
-                const response = await fetch("https://api.anthropic.com/v1/messages", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        model: "claude-sonnet-4-20250514",
-                        max_tokens: 300,
-                        system: `Eres FreddyBot, el asistente virtual de Freddy's Pizza. Eres amigable, un poco gracioso y hablas siempre en español.
-Tienes la personalidad de un animatrónico de Five Nights at Freddy's, pero amable y servicial.
-Información del restaurante:
-- Pizzas: Pepperoni Premium ($121.99), Pizza Suprema ($166.99, pimientos, cebolla y champiñones), Margherita ($158.99, mozzarella y albahaca).
-- Catálogo completo: catalogo.html
-- Contacto / atención: Conta.html
-- Reportar fallas: reporte.html
-- Conócenos: nosotros.html
-Cuando el usuario quiera ir a una sección, responde normalmente Y añade al final EXACTAMENTE: [IR:catalogo.html] o [IR:Conta.html] o [IR:reporte.html] o [IR:nosotros.html] según corresponda.
-Respuestas cortas (máximo 3 oraciones). No uses markdown ni asteriscos.`,
-                        messages: [{ role: "user", content: text }]
-                    })
-                });
-
-                removeTyping();
-                const data = await response.json();
-                let reply = data.content?.[0]?.text || "¡Ups! Tuve un pequeño cortocircuito. Intenta de nuevo 🔧";
-
-                let targetPage = null;
-                const pageMatch = reply.match(/\[IR:([^\]]+)\]/);
-                if (pageMatch) {
-                    targetPage = pageMatch[1];
-                    reply = reply.replace(/\[IR:[^\]]+\]/, "").trim();
-                }
-
-                const msgDiv = addBotMessage(reply);
-                if (targetPage) {
-                    const btn = document.createElement("button");
-                    btn.className = "chat-link-btn";
-                    btn.textContent = "Ir ahora →";
-                    btn.onclick = () => goPage(targetPage);
-                    msgDiv.appendChild(btn);
-                }
-            } catch (e) {
-                removeTyping();
-                addBotMessage("¡Ay, error de sistema! 🛠️ Intenta de nuevo en un momento.");
-            }
-        }
-
-        function goPage(url) { window.location.href = url; }
+        function goPage(url) { playClick(); window.location.href = url; }
+        function random(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+        function escapeHtml(t) { return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
         inputEl.addEventListener("keypress", (e) => { if (e.key === "Enter") sendMessage(); });
 
-        /* =========================================
-           SUPABASE + AUTH
-           ========================================= */
-
-        const SUPABASE_URL = 'https://vndfmcxlifcwzpjbphoy.supabase.co';
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZuZGZtY3hsaWZjd3pwamJwaG95Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3OTc3MDIsImV4cCI6MjA4NzM3MzcwMn0.OkQ6aSZsHkyLMgfT-x0w3beJ3Ey95smEujmhT7ZfjuY';
-        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
+        /* =============================================
+           SUPABASE AUTH
+           ============================================= */
         document.addEventListener('DOMContentLoaded', () => {
             initAuth();
             updateCartBadge();
+            cargarProductos(); // Carga productos al iniciar
             new Swiper('.hero-swiper', {
                 loop: true,
                 autoplay: { delay: 5000 },
@@ -615,24 +815,19 @@ Respuestas cortas (máximo 3 oraciones). No uses markdown ni asteriscos.`,
                     userBtn.innerHTML = `<img src="${foto}" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">`;
                 } else {
                     const inicial = nombre.charAt(0).toUpperCase();
-                    userBtn.innerHTML = `<div style="width:100%; height:100%; background:#ff6b00; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:900; border-radius:50%; font-size:18px;">${inicial}</div>`;
+                    userBtn.innerHTML = `<div style="width:100%;height:100%;background:#ff6b00;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;border-radius:50%;font-size:18px;">${inicial}</div>`;
                 }
 
-                userBtn.onclick = (e) => {
-                    e.stopPropagation();
-                    userDropdown.classList.toggle('active');
-                };
+                userBtn.onclick = (e) => { e.stopPropagation(); userDropdown.classList.toggle('active'); };
 
                 const avatarImg  = document.getElementById('userAvatarDropdown');
                 const initialDiv = document.getElementById('userInitial');
 
                 if (foto) {
-                    avatarImg.src          = foto;
-                    avatarImg.style.display = 'block';
-                    initialDiv.style.display = 'none';
+                    avatarImg.src = foto; avatarImg.style.display = 'block'; initialDiv.style.display = 'none';
                 } else {
-                    avatarImg.style.display  = 'none';
-                    initialDiv.textContent   = nombre.charAt(0).toUpperCase();
+                    avatarImg.style.display = 'none';
+                    initialDiv.textContent = nombre.charAt(0).toUpperCase();
                     initialDiv.style.display = 'flex';
                 }
 
@@ -667,12 +862,8 @@ Respuestas cortas (máximo 3 oraciones). No uses markdown ni asteriscos.`,
             let cart  = JSON.parse(localStorage.getItem('pizzaCart')) || {};
             let total = Object.values(cart).reduce((s, i) => s + i.quantity, 0);
             const badge = document.getElementById('cartBadge');
-            if (total > 0) {
-                badge.style.display = 'flex';
-                badge.textContent   = total;
-            } else {
-                badge.style.display = 'none';
-            }
+            if (total > 0) { badge.style.display = 'flex'; badge.textContent = total; }
+            else { badge.style.display = 'none'; }
         }
 
         window.onclick = (e) => {
