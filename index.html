@@ -20,7 +20,7 @@
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
     <style>
-        /* --- TUS ANIMACIONES ORIGINALES --- */
+        /* --- ANIMACIONES --- */
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
@@ -50,6 +50,7 @@
 
         .header-right { display: flex; gap: 15px; align-items: center; }
 
+        /* --- BOTONES CIRCULARES --- */
         .cart-btn { 
             background: #fff; border: 3px solid #000; color: #000; 
             width: 48px; height: 48px; border-radius: 50%; cursor: pointer; 
@@ -129,31 +130,6 @@
         .footer-col a:hover { color: #ff6b00; }
         .copy { text-align: center; margin-top: 30px; font-size: 13px; font-weight: 900; text-transform: uppercase; border-top: 2px solid #000; padding-top: 20px; }
 
-        /* --- ESTILOS EXCLUSIVOS CHATBOT --- */
-        .fnaf-bot-launcher { position: fixed; bottom: 20px; right: 20px; width: 65px; height: 65px; cursor: pointer; z-index: 3000; transition: 0.3s; }
-        .fnaf-bot-launcher:hover { transform: scale(1.1) rotate(5deg); }
-
-        .fnaf-chat-window {
-            position: fixed; bottom: 100px; right: 20px; width: 340px; height: 480px;
-            background: #fff; border: 4px solid #000; box-shadow: 8px 8px 0px #000;
-            border-radius: 20px; display: none; flex-direction: column; overflow: hidden; z-index: 3000;
-        }
-
-        .fnaf-chat-header { background: #000; color: #ff6b00; padding: 12px; font-family: 'Archivo Black', sans-serif; font-size: 14px; display: flex; justify-content: space-between; align-items: center; }
-        .fnaf-chat-msgs { flex: 1; padding: 15px; overflow-y: auto; background: #fff; display: flex; flex-direction: column; gap: 10px; }
-        
-        .fnaf-msg { padding: 10px 14px; border-radius: 15px; font-size: 13px; line-height: 1.4; border: 2px solid #000; max-width: 85%; }
-        .fnaf-bot { background: #eee; align-self: flex-start; }
-        .fnaf-user { background: #ff6b00; color: #fff; align-self: flex-end; }
-
-        .fnaf-quick-btns { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px; }
-        .fnaf-btn { background: #fff; border: 2px solid #000; padding: 5px 10px; border-radius: 10px; font-size: 11px; font-weight: 900; cursor: pointer; transition: 0.2s; }
-        .fnaf-btn:hover { background: #000; color: #fff; }
-
-        .fnaf-input-area { padding: 10px; border-top: 3px solid #000; display: flex; gap: 5px; background: #f9f9f9; }
-        .fnaf-input-area input { flex: 1; border: 2px solid #000; border-radius: 10px; padding: 8px; outline: none; }
-        .fnaf-send { background: #ff6b00; border: 2px solid #000; border-radius: 10px; width: 40px; cursor: pointer; font-weight: 900; }
-
         @media (max-width: 850px) {
             .slide-container { grid-template-columns: 1fr; text-align: center; }
             .slide-text { order: 2; } 
@@ -172,6 +148,7 @@
         <div class="header-right">
             <div style="position: relative;" id="userMenuContainer">
                 <div class="cart-btn" id="userBtn">👤</div>
+                
                 <div class="user-dropdown" id="userDropdown">
                     <div class="user-info-box">
                         <img id="userAvatarDropdown" src="" class="dropdown-avatar" style="display: none;">
@@ -180,34 +157,18 @@
                         <p id="userEmail" style="font-size:11px; color: #666; word-break: break-all; margin-bottom: 5px;"></p>
                         <p id="userRole" class="user-role-badge"></p>
                     </div>
+                    
                     <div id="adminLinkContainer"></div>
                     <a href="perfil.html" class="profile-menu-link">👤 Mi Perfil</a>
                     <button onclick="cerrarSesion()" class="logout-btn">Cerrar Sesión</button>
                 </div>
             </div>
+
             <a href="carrito.html" class="cart-btn">
                 🛒<span id="cartBadge" class="cart-badge" style="display: none;">0</span>
             </a>
         </div>
     </header>
-
-    <img src="https://cdn-icons-png.flaticon.com/512/1404/1404945.png" class="fnaf-bot-launcher" onclick="toggleFnafChat()">
-    
-    <div id="fnafChat" class="fnaf-chat-window">
-        <div class="fnaf-chat-header">
-            <span>FREDDY'S BOT</span>
-            <span style="cursor:pointer" onclick="limpiarChat()">🗑️</span>
-        </div>
-        <div id="fnafMsgs" class="fnaf-chat-msgs"></div>
-        <div class="fnaf-input-area">
-            <input type="text" id="fnafInput" placeholder="Escribe aquí...">
-            <button class="fnaf-send" onclick="sendFnafMsg()">></button>
-        </div>
-    </div>
-
-    <audio id="fnafMusic" loop>
-        <source src="https://www.myinstants.com/media/sounds/fnaf-1-music-box.mp3" type="audio/mpeg">
-    </audio>
 
     <section class="swiper hero-swiper">
         <div class="swiper-wrapper">
@@ -223,7 +184,22 @@
                     </div>
                 </div>
             </div>
+            <div class="swiper-slide">
+                <div class="slide-container">
+                    <div class="slide-text">
+                        <h1>Clásica <br> Margherita</h1>
+                        <p>Mozzarella fresca de búfala, albahaca recién cortada y el mejor aceite de oliva extra virgen.</p>
+                        <a href="catalogo.html" class="add-btn" style="display: inline-block; text-decoration: none; padding: 15px 25px;">VER CATÁLOGO</a>
+                    </div>
+                    <div class="slide-image-wrapper">
+                        <img src="imagenes/pizza_marg.png" class="slide-img" alt="Pizza">
+                    </div>
+                </div>
+            </div>
         </div>
+        <div class="swiper-button-next" style="color: #fff;"></div>
+        <div class="swiper-button-prev" style="color: #fff;"></div>
+        <div class="swiper-pagination"></div>
     </section>
 
     <div class="container">
@@ -240,12 +216,34 @@
                     <button class="add-btn" onclick="addToCart('Pepperoni Premium', 121.99, 'imagenes/pizza_pepe.png')">AGREGAR</button>
                 </div>
             </div>
+            <div class="card">
+                <img src="imagenes/pizza_suprema.png" class="card-image" alt="Suprema">
+                <div class="card-info">
+                    <h3>Pizza Suprema</h3>
+                    <p>Pimientos, cebolla y champiñones.</p>
+                </div>
+                <div class="card-footer">
+                    <span class="card-price">$166.99</span>
+                    <button class="add-btn" onclick="addToCart('Pizza Suprema', 166.99, 'imagenes/pizza_suprema.png')">AGREGAR</button>
+                </div>
+            </div>
+            <div class="card">
+                <img src="imagenes/pizza_marg.png" class="card-image" alt="Margherita">
+                <div class="card-info">
+                    <h3>Margherita</h3>
+                    <p>Sencillez: mozzarella y albahaca.</p>
+                </div>
+                <div class="card-footer">
+                    <span class="card-price">$158.99</span>
+                    <button class="add-btn" onclick="addToCart('Margherita', 158.99, 'imagenes/pizza_marg.png')">AGREGAR</button>
+                </div>
+            </div>
         </div>
     </div>
 
     <footer class="main-footer">
         <div class="footer-grid">
-            <div class="footer-col"><h4>Menú</h4><a href="catalogo.html">Pizzas</a></div>
+            <div class="footer-col"><h4>Menú</h4><a href="catalogo.html">Pizzas</a><a href="catalogo.html">Promos</a></div>
             <div class="footer-col"><h4>Nosotros</h4><a href="contacto.html">Historia</a></div>
             <div class="footer-col"><h4>Contacto</h4><a href="Conta.html">Atención</a></div>
         </div>
@@ -257,147 +255,101 @@
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZuZGZtY3hsaWZjd3pwamJwaG95Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3OTc3MDIsImV4cCI6MjA4NzM3MzcwMn0.OkQ6aSZsHkyLMgfT-x0w3beJ3Ey95smEujmhT7ZfjuY'; 
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        let userNameBot = "";
-
         document.addEventListener('DOMContentLoaded', () => {
             initAuth();
             updateCartBadge();
-            // Swiper init...
-            new Swiper('.hero-swiper', { loop: true, autoplay: { delay: 5000 } });
+            new Swiper('.hero-swiper', {
+                loop: true, 
+                autoplay: { delay: 5000 },
+                pagination: { el: '.swiper-pagination', clickable: true },
+                navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
+            });
         });
 
-        /* --- LOGICA DEL CHATBOT --- */
-        function toggleFnafChat() {
-            const chat = document.getElementById('fnafChat');
-            const music = document.getElementById('fnafMusic');
-            const isHidden = chat.style.display === 'none' || chat.style.display === '';
-            chat.style.display = isHidden ? 'flex' : 'none';
-            if(isHidden) {
-                music.play().catch(e => console.log("Interacción necesaria para audio"));
-                if(!userNameBot) addBotMsg("¡Hola! Soy Fazbot. ¿Cómo te llamas para poder saludarte?");
-            }
-        }
-
-        async function sendFnafMsg() {
-            const input = document.getElementById('fnafInput');
-            const text = input.value.trim();
-            if(!text) return;
-
-            addUserMsg(text);
-            input.value = "";
-
-            if(!userNameBot) {
-                userNameBot = text;
-                addBotMsg(`¡Mucho gusto, **${userNameBot}**! ¿En qué puedo ayudarte?`);
-                showQuickButtons();
-                return;
-            }
-
-            const lower = text.toLowerCase();
-            
-            if(lower.includes("barata") || lower.includes("precio")) {
-                const { data } = await supabaseClient.from('productos').select('*').order('precio', {ascending: true}).limit(1);
-                if(data && data.length > 0) {
-                    addBotMsg(`La más económica es la ${data[0].nombre} a $${data[0].precio}. ¡Aprovecha ${userNameBot}!`);
-                }
-            } else if(lower.includes("menú") || lower.includes("carta")) {
-                addBotMsg("Te muestro nuestras delicias...");
-                setTimeout(() => window.location.href = "catalogo.html", 1000);
-            } else if(lower.includes("soporte") || lower.includes("falla") || lower.includes("ayuda")) {
-                addBotMsg("Lo siento, te redirijo a soporte para que un humano te ayude.");
-                setTimeout(() => window.location.href = "Conta.html", 1000);
-            } else {
-                addBotMsg(`${userNameBot}, no estoy seguro de eso, pero puedes usar los botones de abajo o preguntar por la pizza más barata.`);
-                showQuickButtons();
-            }
-        }
-
-        function showQuickButtons() {
-            const container = document.getElementById('fnafMsgs');
-            const div = document.createElement('div');
-            div.className = "fnaf-quick-btns";
-            div.innerHTML = `
-                <button class="fnaf-btn" onclick="window.location.href='catalogo.html'">🍕 Ver Menú</button>
-                <button class="fnaf-btn" onclick="window.location.href='Conta.html'">🛠️ Soporte</button>
-                <button class="fnaf-btn" onclick="window.location.href='perfil.html'">👤 Mi Perfil</button>
-                <button class="fnaf-btn" onclick="sendFnafMsgDirect('¿Cual es la más barata?')">💰 Pizza Barata</button>
-            `;
-            container.appendChild(div);
-            container.scrollTop = container.scrollHeight;
-        }
-
-        function sendFnafMsgDirect(txt) {
-            document.getElementById('fnafInput').value = txt;
-            sendFnafMsg();
-        }
-
-        function addBotMsg(txt) {
-            const container = document.getElementById('fnafMsgs');
-            const div = document.createElement('div');
-            div.className = "fnaf-msg fnaf-bot";
-            div.innerHTML = txt;
-            container.appendChild(div);
-            container.scrollTop = container.scrollHeight;
-        }
-
-        function addUserMsg(txt) {
-            const container = document.getElementById('fnafMsgs');
-            const div = document.createElement('div');
-            div.className = "fnaf-msg fnaf-user";
-            div.innerText = txt;
-            container.appendChild(div);
-            container.scrollTop = container.scrollHeight;
-        }
-
-        function limpiarChat() {
-            document.getElementById('fnafMsgs').innerHTML = "";
-            userNameBot = "";
-            addBotMsg("Chat reiniciado. ¿Cómo te llamas?");
-        }
-
-        // Borrar al cerrar pestaña
-        window.onbeforeunload = () => { sessionStorage.removeItem('bot_user'); };
-
-        /* --- TUS FUNCIONES ORIGINALES DE AUTH Y CARRITO --- */
         async function initAuth() {
             const { data: { user } } = await supabaseClient.auth.getUser();
             const userBtn = document.getElementById('userBtn');
             const userDropdown = document.getElementById('userDropdown');
+
             if (user) {
-                const { data: perfil } = await supabaseClient.from('perfiles').select('rol, nombre, foto_url').eq('id', user.id).maybeSingle();
+                const { data: perfil } = await supabaseClient
+                    .from('perfiles')
+                    .select('rol, nombre, foto_url')
+                    .eq('id', user.id)
+                    .maybeSingle();
+
                 const rol = perfil?.rol || 'usuario';
                 const nombre = perfil?.nombre || user.email.split('@')[0];
-                if (perfil?.foto_url) {
-                    userBtn.innerHTML = `<img src="${perfil.foto_url}" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">`;
+                const foto = perfil?.foto_url;
+
+                if (foto) {
+                    userBtn.innerHTML = `<img src="${foto}" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">`;
                 } else {
-                    userBtn.innerHTML = `<div style="width:100%; height:100%; background:#ff6b00; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:900; border-radius:50%; font-size:18px;">${nombre.charAt(0).toUpperCase()}</div>`;
+                    const inicial = nombre.charAt(0).toUpperCase();
+                    userBtn.innerHTML = `<div style="width:100%; height:100%; background:#ff6b00; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:900; border-radius:50%; font-size:18px;">${inicial}</div>`;
                 }
-                userBtn.onclick = (e) => { e.stopPropagation(); userDropdown.classList.toggle('active'); };
+                
+                userBtn.onclick = (e) => { 
+                    e.stopPropagation();
+                    userDropdown.classList.toggle('active'); 
+                };
+
+                const avatarImg = document.getElementById('userAvatarDropdown');
+                const initialDiv = document.getElementById('userInitial');
+                
+                if (foto) {
+                    avatarImg.src = foto;
+                    avatarImg.style.display = 'block';
+                    initialDiv.style.display = 'none';
+                } else {
+                    avatarImg.style.display = 'none';
+                    initialDiv.textContent = nombre.charAt(0).toUpperCase();
+                    initialDiv.style.display = 'flex';
+                }
+
                 document.getElementById('userName').textContent = nombre;
                 document.getElementById('userEmail').textContent = user.email;
                 document.getElementById('userRole').textContent = rol;
-                if (rol === 'admin') document.getElementById('adminLinkContainer').innerHTML = `<a href="panelA.html" class="profile-menu-link admin-link">⚙️ PANEL ADMIN</a>`;
+                
+                if (rol === 'admin') {
+                    document.getElementById('adminLinkContainer').innerHTML = `
+                        <a href="panelA.html" class="profile-menu-link admin-link">⚙️ PANEL ADMIN</a>
+                    `;
+                }
             } else {
                 userBtn.onclick = () => window.location.href = 'login.html';
             }
         }
-        async function cerrarSesion() { await supabaseClient.auth.signOut(); window.location.reload(); }
+
+        async function cerrarSesion() {
+            await supabaseClient.auth.signOut();
+            window.location.reload();
+        }
+
         function addToCart(name, price, img) {
             let cart = JSON.parse(localStorage.getItem('pizzaCart')) || {};
             cart[name] = cart[name] ? {...cart[name], quantity: cart[name].quantity + 1} : {name, price, image: img, quantity: 1};
             localStorage.setItem('pizzaCart', JSON.stringify(cart));
             updateCartBadge();
         }
+
         function updateCartBadge() {
             let cart = JSON.parse(localStorage.getItem('pizzaCart')) || {};
             let total = Object.values(cart).reduce((s, i) => s + i.quantity, 0);
             const badge = document.getElementById('cartBadge');
-            badge.style.display = total > 0 ? 'flex' : 'none';
-            badge.textContent = total;
+            if (total > 0) {
+                badge.style.display = 'flex';
+                badge.textContent = total;
+            } else {
+                badge.style.display = 'none';
+            }
         }
+
         window.onclick = (e) => {
             const container = document.getElementById('userMenuContainer');
-            if (container && !container.contains(e.target)) document.getElementById('userDropdown').classList.remove('active');
+            if (container && !container.contains(e.target)) {
+                document.getElementById('userDropdown').classList.remove('active');
+            }
         };
     </script>
 </body>
