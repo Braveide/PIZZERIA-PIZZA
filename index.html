@@ -1,362 +1,300 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-EVDX4YSVLB"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-EVDX4YSVLB');
+    </script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mi Perfil - Freddy's Pizza</title>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link rel="icon" type="image/x-icon" href="freddy.png">
+    <title>FREDDY'S PIZZA - Inicio</title>
+    
     <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
     <style>
-        :root {
-            --primary: #ff6b00;
-            --secondary: #ffedd5;
-            --dark: #1e293b;
-            --black: #000000;
-            --success: #10b981;
+        /* --- ANIMACIONES --- */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        /* --- GENERAL --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #fdf2e9; color: #333; overflow-x: hidden; }
         
-        body { background-color: #f1f5f9; color: var(--dark); padding-bottom: 50px; }
+        /* --- HEADER --- */
+        .header { 
+            background: #fff; padding: 15px 25px; display: flex; 
+            justify-content: space-between; align-items: center; 
+            border-bottom: 4px solid #000; position: sticky; top: 0; z-index: 1000; 
+        }
+        .logo-container { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+        .logo-img { height: 45px; width: auto; transition: 0.3s; }
+        .logo-text { font-family: 'Archivo Black', sans-serif; font-size: 22px; color: #ff4500; text-shadow: 2px 2px 0px #000; }
 
-        /* --- NAVEGACIÓN --- */
-        .nav-header {
-            background: #fff;
-            padding: 15px 5%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 4px solid var(--black);
+        .header-right { display: flex; gap: 15px; align-items: center; }
+
+        .cart-btn { 
+            background: #fff; border: 3px solid #000; color: #000; 
+            width: 48px; height: 48px; border-radius: 50%; cursor: pointer; 
+            display: flex; align-items: center; justify-content: center; 
+            position: relative; text-decoration: none; font-size: 20px;
+            box-shadow: 3px 3px 0px #000; transition: 0.3s;
+        }
+        .cart-btn:hover { background: #ff6b00; transform: scale(1.1); color: #fff; }
+
+        .cart-badge { 
+            position: absolute; top: -5px; right: -5px; background: #ff3d00; color: #fff; 
+            border: 2px solid #000; border-radius: 50%; width: 22px; height: 22px;
+            font-size: 11px; font-family: 'Archivo Black', sans-serif; 
+            display: flex; align-items: center; justify-content: center; box-shadow: 2px 2px 0px #000;
         }
 
-        .logo { font-family: 'Archivo Black', sans-serif; color: var(--primary); text-decoration: none; font-size: 24px; text-shadow: 2px 2px 0px #000; }
-
-        /* --- LAYOUT PRINCIPAL --- */
-        .profile-wrapper {
-            max-width: 1000px;
-            margin: 40px auto;
-            display: grid;
-            grid-template-columns: 300px 1fr;
-            gap: 25px;
-            padding: 0 20px;
+        /* --- DROPDOWN PERFIL --- */
+        .user-dropdown { 
+            display: none; position: absolute; top: 60px; right: 0; 
+            background: white; border: 4px solid #000; box-shadow: 8px 8px 0px #000; 
+            width: 260px; padding: 20px; z-index: 2000; border-radius: 15px;
+            animation: slideDown 0.3s ease-out; 
         }
+        .user-dropdown.active { display: block; }
 
-        /* --- SIDEBAR --- */
-        .sidebar {
-            background: white;
-            border: 3px solid var(--black);
-            border-radius: 15px;
-            padding: 25px;
-            box-shadow: 8px 8px 0px var(--black);
-            height: fit-content;
+        .user-info-box { text-align: center; padding-bottom: 15px; border-bottom: 2px solid #eee; margin-bottom: 15px; }
+        .dropdown-avatar { width: 65px; height: 65px; border-radius: 50%; border: 3px solid #000; margin: 0 auto 10px; object-fit: cover; display: block; }
+        .user-role-badge { font-size: 10px; font-weight: 900; color: #ff6b00; text-transform: uppercase; letter-spacing: 1px; margin-top: 5px; }
+
+        .profile-menu-link {
+            display: flex; align-items: center; gap: 10px; padding: 12px; border-radius: 10px; 
+            text-decoration: none; color: #000; font-weight: bold; font-size: 14px;
+            transition: 0.2s; margin-bottom: 5px; background: #f9f9f9;
         }
+        .profile-menu-link:hover { background: #ff6b00; color: #fff; transform: translateX(5px); }
+        .admin-link { background: #000; color: #fff; }
 
-        .profile-card { text-align: center; margin-bottom: 25px; }
+        /* --- HERO & CARDS --- */
+        .hero-swiper { width: 100%; min-height: 500px; border-bottom: 5px solid #000; background: url('imagenes/carrusel.png') center/cover; }
+        .slide-container { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 40px; width: 100%; max-width: 1100px; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(8px); padding: 30px; border-radius: 30px; border: 2px solid rgba(255,255,255,0.3); animation: fadeInUp 0.8s ease-out; }
+        .slide-text h1 { font-family: 'Archivo Black', sans-serif; font-size: clamp(28px, 5vw, 55px); color: #fff; text-shadow: 3px 3px 0px #000; text-transform: uppercase; }
+        .slide-img { max-height: 350px; border-radius: 40px; box-shadow: 0 15px 35px rgba(0,0,0,0.4); border: 5px solid #fff; }
+        
+        .container { max-width: 1200px; margin: 0 auto; padding: 50px 20px; }
+        .section-title { font-family: 'Archivo Black', sans-serif; text-align: center; margin-bottom: 40px; font-size: 35px; text-transform: uppercase; text-shadow: 3px 3px 0px #ff6b00; }
+        
+        .grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px; }
+        .card { background: white; border-radius: 20px; border: 3px solid #000; overflow: hidden; box-shadow: 6px 6px 0px #000; transition: 0.3s; display: flex; flex-direction: column; }
+        .card:hover { transform: translateY(-10px); box-shadow: 10px 10px 0px #ff6b00; }
+        .card-image { width: 100%; height: 230px; object-fit: cover; border-bottom: 3px solid #000; }
+        .card-price { color: #ff6b00; font-size: 26px; font-weight: 900; text-shadow: 1.5px 1.5px 0px #000; }
+        
+        .add-btn { background: #fff; color: #000; border: 3px solid #000; padding: 12px 20px; border-radius: 15px; cursor: pointer; font-weight: 900; box-shadow: 4px 4px 0px #000; text-transform: uppercase; }
+        .add-btn:hover { background: #ff6b00; color: #fff; }
 
-        .avatar-container {
-            position: relative;
-            width: 120px;
-            height: 120px;
-            margin: 0 auto 15px;
-        }
-
-        .avatar-container img {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            border: 4px solid var(--black);
-            object-fit: cover;
-            background: #eee;
-        }
-
-        .btn-edit-photo {
-            position: absolute;
-            bottom: 5px;
-            right: 5px;
-            background: var(--primary);
-            border: 2px solid var(--black);
-            border-radius: 50%;
-            width: 35px;
-            height: 35px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 2px 2px 0px var(--black);
-        }
-
-        .nav-menu { display: flex; flex-direction: column; gap: 10px; }
-
-        .nav-btn {
-            padding: 12px 15px;
-            border: 2px solid transparent;
-            border-radius: 8px;
-            background: none;
-            text-align: left;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .nav-btn:hover { background: var(--secondary); border-color: var(--black); }
-        .nav-btn.active {
-            background: var(--primary);
-            color: white;
-            border-color: var(--black);
-            box-shadow: 4px 4px 0px var(--black);
-        }
-
-        /* --- ÁREA DE CONTENIDO --- */
-        .main-content {
-            background: white;
-            border: 3px solid var(--black);
-            border-radius: 15px;
-            padding: 35px;
-            box-shadow: 8px 8px 0px var(--black);
-            min-height: 550px;
-        }
-
-        .tab-panel { display: none; animation: fadeIn 0.3s ease; }
-        .tab-panel.active { display: block; }
-
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        h2 { font-family: 'Archivo Black', sans-serif; margin-bottom: 25px; text-transform: uppercase; font-size: 22px; }
-
-        /* --- FORMULARIOS --- */
-        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .full-width { grid-column: 1 / -1; }
-
-        .input-group { margin-bottom: 20px; }
-        .input-group label { display: block; font-size: 12px; font-weight: bold; margin-bottom: 8px; text-transform: uppercase; }
-        .input-group input {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid var(--black);
-            border-radius: 8px;
-            font-size: 14px;
-            outline: none;
-        }
-
-        .btn-action {
-            background: var(--success);
-            color: white;
-            border: 2px solid var(--black);
-            padding: 12px 25px;
-            font-weight: bold;
-            border-radius: 8px;
-            cursor: pointer;
-            box-shadow: 4px 4px 0px var(--black);
-            text-transform: uppercase;
-        }
-
-        .btn-action:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0px var(--black); }
-
-        .msg-card {
-            border: 2px solid var(--black);
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 15px;
-            background: #fff;
-        }
-
-        .msg-header { display: flex; justify-content: space-between; margin-bottom: 10px; border-bottom: 1px dashed #ccc; padding-bottom: 5px; }
-        .status-pill { font-size: 10px; padding: 3px 8px; border-radius: 5px; border: 1px solid var(--black); font-weight: bold; }
-
-        .admin-reply-box {
-            background: var(--secondary);
-            border-left: 5px solid var(--primary);
-            padding: 10px;
-            margin-top: 10px;
-            border-radius: 0 5px 5px 0;
-        }
+        /* --- CHAT STYLES --- */
+        .msg-bot { background: #fff; border: 3px solid #000; padding: 12px; border-radius: 15px 15px 15px 0px; box-shadow: 4px 4px 0px #000; align-self: flex-start; max-width: 85%; font-weight: 600; font-size: 14px; }
+        .msg-user { background: #ff6b00; border: 3px solid #000; padding: 12px; border-radius: 15px 15px 0px 15px; box-shadow: 4px 4px 0px #000; align-self: flex-end; max-width: 80%; color: #fff; font-weight: bold; font-size: 14px; }
+        .btn-group { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 5px; }
+        .action-btn { background: #fff; border: 2px solid #000; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: 900; box-shadow: 2px 2px 0px #000; transition: 0.2s; }
+        .action-btn:hover { background: #000; color: #fff; transform: translate(-2px, -2px); }
+        .pizza-card { border: 2px solid #000; padding: 8px; border-radius: 8px; background: #fff; margin-top: 5px; font-size: 13px; }
     </style>
 </head>
 <body>
 
-<nav class="nav-header">
-    <a href="index.html" class="logo">FREDDY'S PIZZA</a>
-    <button onclick="cerrarSesion()" style="color: black; border: 2px solid black; background: none; padding: 5px 12px; border-radius: 5px; cursor: pointer; font-weight: bold;">SALIR</button>
-</nav>
+<audio id="bg-music-freddy" src="https://www.myinstants.com/media/sounds/fnaf-sister-location-night-start.mp3" preload="auto" loop></audio>
+<audio id="sound-bong" src="https://www.myinstants.com/media/sounds/freddys-honk-nose.mp3" preload="auto"></audio>
 
-<div class="profile-wrapper">
-    <aside class="sidebar">
-        <div class="profile-card">
-            <div class="avatar-container">
-                <img id="userAvatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=Freddy" alt="Avatar">
-                <button class="btn-edit-photo" onclick="document.getElementById('fileInput').click()">✏️</button>
-                <input type="file" id="fileInput" hidden accept="image/*" onchange="subirFoto()">
-            </div>
-            <h3 id="displayUserName" style="font-family: 'Archivo Black', sans-serif;">Cargando...</h3>
-            <p id="displayUserEmail" style="font-size: 12px; color: #666;"></p>
+<div id="chat-btn" onclick="toggleChat()" style="position: fixed; bottom: 25px; right: 25px; background: #ff6b00; color: white; width: 65px; height: 65px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 32px; cursor: pointer; box-shadow: 4px 4px 0px #000; z-index: 4000; border: 3px solid #000;">🐻</div>
+
+<div id="chat-window" style="display: none; position: fixed; bottom: 100px; right: 25px; width: 350px; height: 550px; background: #fff; border: 4px solid #000; border-radius: 20px; flex-direction: column; overflow: hidden; z-index: 4000; box-shadow: 12px 12px 0px rgba(0,0,0,0.15);">
+    <div style="background: #000; color: #fff; padding: 18px; display: flex; justify-content: space-between; align-items: center;">
+        <span style="font-weight: 900; font-family: 'Archivo Black';">FREDDY'S RESPONDE</span>
+        <button onclick="toggleChat()" style="background:none; border:none; color:#fff; font-size:24px; cursor:pointer;">&times;</button>
+    </div>
+    <div id="chat-messages" style="flex: 1; padding: 15px; overflow-y: auto; background: #fdf2e9; display: flex; flex-direction: column; gap: 15px;">
+        <div class="msg-bot">¡Hola! Soy Freddy. ¿Qué te gustaría hacer hoy? 🍕</div>
+        <div class="btn-group">
+            <button class="action-btn" onclick="processInput('Ver Menú')">🍕 Menú</button>
+            <button class="action-btn" onclick="processInput('Soporte')">🛠️ Soporte</button>
+            <button class="action-btn" onclick="processInput('Ubicación')">📍 Ubicación</button>
         </div>
-
-        <nav class="nav-menu">
-            <button class="nav-btn active" onclick="switchTab(event, 'tab-datos')">👤 MIS DATOS</button>
-            <button class="nav-btn" onclick="switchTab(event, 'tab-buzon')">📩 MI BUZÓN</button>
-            <button class="nav-btn" onclick="switchTab(event, 'tab-pedidos')">🍕 PEDIDOS</button>
-            <button class="nav-btn" onclick="switchTab(event, 'tab-seguridad')">🔒 SEGURIDAD</button>
-        </nav>
-    </aside>
-
-    <main class="main-content">
-        <section id="tab-datos" class="tab-panel active">
-            <h2>Configuración de Perfil</h2>
-            <div class="form-grid">
-                <div class="input-group">
-                    <label>Nombre Completo</label>
-                    <input type="text" id="inNombre" placeholder="Ej. Juan Pérez">
-                </div>
-                <div class="input-group">
-                    <label>Teléfono</label>
-                    <input type="text" id="inTelefono" placeholder="Tu celular">
-                </div>
-                <div class="input-group full-width">
-                    <label>Correo Electrónico (No editable)</label>
-                    <input type="email" id="inEmail" disabled style="background: #f1f5f9;">
-                </div>
-                <div class="input-group full-width">
-                    <label>Dirección Predeterminada</label>
-                    <input type="text" id="inDireccion" placeholder="Calle, Número, Colonia">
-                </div>
-            </div>
-            <button class="btn-action" onclick="actualizarPerfil()">Guardar Cambios</button>
-        </section>
-
-        <section id="tab-buzon" class="tab-panel">
-            <h2>Respuestas del Administrador</h2>
-            <div id="userInboxContainer"></div>
-        </section>
-
-        <section id="tab-pedidos" class="tab-panel">
-            <h2>Historial de Compras</h2>
-            <p>Próximamente: Podrás ver tus pizzas favoritas aquí.</p>
-        </section>
-
-        <section id="tab-seguridad" class="tab-panel">
-            <h2>Seguridad de la Cuenta</h2>
-            <div class="input-group">
-                <label>Nueva Contraseña</label>
-                <input type="password" id="newPassword" placeholder="Mínimo 6 caracteres">
-            </div>
-            <button class="btn-action" style="background: #ef4444;" onclick="cambiarPassword()">Actualizar Contraseña</button>
-        </section>
-    </main>
+    </div>
+    <div style="padding: 15px; border-top: 3px solid #000; display: flex; gap: 8px; background: #fff;">
+        <input type="text" id="user-input" placeholder="Dime algo..." style="flex: 1; border: 2px solid #000; padding: 10px; border-radius: 8px; outline: none; font-weight: bold;">
+        <button onclick="sendText()" style="background: #ff6b00; border: 2px solid #000; color: white; padding: 0 15px; border-radius: 8px; cursor: pointer; font-weight: bold;">></button>
+    </div>
 </div>
+
+<header class="header">
+    <a href="index.html" class="logo-container">
+        <img src="imagenes/logo.png" class="logo-img">
+        <span class="logo-text">FREDDY'S PIZZA</span>
+    </a>
+    <div class="header-right">
+        <div style="position: relative;" id="userMenuContainer">
+            <div class="cart-btn" id="userBtn">👤</div>
+            <div class="user-dropdown" id="userDropdown">
+                <div class="user-info-box">
+                    <img id="userAvatarDropdown" src="" class="dropdown-avatar" style="display: none;">
+                    <div id="userInitial" style="width:60px; height:60px; background:#ff6b00; color:#fff; display:none; align-items:center; justify-content:center; font-weight:900; border-radius:50%; border: 3px solid #000; margin: 0 auto 10px; font-size: 24px;"></div>
+                    <h4 id="userName" style="font-family:'Archivo Black';"></h4>
+                    <p id="userEmail" style="font-size:11px; color:#666;"></p>
+                    <p id="userRole" class="user-role-badge"></p>
+                </div>
+                <div id="adminLinkContainer"></div>
+                <a href="perfil.html" class="profile-menu-link">👤 Mi Perfil</a>
+                <button onclick="cerrarSesion()" class="logout-btn">Cerrar Sesión</button>
+            </div>
+        </div>
+        <a href="carrito.html" class="cart-btn">🛒<span id="cartBadge" class="cart-badge" style="display: none;">0</span></a>
+    </div>
+</header>
+
+<section class="swiper hero-swiper">
+    <div class="swiper-wrapper">
+        <div class="swiper-slide">
+            <div class="slide-container">
+                <div class="slide-text">
+                    <h1>Pepperoni <br> Legendario</h1>
+                    <p>Nuestra pizza estrella con pepperoni de corte grueso.</p>
+                    <a href="catalogo.html" class="add-btn" style="text-decoration:none; display:inline-block; padding:15px 20px;">ORDENAR</a>
+                </div>
+                <img src="imagenes/pizza_pepe.png" class="slide-img">
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="container">
+    <h2 class="section-title">Especialidades</h2>
+    <div class="grid-container">
+        <div class="card">
+            <img src="imagenes/pizza_pepe.png" class="card-image">
+            <div style="padding:20px;">
+                <h3 style="font-family:'Archivo Black';">Pepperoni Premium</h3>
+                <p>Corte grueso y extra queso.</p>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-top:15px;">
+                    <span class="card-price">$121.99</span>
+                    <button class="add-btn" onclick="addToCart('Pepperoni Premium', 121.99, 'imagenes/pizza_pepe.png')">AGREGAR</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="main-footer">
+    <div class="copy">© 2026 FREDDY'S PIZZA. TODOS LOS DERECHOS RESERVADOS.</div>
+</footer>
 
 <script>
     const SUPABASE_URL = 'https://vndfmcxlifcwzpjbphoy.supabase.co';
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZuZGZtY3hsaWZjd3pwamJwaG95Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3OTc3MDIsImV4cCI6MjA4NzM3MzcwMn0.OkQ6aSZsHkyLMgfT-x0w3beJ3Ey95smEujmhT7ZfjuY'; 
-    const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    function switchTab(event, tabId) {
-        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById(tabId).classList.add('active');
-        event.currentTarget.classList.add('active');
-        if(tabId === 'tab-buzon') cargarBuzonUsuario();
+    const messagesContainer = document.getElementById('chat-messages');
+    const bong = document.getElementById('sound-bong');
+    const bgMusic = document.getElementById('bg-music-freddy');
+
+    document.addEventListener('DOMContentLoaded', () => {
+        initAuth();
+        updateCartBadge();
+        new Swiper('.hero-swiper', { loop: true, autoplay: { delay: 5000 } });
+    });
+
+    function toggleChat() {
+        const win = document.getElementById('chat-window');
+        const isHidden = win.style.display === 'none';
+        win.style.display = isHidden ? 'flex' : 'none';
+        if(isHidden) { bgMusic.volume = 0.1; bgMusic.play(); } else { bgMusic.pause(); }
     }
 
-    async function inicializarPerfil() {
-        const { data: { user } } = await _supabase.auth.getUser();
-        if (!user) { window.location.href = "login.html"; return; }
+    function processInput(val) {
+        addMsg(val, 'msg-user');
+        setTimeout(() => {
+            bong.currentTime = 0; bong.volume = 0.3; bong.play();
+            let response = "";
+            let buttons = ["🍕 Menú", "🛠️ Soporte", "🏠 Inicio"];
+            let input = val.toLowerCase();
 
-        document.getElementById('inEmail').value = user.email;
-        document.getElementById('displayUserEmail').innerText = user.email;
+            if (input.includes("menú")) {
+                response = "¡Pizzas recién salidas del horno! 🍕<div class='pizza-card'><b>• Suprema:</b> $166.99<br><b>• Pepperoni:</b> $121.99<br><b>• Margherita:</b> $158.99</div>";
+            } else if (input.includes("soporte")) {
+                response = "🛠️ Si tienes problemas, recarga la página o revisa tu conexión. ¿Necesitas ayuda con un pedido?";
+            } else if (input.includes("ubicación")) {
+                response = "📍 Estamos en el corazón del centro educativo. ¡Te esperamos!";
+            } else {
+                response = "¡Hola! Soy Freddy. ¿En qué puedo ayudarte hoy?";
+            }
 
-        // Cargar desde tabla 'perfiles' (nombre y foto_url como en index)
-        const { data: perfil } = await _supabase.from('perfiles').select('*').eq('id', user.id).maybeSingle();
-        
-        if(perfil) {
-            document.getElementById('displayUserName').innerText = perfil.nombre || "Usuario Freddy's";
-            document.getElementById('inNombre').value = perfil.nombre || "";
-            document.getElementById('inTelefono').value = perfil.telefono || "";
-            document.getElementById('inDireccion').value = perfil.direccion || "";
-            if(perfil.foto_url) document.getElementById('userAvatar').src = perfil.foto_url;
+            addMsg(response, 'msg-bot');
+            renderButtons(buttons);
+        }, 600);
+    }
+
+    function addMsg(text, type) {
+        const div = document.createElement('div');
+        div.className = type;
+        div.innerHTML = (type === 'msg-user' ? '<b>Tú:</b> ' : '<b>Freddy:</b> ') + text;
+        messagesContainer.appendChild(div);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    function renderButtons(opts) {
+        const div = document.createElement('div'); div.className = "btn-group";
+        opts.forEach(opt => {
+            const btn = document.createElement('button'); btn.className = "action-btn";
+            btn.innerText = opt; btn.onclick = () => processInput(opt);
+            div.appendChild(btn);
+        });
+        messagesContainer.appendChild(div);
+    }
+
+    function sendText() {
+        const input = document.getElementById('user-input');
+        if (input.value.trim()) { processInput(input.value); input.value = ""; }
+    }
+
+    async function initAuth() {
+        const { data: { user } } = await supabaseClient.auth.getUser();
+        const userBtn = document.getElementById('userBtn');
+        if (user) {
+            const { data: perfil } = await supabaseClient.from('perfiles').select('*').eq('id', user.id).maybeSingle();
+            const nombre = perfil?.nombre || user.email.split('@')[0];
+            userBtn.innerHTML = `<div style="width:100%;height:100%;background:#ff6b00;color:#fff;display:flex;align-items:center;justify-content:center;border-radius:50%;font-weight:900;">${nombre[0].toUpperCase()}</div>`;
+            document.getElementById('userName').textContent = nombre;
+            document.getElementById('userEmail').textContent = user.email;
+            userBtn.onclick = (e) => { e.stopPropagation(); document.getElementById('userDropdown').classList.toggle('active'); };
         } else {
-            document.getElementById('displayUserName').innerText = user.email.split('@')[0];
+            userBtn.onclick = () => window.location.href = 'login.html';
         }
     }
 
-    async function actualizarPerfil() {
-        const { data: { user } } = await _supabase.auth.getUser();
-        const updates = {
-            id: user.id,
-            nombre: document.getElementById('inNombre').value,
-            telefono: document.getElementById('inTelefono').value,
-            direccion: document.getElementById('inDireccion').value,
-            updated_at: new Date()
-        };
-
-        const { error } = await _supabase.from('perfiles').upsert(updates);
-        if(!error) { alert("¡Perfil actualizado!"); location.reload(); }
-        else { alert("Error al actualizar"); }
+    function addToCart(name, price, img) {
+        let cart = JSON.parse(localStorage.getItem('pizzaCart')) || {};
+        cart[name] = cart[name] ? {...cart[name], quantity: cart[name].quantity + 1} : {name, price, image: img, quantity: 1};
+        localStorage.setItem('pizzaCart', JSON.stringify(cart));
+        updateCartBadge();
     }
 
-    async function subirFoto() {
-        const file = document.getElementById('fileInput').files[0];
-        if (!file) return;
-
-        const { data: { user } } = await _supabase.auth.getUser();
-        const fileExt = file.name.split('.').pop();
-        const fileName = `${user.id}-${Math.random()}.${fileExt}`;
-        const filePath = `avatars/${fileName}`;
-
-        // Subir a Storage (Asegúrate de tener un bucket llamado 'perfiles' público)
-        const { error: uploadError } = await _supabase.storage.from('perfiles').upload(filePath, file);
-
-        if (!uploadError) {
-            const { data: { publicUrl } } = _supabase.storage.from('perfiles').getPublicUrl(filePath);
-            await _supabase.from('perfiles').upsert({ id: user.id, foto_url: publicUrl });
-            location.reload();
-        } else {
-            alert("Error al subir imagen. Revisa que el bucket 'perfiles' exista.");
-        }
+    function updateCartBadge() {
+        let cart = JSON.parse(localStorage.getItem('pizzaCart')) || {};
+        let total = Object.values(cart).reduce((s, i) => s + i.quantity, 0);
+        const badge = document.getElementById('cartBadge');
+        if (total > 0) { badge.style.display = 'flex'; badge.textContent = total; }
     }
 
-    async function cambiarPassword() {
-        const newPass = document.getElementById('newPassword').value;
-        if(newPass.length < 6) { alert("Mínimo 6 caracteres"); return; }
-        const { error } = await _supabase.auth.updateUser({ password: newPass });
-        if(!error) alert("Contraseña actualizada");
-        else alert("Error: " + error.message);
-    }
-
-    async function cargarBuzonUsuario() {
-        const { data: { user } } = await _supabase.auth.getUser();
-        const container = document.getElementById('userInboxContainer');
-        container.innerHTML = "Cargando...";
-
-        const { data } = await _supabase.from('mensajes_contacto').select('*').eq('correo', user.email).order('created_at', { ascending: false });
-
-        if(!data || data.length === 0) {
-            container.innerHTML = "<p>No hay mensajes enviados.</p>";
-            return;
-        }
-
-        container.innerHTML = data.map(m => `
-            <div class="msg-card">
-                <div class="msg-header">
-                    <span style="font-weight:bold; color:var(--primary);">${m.tipo.toUpperCase()}</span>
-                    <span class="status-pill" style="background: ${m.respuesta_admin ? '#dcfce7' : '#eee'}">
-                        ${m.respuesta_admin ? 'RESPONDIDO' : 'EN ESPERA'}
-                    </span>
-                </div>
-                <p style="font-size: 14px;"><strong>Tú:</strong> ${m.mensaje}</p>
-                ${m.respuesta_admin ? `<div class="admin-reply-box"><p style="font-size:13px;"><strong>Freddy's:</strong> ${m.respuesta_admin}</p></div>` : ''}
-            </div>
-        `).join('');
-    }
-
-    async function cerrarSesion() {
-        await _supabase.auth.signOut();
-        window.location.href = "login.html";
-    }
-
-    document.addEventListener('DOMContentLoaded', inicializarPerfil);
+    window.onclick = () => document.getElementById('userDropdown').classList.remove('active');
 </script>
 </body>
 </html>
