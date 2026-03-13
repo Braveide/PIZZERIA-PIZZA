@@ -20,6 +20,99 @@
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
     <style>
+
+        /* CHATBOT */
+
+#chatbotContainer{
+position:fixed;
+bottom:20px;
+right:20px;
+z-index:5000;
+}
+
+#chatbotToggle{
+width:60px;
+height:60px;
+border-radius:50%;
+background:#ff6b00;
+border:3px solid #000;
+font-size:25px;
+cursor:pointer;
+box-shadow:4px 4px 0px #000;
+}
+
+#chatbotBox{
+display:none;
+width:320px;
+height:420px;
+background:white;
+border:4px solid #000;
+border-radius:15px;
+box-shadow:8px 8px 0px #000;
+flex-direction:column;
+overflow:hidden;
+}
+
+.chat-header{
+background:#000;
+color:#fff;
+padding:10px;
+display:flex;
+justify-content:space-between;
+font-weight:bold;
+}
+
+#chatMessages{
+flex:1;
+padding:10px;
+overflow-y:auto;
+font-size:14px;
+}
+
+.message-user{
+text-align:right;
+margin:5px 0;
+}
+
+.message-bot{
+text-align:left;
+margin:5px 0;
+}
+
+.chat-buttons{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:5px;
+padding:5px;
+}
+
+.chat-buttons button{
+border:2px solid #000;
+background:#ff6b00;
+color:white;
+font-weight:bold;
+cursor:pointer;
+}
+
+.chat-input{
+display:flex;
+border-top:2px solid #000;
+}
+
+.chat-input input{
+flex:1;
+border:none;
+padding:10px;
+}
+
+.chat-input button{
+width:50px;
+border:none;
+background:#000;
+color:white;
+cursor:pointer;
+}
+        
         /* --- ANIMACIONES --- */
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(30px); }
@@ -140,6 +233,42 @@
 </head>
 <body>
 
+    <!-- CHATBOT -->
+<div id="chatbotContainer">
+
+<button id="chatbotToggle">🤖</button>
+
+<div id="chatbotBox">
+
+<div class="chat-header">
+FreddyBot 🍕
+<button id="clearChat">🗑</button>
+</div>
+
+<div id="chatMessages"></div>
+
+<div class="chat-buttons">
+<button onclick="goPage('Conta.html')">Contáctanos</button>
+<button onclick="goPage('reporte.html')">Reportar fallas</button>
+<button onclick="goPage('catalogo.html')">Mostrar menú</button>
+<button onclick="goPage('horarios.html')">Horarios</button>
+</div>
+
+<div class="chat-input">
+<input id="chatInput" placeholder="Escribe tu pregunta..." />
+<button onclick="sendMessage()">➤</button>
+</div>
+
+</div>
+</div>
+
+<audio id="chatSound">
+<source src="https://www.myinstants.com/media/sounds/freddys-honk-nose.mp3">
+</audio>
+
+<audio id="chatMusic" loop>
+<source src="https://www.myinstants.com/media/sounds/fnaf-sister-location-night-start.mp3">
+</audio>
     <header class="header">
         <a href="index.html" class="logo-container">
             <img src="imagenes/logo.png" alt="Freddy's Logo" class="logo-img">
@@ -251,6 +380,159 @@
     </footer>
 
     <script>
+        /* =========================
+CHATBOT FREDDY
+========================= */
+
+let chatOpen=false
+let userName=""
+
+const toggleBtn=document.getElementById("chatbotToggle")
+const chatBox=document.getElementById("chatbotBox")
+const messages=document.getElementById("chatMessages")
+const input=document.getElementById("chatInput")
+const sound=document.getElementById("chatSound")
+const music=document.getElementById("chatMusic")
+
+toggleBtn.onclick=()=>{
+
+chatOpen=!chatOpen
+
+chatBox.style.display=chatOpen?"flex":"none"
+
+if(chatOpen){
+music.volume=0.2
+music.play()
+initChat()
+}
+
+}
+
+function playSound(){
+sound.currentTime=0
+sound.play()
+}
+
+function addMessage(text,type){
+
+const div=document.createElement("div")
+div.className=type==="user"?"message-user":"message-bot"
+div.innerText=text
+
+messages.appendChild(div)
+
+messages.scrollTop=messages.scrollHeight
+}
+
+function initChat(){
+
+if(messages.innerHTML!=="")return
+
+const nombre=document.getElementById("userName")?.textContent
+
+userName=nombre || "Invitado"
+
+addMessage(`Hola ${userName} 👋 soy FreddyBot ¿En qué puedo ayudarte?`,"bot")
+
+}
+
+function sendMessage(){
+
+const text=input.value.trim()
+
+if(!text)return
+
+playSound()
+
+addMessage(text,"user")
+
+input.value=""
+
+setTimeout(()=>{
+
+botResponse(text)
+
+},400)
+
+}
+
+function botResponse(text){
+
+const msg=text.toLowerCase()
+
+let reply=""
+
+if(msg.includes("menu")||msg.includes("pizza")){
+
+reply="Puedes ver nuestro menú aquí 🍕"
+goSuggestion("catalogo.html")
+
+}
+
+else if(msg.includes("horario")){
+
+reply="Puedes ver nuestros horarios aquí 🕒"
+goSuggestion("horarios.html")
+
+}
+
+else if(msg.includes("contacto")||msg.includes("hablar")){
+
+reply="Puedes contactarnos aquí 📞"
+goSuggestion("Conta.html")
+
+}
+
+else if(msg.includes("error")||msg.includes("falla")){
+
+reply="Puedes reportar el problema aquí 🛠"
+goSuggestion("reporte.html")
+
+}
+
+else{
+
+reply="Puedo ayudarte con el menú, pedidos, horarios o contacto."
+
+}
+
+addMessage(reply,"bot")
+
+}
+
+function goSuggestion(url){
+
+const link=document.createElement("div")
+
+link.innerHTML=`<a href="${url}" style="color:#ff6b00;font-weight:bold">Ir ahora</a>`
+
+messages.appendChild(link)
+
+}
+
+function goPage(url){
+
+playSound()
+
+window.location.href=url
+
+}
+
+document.getElementById("clearChat").onclick=()=>{
+
+messages.innerHTML=""
+
+initChat()
+
+}
+
+/* borrar chat al salir */
+
+window.addEventListener("beforeunload",()=>{
+
+messages.innerHTML=""
+
+})
         const SUPABASE_URL = 'https://vndfmcxlifcwzpjbphoy.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZuZGZtY3hsaWZjd3pwamJwaG95Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3OTc3MDIsImV4cCI6MjA4NzM3MzcwMn0.OkQ6aSZsHkyLMgfT-x0w3beJ3Ey95smEujmhT7ZfjuY'; 
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
