@@ -1,362 +1,294 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-EVDX4YSVLB"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-EVDX4YSVLB');
-    </script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-EVDX4YSVLB"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-EVDX4YSVLB');
+    </script>
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/x-icon" href="freddy.png">
-    <title>FREDDY'S PIZZA - Inicio</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="freddy.png">
+    <title>FREDDY'S PIZZA - Inicio</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
-    <style>
-        /* --- ANIMACIONES --- */
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes slideDown {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+    <style>
+        /* --- ANIMACIONES --- */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
-        /* --- GENERAL --- */
-        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #fdf2e9; color: #333; overflow-x: hidden; }
-        
-        /* --- HEADER --- */
-        .header { 
-            background: #fff; 
-            padding: 15px 25px; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            border-bottom: 4px solid #000;
-            position: sticky; top: 0; z-index: 1000; 
-        }
-        .logo-container { display: flex; align-items: center; gap: 12px; text-decoration: none; }
-        .logo-img { height: 45px; width: auto; transition: 0.3s; }
-        .logo-text { font-family: 'Archivo Black', sans-serif; font-size: 22px; color: #ff4500; text-shadow: 2px 2px 0px #000; }
+        /* --- GENERAL --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #fdf2e9; color: #333; overflow-x: hidden; }
+        
+        /* --- HEADER --- */
+        .header { 
+            background: #fff; padding: 15px 25px; display: flex; 
+            justify-content: space-between; align-items: center; 
+            border-bottom: 4px solid #000; position: sticky; top: 0; z-index: 1000; 
+        }
+        .logo-container { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+        .logo-img { height: 45px; width: auto; transition: 0.3s; }
+        .logo-text { font-family: 'Archivo Black', sans-serif; font-size: 22px; color: #ff4500; text-shadow: 2px 2px 0px #000; }
 
-        .header-right { display: flex; gap: 15px; align-items: center; }
+        .header-right { display: flex; gap: 15px; align-items: center; }
 
-        /* --- BOTONES CIRCULARES --- */
-        .cart-btn { 
-            background: #fff; border: 3px solid #000; color: #000; 
-            width: 48px; height: 48px; border-radius: 50%; cursor: pointer; 
-            display: flex; align-items: center; justify-content: center; 
-            position: relative; text-decoration: none; font-size: 20px;
-            box-shadow: 3px 3px 0px #000; transition: 0.3s;
-            /* SE MANTIENE SIN OVERFLOW PARA EL BADGE */
-        }
-        .cart-btn:hover { background: #ff6b00; transform: scale(1.1); color: #fff; }
+        .cart-btn { 
+            background: #fff; border: 3px solid #000; color: #000; 
+            width: 48px; height: 48px; border-radius: 50%; cursor: pointer; 
+            display: flex; align-items: center; justify-content: center; 
+            position: relative; text-decoration: none; font-size: 20px;
+            box-shadow: 3px 3px 0px #000; transition: 0.3s;
+        }
+        .cart-btn:hover { background: #ff6b00; transform: scale(1.1); color: #fff; }
 
-        .cart-badge { 
-            position: absolute; top: -5px; right: -5px; 
-            background-color: #ff3d00; color: #fff; border: 2px solid #000; 
-            border-radius: 50%; width: 22px; height: 22px;
-            font-size: 11px; font-family: 'Archivo Black', sans-serif; 
-            display: flex; align-items: center; justify-content: center;
-            box-shadow: 2px 2px 0px #000; z-index: 10;
-        }
+        .cart-badge { 
+            position: absolute; top: -5px; right: -5px; 
+            background-color: #ff3d00; color: #fff; border: 2px solid #000; 
+            border-radius: 50%; width: 22px; height: 22px;
+            font-size: 11px; font-family: 'Archivo Black', sans-serif; 
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 2px 2px 0px #000; z-index: 10;
+        }
 
-        /* --- DROPDOWN PERFIL --- */
-        .user-dropdown { 
-            display: none; position: absolute; top: 60px; right: 0; 
-            background: white; border: 4px solid #000; box-shadow: 8px 8px 0px #000; 
-            width: 260px; padding: 20px; z-index: 2000; border-radius: 15px;
-            animation: slideDown 0.3s ease-out; 
-        }
-        .user-dropdown.active { display: block; }
+        /* --- DROPDOWN PERFIL --- */
+        .user-dropdown { 
+            display: none; position: absolute; top: 60px; right: 0; 
+            background: white; border: 4px solid #000; box-shadow: 8px 8px 0px #000; 
+            width: 260px; padding: 20px; z-index: 2000; border-radius: 15px;
+            animation: slideDown 0.3s ease-out; 
+        }
+        .user-dropdown.active { display: block; }
 
-        .user-info-box { text-align: center; padding-bottom: 15px; border-bottom: 2px solid #eee; margin-bottom: 15px; }
-        .dropdown-avatar { width: 65px; height: 65px; border-radius: 50%; border: 3px solid #000; margin: 0 auto 10px; object-fit: cover; display: block; }
-        .user-role-badge { font-size: 10px; font-weight: 900; color: #ff6b00; text-transform: uppercase; letter-spacing: 1px; margin-top: 5px; }
+        .user-info-box { text-align: center; padding-bottom: 15px; border-bottom: 2px solid #eee; margin-bottom: 15px; }
+        .dropdown-avatar { width: 65px; height: 65px; border-radius: 50%; border: 3px solid #000; margin: 0 auto 10px; object-fit: cover; display: block; }
+        .user-role-badge { font-size: 10px; font-weight: 900; color: #ff6b00; text-transform: uppercase; letter-spacing: 1px; margin-top: 5px; }
 
-        .profile-menu-link {
-            display: flex; align-items: center; gap: 10px;
-            padding: 12px; border-radius: 10px; text-decoration: none;
-            color: #000; font-weight: bold; font-size: 14px;
-            transition: 0.2s; margin-bottom: 5px; background: #f9f9f9;
-        }
-        .profile-menu-link:hover { background: #ff6b00; color: #fff; transform: translateX(5px); }
-        .admin-link { background: #000; color: #fff; }
-        .admin-link:hover { background: #333; color: #ff6b00; }
+        .profile-menu-link {
+            display: flex; align-items: center; gap: 10px;
+            padding: 12px; border-radius: 10px; text-decoration: none;
+            color: #000; font-weight: bold; font-size: 14px;
+            transition: 0.2s; margin-bottom: 5px; background: #f9f9f9;
+        }
+        .profile-menu-link:hover { background: #ff6b00; color: #fff; transform: translateX(5px); }
+        .admin-link { background: #000; color: #fff; }
 
-        .logout-btn { 
-            width: 100%; padding: 10px; margin-top: 10px;
-            background: none; border: none; color: #ff3d00;
-            font-weight: 900; text-transform: uppercase; cursor: pointer;
-            transition: 0.2s; border-radius: 10px;
-        }
-        .logout-btn:hover { background: #fff1f1; }
+        /* --- CHAT STYLES (RESTURADOS) --- */
+        .msg-bot { background: #fff; border: 3px solid #000; padding: 12px; border-radius: 15px 15px 15px 0px; box-shadow: 4px 4px 0px #000; align-self: flex-start; max-width: 85%; font-weight: 600; font-size: 14px; }
+        .msg-user { background: #ff6b00; border: 3px solid #000; padding: 12px; border-radius: 15px 15px 0px 15px; box-shadow: 4px 4px 0px #000; align-self: flex-end; max-width: 80%; color: #fff; font-weight: bold; font-size: 14px; }
+        .btn-group { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 5px; }
+        .action-btn { background: #fff; border: 2px solid #000; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: 900; box-shadow: 2px 2px 0px #000; transition: 0.2s; }
+        .action-btn:hover { background: #000; color: #fff; transform: translate(-2px, -2px); }
+        .pizza-card { border: 2px solid #000; padding: 8px; border-radius: 8px; background: #fff; margin-top: 5px; font-size: 13px; }
 
-        /* --- HERO & SECCIONES --- */
-        .hero-swiper { width: 100%; min-height: 500px; border-bottom: 5px solid #000; background-image: url('imagenes/carrusel.png'); background-size: cover; background-position: center; }
-        .swiper-slide { display: flex; align-items: center; justify-content: center; padding: 20px; }
-        .slide-container { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 40px; width: 100%; max-width: 1100px; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(8px); padding: 30px; border-radius: 30px; border: 2px solid rgba(255,255,255,0.3); animation: fadeInUp 0.8s ease-out; }
-        .slide-text h1 { font-family: 'Archivo Black', sans-serif; font-size: clamp(28px, 5vw, 55px); color: #fff; text-shadow: 3px 3px 0px #000; text-transform: uppercase; line-height: 1; margin-bottom: 15px; }
-        .slide-text p { font-size: clamp(14px, 2vw, 18px); font-weight: 600; color: #fff; margin-bottom: 25px; line-height: 1.4; text-shadow: 1px 1px 5px rgba(0,0,0,0.7); }
-        .slide-img { max-height: 350px; width: auto; max-width: 100%; border-radius: 40px; box-shadow: 0 15px 35px rgba(0,0,0,0.4); border: 5px solid #fff; }
-        
-        .container { max-width: 1200px; margin: 0 auto; padding: 50px 20px; }
-        .section-title { font-family: 'Archivo Black', sans-serif; text-align: center; margin-bottom: 40px; font-size: clamp(24px, 5vw, 35px); text-transform: uppercase; text-shadow: 3px 3px 0px #ff6b00; color: #000; }
-        
-        .grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px; }
-        .card { background: white; border-radius: 20px; border: 3px solid #000; overflow: hidden; box-shadow: 6px 6px 0px #000; transition: 0.3s; display: flex; flex-direction: column; animation: fadeInUp 0.8s ease-out; }
-        .card:hover { transform: translateY(-10px); box-shadow: 10px 10px 0px #ff6b00; }
-        .card-image { width: 100%; height: 230px; object-fit: cover; border-bottom: 3px solid #000; }
-        .card-info { padding: 25px; flex-grow: 1; }
-        .card-info h3 { font-family: 'Archivo Black', sans-serif; font-size: 20px; margin-bottom: 10px; text-transform: uppercase; }
-        .card-footer { display: flex; justify-content: space-between; align-items: center; padding: 0 25px 25px; }
-        .card-price { color: #ff6b00; font-size: 26px; font-weight: 900; text-shadow: 1.5px 1.5px 0px #000; }
-        
-        .add-btn { background: #fff; color: #000; border: 3px solid #000; padding: 12px 20px; border-radius: 15px; cursor: pointer; font-weight: 900; transition: 0.2s; box-shadow: 4px 4px 0px #000; text-transform: uppercase; font-size: 13px; }
-        .add-btn:hover { transform: scale(1.05) translateY(-2px); background: #ff6b00; color: #fff; box-shadow: 6px 6px 0px #000; }
+        /* --- HERO & CARDS --- */
+        .hero-swiper { width: 100%; min-height: 500px; border-bottom: 5px solid #000; background: url('imagenes/carrusel.png') center/cover; }
+        .slide-container { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 40px; width: 100%; max-width: 1100px; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(8px); padding: 30px; border-radius: 30px; border: 2px solid rgba(255,255,255,0.3); animation: fadeInUp 0.8s ease-out; }
+        .slide-text h1 { font-family: 'Archivo Black', sans-serif; font-size: clamp(28px, 5vw, 55px); color: #fff; text-shadow: 3px 3px 0px #000; text-transform: uppercase; }
+        .slide-img { max-height: 350px; border-radius: 40px; box-shadow: 0 15px 35px rgba(0,0,0,0.4); border: 5px solid #fff; }
+        
+        .container { max-width: 1200px; margin: 0 auto; padding: 50px 20px; }
+        .section-title { font-family: 'Archivo Black', sans-serif; text-align: center; margin-bottom: 40px; font-size: clamp(24px, 5vw, 35px); text-transform: uppercase; text-shadow: 3px 3px 0px #ff6b00; color: #000; }
+        
+        .grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px; }
+        .card { background: white; border-radius: 20px; border: 3px solid #000; overflow: hidden; box-shadow: 6px 6px 0px #000; transition: 0.3s; display: flex; flex-direction: column; animation: fadeInUp 0.8s ease-out; }
+        .card:hover { transform: translateY(-10px); box-shadow: 10px 10px 0px #ff6b00; }
+        .card-image { width: 100%; height: 230px; object-fit: cover; border-bottom: 3px solid #000; }
+        .card-price { color: #ff6b00; font-size: 26px; font-weight: 900; text-shadow: 1.5px 1.5px 0px #000; }
+        
+        .add-btn { background: #fff; color: #000; border: 3px solid #000; padding: 12px 20px; border-radius: 15px; cursor: pointer; font-weight: 900; box-shadow: 4px 4px 0px #000; text-transform: uppercase; }
 
-        .main-footer { background-color: #fff; border-top: 5px solid #000; padding: 40px 20px; margin-top: 50px; }
-        .footer-grid { max-width: 800px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; text-align: center; }
-        .footer-col h4 { font-family: 'Archivo Black', sans-serif; font-size: 16px; margin-bottom: 15px; text-transform: uppercase; }
-        .footer-col a { display: block; text-decoration: none; color: #333; font-size: 14px; margin-bottom: 10px; font-weight: 700; transition: 0.2s; }
-        .footer-col a:hover { color: #ff6b00; }
-        .copy { text-align: center; margin-top: 30px; font-size: 13px; font-weight: 900; text-transform: uppercase; border-top: 2px solid #000; padding-top: 20px; }
-
-        @media (max-width: 850px) {
-            .slide-container { grid-template-columns: 1fr; text-align: center; }
-            .slide-text { order: 2; } .slide-image-wrapper { order: 1; }
-            .footer-grid { grid-template-columns: 1fr; }
-        }
-    </style>
+        .main-footer { background-color: #fff; border-top: 5px solid #000; padding: 40px 20px; margin-top: 50px; }
+        .copy { text-align: center; margin-top: 30px; font-size: 13px; font-weight: 900; text-transform: uppercase; border-top: 2px solid #000; padding-top: 20px; }
+    </style>
 </head>
 <body>
 
-    <header class="header">
-        <a href="index.html" class="logo-container">
-            <img src="imagenes/logo.png" alt="Freddy's Logo" class="logo-img">
-            <span class="logo-text">FREDDY'S PIZZA</span>
-        </a>
-        <div class="header-right">
-            <div style="position: relative;" id="userMenuContainer">
-                <div class="cart-btn" id="userBtn">👤</div>
-                
-                <div class="user-dropdown" id="userDropdown">
-                    <div class="user-info-box">
-                        <img id="userAvatarDropdown" src="" class="dropdown-avatar" style="display: none;">
-                        <div id="userInitial" style="width:60px; height:60px; background:#ff6b00; color:#fff; display:none; align-items:center; justify-content:center; font-weight:900; border-radius:50%; border: 3px solid #000; margin: 0 auto 10px; font-size: 24px;"></div>
-                        <h4 id="userName" style="font-size:16px; font-family:'Archivo Black', sans-serif; margin-bottom: 2px; text-transform: uppercase;"></h4>
-                        <p id="userEmail" style="font-size:11px; color: #666; word-break: break-all; margin-bottom: 5px;"></p>
-                        <p id="userRole" class="user-role-badge"></p>
-                    </div>
-                    
-                    <div id="adminLinkContainer"></div>
-                    <a href="perfil.html" class="profile-menu-link">👤 Mi Perfil</a>
-                    <button onclick="cerrarSesion()" class="logout-btn">Cerrar Sesión</button>
-                </div>
-            </div>
+<audio id="bg-music-freddy" src="https://www.myinstants.com/media/sounds/fnaf-sister-location-night-start.mp3" preload="auto" loop></audio>
+<audio id="sound-bong" src="https://www.myinstants.com/media/sounds/freddys-honk-nose.mp3" preload="auto"></audio>
 
-            <a href="carrito.html" class="cart-btn">
-                🛒<span id="cartBadge" class="cart-badge" style="display: none;">0</span>
-            </a>
-        </div>
-    </header>
+<div id="chat-btn" onclick="toggleChat()" style="position: fixed; bottom: 25px; right: 25px; background: #ff6b00; color: white; width: 65px; height: 65px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 32px; cursor: pointer; box-shadow: 4px 4px 0px #000; z-index: 4000; border: 3px solid #000;">🐻</div>
 
-    <section class="swiper hero-swiper">
-        <div class="swiper-wrapper">
-            <div class="swiper-slide">
-                <div class="slide-container">
-                    <div class="slide-text">
-                        <h1>Pepperoni <br> Legendario</h1>
-                        <p>Nuestra pizza estrella con pepperoni de corte grueso y una mezcla secreta de quesos derretidos.</p>
-                        <a href="catalogo.html" class="add-btn" style="display: inline-block; text-decoration: none; padding: 15px 25px;">¡ORDENAR YA!</a>
-                    </div>
-                    <div class="slide-image-wrapper">
-                        <img src="imagenes/pizza_pepe.png" class="slide-img" alt="Pizza">
-                    </div>
-                </div>
-            </div>
-            <div class="swiper-slide">
-                <div class="slide-container">
-                    <div class="slide-text">
-                        <h1>Clásica <br> Margherita</h1>
-                        <p>Mozzarella fresca de búfala, albahaca recién cortada y el mejor aceite de oliva extra virgen.</p>
-                        <a href="catalogo.html" class="add-btn" style="display: inline-block; text-decoration: none; padding: 15px 25px;">VER CATÁLOGO</a>
-                    </div>
-                    <div class="slide-image-wrapper">
-                        <img src="imagenes/pizza_marg.png" class="slide-img" alt="Pizza">
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="swiper-button-next" style="color: #fff;"></div>
-        <div class="swiper-button-prev" style="color: #fff;"></div>
-        <div class="swiper-pagination"></div>
-    </section>
+<div id="chat-window" style="display: none; position: fixed; bottom: 100px; right: 25px; width: 350px; height: 550px; background: #fff; border: 4px solid #000; border-radius: 20px; flex-direction: column; overflow: hidden; z-index: 4000; box-shadow: 12px 12px 0px rgba(0,0,0,0.15);">
+    <div style="background: #000; color: #fff; padding: 18px; display: flex; justify-content: space-between; align-items: center; border-bottom: 4px solid #000;">
+        <span style="font-weight: 900; font-family: 'Archivo Black';">FREDDY'S RESPONDE</span>
+        <button onclick="toggleChat()" style="background:none; border:none; color:#fff; font-size:24px; cursor:pointer;">&times;</button>
+    </div>
+    <div id="chat-messages" style="flex: 1; padding: 15px; overflow-y: auto; background: #fdf2e9; display: flex; flex-direction: column; gap: 15px;">
+        <div class="msg-bot">¡Hola! Soy Freddy. ¿Qué te gustaría hacer hoy? 🍕</div>
+        <div class="btn-group">
+            <button class="action-btn" onclick="processInput('Ver Menú')">🍕 Menú</button>
+            <button class="action-btn" onclick="processInput('Soporte')">🛠️ Soporte</button>
+            <button class="action-btn" onclick="processInput('Ubicación')">📍 Ubicación</button>
+        </div>
+    </div>
+    <div style="padding: 15px; border-top: 3px solid #000; display: flex; gap: 8px; background: #fff;">
+        <input type="text" id="user-input" placeholder="Dime algo..." style="flex: 1; border: 2px solid #000; padding: 10px; border-radius: 8px; outline: none; font-weight: bold;">
+        <button onclick="sendText()" style="background: #ff6b00; border: 2px solid #000; color: white; padding: 0 15px; border-radius: 8px; cursor: pointer; font-weight: bold;">></button>
+    </div>
+</div>
 
-    <div class="container">
-        <h2 class="section-title">Especialidades</h2>
-        <div class="grid-container">
-            <div class="card">
-                <img src="imagenes/pizza_pepe.png" class="card-image" alt="Pepperoni">
-                <div class="card-info">
-                    <h3>Pepperoni Premium</h3>
-                    <p>Corte grueso y extra queso.</p>
-                </div>
-                <div class="card-footer">
-                    <span class="card-price">$121.99</span>
-                    <button class="add-btn" onclick="addToCart('Pepperoni Premium', 121.99, 'imagenes/pizza_pepe.png')">AGREGAR</button>
-                </div>
-            </div>
-            <div class="card">
-                <img src="imagenes/pizza_suprema.png" class="card-image" alt="Suprema">
-                <div class="card-info">
-                    <h3>Pizza Suprema</h3>
-                    <p>Pimientos, cebolla y champiñones.</p>
-                </div>
-                <div class="card-footer">
-                    <span class="card-price">$166.99</span>
-                    <button class="add-btn" onclick="addToCart('Pizza Suprema', 166.99, 'imagenes/pizza_suprema.png')">AGREGAR</button>
-                </div>
-            </div>
-            <div class="card">
-                <img src="imagenes/pizza_marg.png" class="card-image" alt="Margherita">
-                <div class="card-info">
-                    <h3>Margherita</h3>
-                    <p>Sencillez: mozzarella y albahaca.</p>
-                </div>
-                <div class="card-footer">
-                    <span class="card-price">$158.99</span>
-                    <button class="add-btn" onclick="addToCart('Margherita', 158.99, 'imagenes/pizza_marg.png')">AGREGAR</button>
-                </div>
-            </div>
-        </div>
-    </div>
+<header class="header">
+    <a href="index.html" class="logo-container">
+        <img src="imagenes/logo.png" alt="Freddy's Logo" class="logo-img">
+        <span class="logo-text">FREDDY'S PIZZA</span>
+    </a>
+    <div class="header-right">
+        <div style="position: relative;" id="userMenuContainer">
+            <div class="cart-btn" id="userBtn">👤</div>
+            <div class="user-dropdown" id="userDropdown">
+                <div class="user-info-box">
+                    <img id="userAvatarDropdown" src="" class="dropdown-avatar" style="display: none;">
+                    <div id="userInitial" style="width:60px; height:60px; background:#ff6b00; color:#fff; display:none; align-items:center; justify-content:center; font-weight:900; border-radius:50%; border: 3px solid #000; margin: 0 auto 10px; font-size: 24px;"></div>
+                    <h4 id="userName" style="font-family:'Archivo Black';"></h4>
+                    <p id="userEmail" style="font-size:11px; color:#666;"></p>
+                    <p id="userRole" class="user-role-badge"></p>
+                </div>
+                <div id="adminLinkContainer"></div>
+                <a href="perfil.html" class="profile-menu-link">👤 Mi Perfil</a>
+                <button onclick="cerrarSesion()" class="logout-btn">Cerrar Sesión</button>
+            </div>
+        </div>
+        <a href="carrito.html" class="cart-btn">
+            🛒<span id="cartBadge" class="cart-badge" style="display: none;">0</span>
+        </a>
+    </div>
+</header>
 
-    <footer class="main-footer">
-        <div class="footer-grid">
-            <div class="footer-col"><h4>Menú</h4><a href="catalogo.html">Pizzas</a><a href="catalogo.html">Promos</a></div>
-            <div class="footer-col"><h4>Nosotros</h4><a href="contacto.html">Historia</a></div>
-            <div class="footer-col"><h4>Contacto</h4><a href="Conta.html">Atención</a></div>
-        </div>
-        <div class="copy">© 2026 FREDDY'S PIZZA. TODOS LOS DERECHOS RESERVADOS.</div>
-    </footer>
+<section class="swiper hero-swiper">
+    <div class="swiper-wrapper">
+        <div class="swiper-slide">
+            <div class="slide-container">
+                <div class="slide-text">
+                    <h1>Pepperoni <br> Legendario</h1>
+                    <p>Nuestra pizza estrella con pepperoni de corte grueso.</p>
+                    <a href="catalogo.html" class="add-btn" style="text-decoration: none; display: inline-block; padding: 15px 25px;">¡ORDENAR YA!</a>
+                </div>
+                <img src="imagenes/pizza_pepe.png" class="slide-img">
+            </div>
+        </div>
+    </div>
+    <div class="swiper-pagination"></div>
+</section>
 
-    <script>
-        const SUPABASE_URL = 'https://vndfmcxlifcwzpjbphoy.supabase.co';
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZuZGZtY3hsaWZjd3pwamJwaG95Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3OTc3MDIsImV4cCI6MjA4NzM3MzcwMn0.OkQ6aSZsHkyLMgfT-x0w3beJ3Ey95smEujmhT7ZfjuY'; 
-        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+<div class="container">
+    <h2 class="section-title">Especialidades</h2>
+    <div class="grid-container">
+        <div class="card">
+            <img src="imagenes/pizza_pepe.png" class="card-image">
+            <div style="padding:20px;">
+                <h3 style="font-family:'Archivo Black';">Pepperoni Premium</h3>
+                <p>Corte grueso y extra queso.</p>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-top:15px;">
+                    <span class="card-price">$121.99</span>
+                    <button class="add-btn" onclick="addToCart('Pepperoni Premium', 121.99, 'imagenes/pizza_pepe.png')">AGREGAR</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-        document.addEventListener('DOMContentLoaded', () => {
-            initAuth();
-            updateCartBadge();
-            new Swiper('.hero-swiper', {
-                loop: true, autoplay: { delay: 5000 },
-                pagination: { el: '.swiper-pagination', clickable: true },
-                navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
-            });
-        });
+<footer class="main-footer">
+    <div class="copy">© 2026 FREDDY'S PIZZA. TODOS LOS DERECHOS RESERVADOS.</div>
+</footer>
 
-        async function initAuth() {
-            const { data: { user } } = await supabaseClient.auth.getUser();
-            const userBtn = document.getElementById('userBtn');
-            const userDropdown = document.getElementById('userDropdown');
+<script>
+    const SUPABASE_URL = 'https://vndfmcxlifcwzpjbphoy.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZuZGZtY3hsaWZjd3pwamJwaG95Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3OTc3MDIsImV4cCI6MjA4NzM3MzcwMn0.OkQ6aSZsHkyLMgfT-x0w3beJ3Ey95smEujmhT7ZfjuY'; 
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-            if (user) {
-                // Obtener datos del perfil unificado (asegúrate que en tu DB sea foto_url)
-                const { data: perfil } = await supabaseClient
-                    .from('perfiles')
-                    .select('rol, nombre, foto_url')
-                    .eq('id', user.id)
-                    .maybeSingle();
+    const messagesContainer = document.getElementById('chat-messages');
+    const bong = document.getElementById('sound-bong');
+    const bgMusic = document.getElementById('bg-music-freddy');
 
-                const rol = perfil?.rol || 'usuario';
-                const nombre = perfil?.nombre || user.email.split('@')[0];
-                const foto = perfil?.foto_url;
+    document.addEventListener('DOMContentLoaded', () => {
+        initAuth();
+        updateCartBadge();
+        new Swiper('.hero-swiper', { loop: true, autoplay: { delay: 5000 } });
+    });
 
-                // Actualizar Botón del Header
-                if (foto) {
-                    userBtn.innerHTML = `<img src="${foto}" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">`;
-                } else {
-                    const inicial = nombre.charAt(0).toUpperCase();
-                    userBtn.innerHTML = `<div style="width:100%; height:100%; background:#ff6b00; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:900; border-radius:50%; font-size:18px;">${inicial}</div>`;
-                }
-                
-                // Evento para abrir dropdown
-                userBtn.onclick = (e) => { 
-                    e.stopPropagation();
-                    userDropdown.classList.toggle('active'); 
-                };
+    function toggleChat() {
+        const win = document.getElementById('chat-window');
+        const isHidden = win.style.display === 'none';
+        win.style.display = isHidden ? 'flex' : 'none';
+        if(isHidden) { bgMusic.volume = 0.1; bgMusic.play(); } else { bgMusic.pause(); }
+    }
 
-                // Llenar información del Dropdown
-                const avatarImg = document.getElementById('userAvatarDropdown');
-                const initialDiv = document.getElementById('userInitial');
-                
-                if (foto) {
-                    avatarImg.src = foto;
-                    avatarImg.style.display = 'block';
-                    initialDiv.style.display = 'none';
-                } else {
-                    avatarImg.style.display = 'none';
-                    initialDiv.textContent = nombre.charAt(0).toUpperCase();
-                    initialDiv.style.display = 'flex';
-                }
+    function processInput(val) {
+        addMsg(val, 'msg-user');
+        setTimeout(() => {
+            bong.currentTime = 0; bong.volume = 0.3; bong.play();
+            let response = "";
+            let input = val.toLowerCase();
 
-                document.getElementById('userName').textContent = nombre;
-                document.getElementById('userEmail').textContent = user.email;
-                document.getElementById('userRole').textContent = rol;
-                
-                if (rol === 'admin') {
-                    document.getElementById('adminLinkContainer').innerHTML = `
-                        <a href="panelA.html" class="profile-menu-link admin-link">⚙️ PANEL ADMIN</a>
-                    `;
-                }
-            } else {
-                // Si no hay usuario, mandarlo al login al hacer clic
-                userBtn.onclick = () => window.location.href = 'login.html';
-            }
-        }
+            if (input.includes("menú")) {
+                response = "¡Pizzas recién salidas del horno! 🍕<div class='pizza-card'>• Suprema: $166.99<br>• Pepperoni: $121.99</div>";
+            } else if (input.includes("soporte")) {
+                response = "🛠️ ¿Algo anda mal? Prueba recargar la página. ¡Estoy aquí para ayudar!";
+            } else {
+                response = "¡Hola! Soy Freddy. ¿Quieres ver el menú o saber nuestra ubicación?";
+            }
+            addMsg(response, 'msg-bot');
+        }, 600);
+    }
 
-        async function cerrarSesion() {
-            await supabaseClient.auth.signOut();
-            window.location.reload();
-        }
+    function addMsg(text, type) {
+        const div = document.createElement('div');
+        div.className = type;
+        div.innerHTML = (type === 'msg-user' ? '<b>Tú:</b> ' : '<b>Freddy:</b> ') + text;
+        messagesContainer.appendChild(div);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
 
-        // --- LÓGICA DE CARRITO ---
-        function addToCart(name, price, img) {
-            let cart = JSON.parse(localStorage.getItem('pizzaCart')) || {};
-            cart[name] = cart[name] ? {...cart[name], quantity: cart[name].quantity + 1} : {name, price, image: img, quantity: 1};
-            localStorage.setItem('pizzaCart', JSON.stringify(cart));
-            updateCartBadge();
-        }
+    function sendText() {
+        const input = document.getElementById('user-input');
+        if (input.value.trim()) { processInput(input.value); input.value = ""; }
+    }
 
-        function updateCartBadge() {
-            let cart = JSON.parse(localStorage.getItem('pizzaCart')) || {};
-            let total = Object.values(cart).reduce((s, i) => s + i.quantity, 0);
-            const badge = document.getElementById('cartBadge');
-            if (total > 0) {
-                badge.style.display = 'flex';
-                badge.textContent = total;
-            } else {
-                badge.style.display = 'none';
-            }
-        }
+    async function initAuth() {
+        const { data: { user } } = await supabaseClient.auth.getUser();
+        const userBtn = document.getElementById('userBtn');
+        if (user) {
+            const { data: perfil } = await supabaseClient.from('perfiles').select('*').eq('id', user.id).maybeSingle();
+            const nombre = perfil?.nombre || user.email.split('@')[0];
+            userBtn.innerHTML = `<div style="width:100%;height:100%;background:#ff6b00;color:#fff;display:flex;align-items:center;justify-content:center;border-radius:50%;font-weight:900;">${nombre[0].toUpperCase()}</div>`;
+            document.getElementById('userName').textContent = nombre;
+            document.getElementById('userEmail').textContent = user.email;
+            userBtn.onclick = (e) => { e.stopPropagation(); document.getElementById('userDropdown').classList.toggle('active'); };
+        } else {
+            userBtn.onclick = () => window.location.href = 'login.html';
+        }
+    }
 
-        // Cerrar dropdown al hacer clic fuera
-        window.onclick = (e) => {
-            const container = document.getElementById('userMenuContainer');
-            if (container && !container.contains(e.target)) {
-                document.getElementById('userDropdown').classList.remove('active');
-            }
-        };
-    </script>
+    function addToCart(name, price, img) {
+        let cart = JSON.parse(localStorage.getItem('pizzaCart')) || {};
+        cart[name] = cart[name] ? {...cart[name], quantity: cart[name].quantity + 1} : {name, price, image: img, quantity: 1};
+        localStorage.setItem('pizzaCart', JSON.stringify(cart));
+        updateCartBadge();
+    }
+
+    function updateCartBadge() {
+        let cart = JSON.parse(localStorage.getItem('pizzaCart')) || {};
+        let total = Object.values(cart).reduce((s, i) => s + i.quantity, 0);
+        const badge = document.getElementById('cartBadge');
+        if (total > 0) { badge.style.display = 'flex'; badge.textContent = total; }
+    }
+
+    async function cerrarSesion() { await supabaseClient.auth.signOut(); window.location.reload(); }
+    window.onclick = () => document.getElementById('userDropdown').classList.remove('active');
+</script>
 </body>
 </html>
