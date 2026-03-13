@@ -140,6 +140,111 @@
 </head>
 <body>
 
+    <audio id="chat-sound" src="https://assets.mixkit.co/active_storage/sfx/2354/2354-preview.mp3" preload="auto"></audio>
+
+<div id="chat-btn" onclick="toggleChat()" style="position: fixed; bottom: 30px; right: 30px; background: #ff6b00; color: white; width: 65px; height: 65px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; cursor: pointer; box-shadow: 5px 5px 0px #000; z-index: 3000; border: 3px solid #000; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
+    🍕
+</div>
+
+<div id="chat-window" style="display: none; position: fixed; bottom: 110px; right: 30px; width: 320px; height: 480px; background: white; border: 4px solid #000; border-radius: 20px; flex-direction: column; overflow: hidden; z-index: 3000; box-shadow: 10px 10px 0px rgba(0,0,0,0.15); animation: chatFadeIn 0.3s ease-out;">
+    
+    <div style="background: #000; color: white; padding: 15px; font-family: 'Archivo Black', sans-serif; font-size: 14px; display: flex; justify-content: space-between; align-items: center;">
+        <div style="display: flex; align-items: center; gap: 8px;">
+            <div style="width: 10px; height: 10px; background: #00ff00; border-radius: 50%; box-shadow: 0 0 5px #00ff00;"></div>
+            <span>FREDDY'S BOT 🤖</span>
+        </div>
+        <button onclick="toggleChat()" style="background:none; border:none; color:white; font-size:20px; cursor:pointer; font-family:'Archivo Black';">×</button>
+    </div>
+
+    <div id="chat-messages" style="flex: 1; padding: 15px; overflow-y: auto; font-size: 14px; background: #fdf2e9; display: flex; flex-direction: column; gap: 12px; font-family: 'Segoe UI', sans-serif;">
+        <div style="background: #fff; border: 2.3px solid #000; padding: 10px; border-radius: 12px; align-self: flex-start; box-shadow: 3px 3px 0px #000; max-width: 85%;">
+            <strong>Freddy:</strong> ¡Hola pizzero! 🐻 Soy Freddy. ¿En qué puedo ayudarte hoy? 
+            <br><small style="color: #666; font-size: 10px;">Pregunta por: menú, horario, pago...</small>
+        </div>
+    </div>
+
+    <div style="padding: 15px; border-top: 4px solid #000; display: flex; gap: 8px; background: #fff;">
+        <input type="text" id="chat-input" placeholder="Escribe aquí..." style="flex: 1; border: 2.5px solid #000; padding: 12px; border-radius: 12px; font-family: 'Segoe UI'; font-weight: bold; outline: none; font-size: 14px;">
+        <button onclick="sendMessage()" style="background: #ff6b00; border: 2.5px solid #000; color: white; width: 45px; height: 45px; border-radius: 12px; cursor: pointer; box-shadow: 3px 3px 0px #000; font-weight: bold; display: flex; align-items: center; justify-content: center; transition: 0.2s;">
+            ➤
+        </button>
+    </div>
+</div>
+
+<style>
+    @keyframes chatFadeIn {
+        from { opacity: 0; transform: translateY(20px) scale(0.9); }
+        to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    #chat-btn:hover { transform: scale(1.1) rotate(5deg); }
+    .chat-msg-user { align-self: flex-end; background: #ff6b00; color: white; padding: 10px; border-radius: 12px; border: 2.3px solid #000; box-shadow: 3px 3px 0px #000; max-width: 85%; animation: msgSlide 0.2s ease-out; }
+    .chat-msg-bot { align-self: flex-start; background: #fff; color: #000; padding: 10px; border-radius: 12px; border: 2.3px solid #000; box-shadow: 3px 3px 0px #000; max-width: 85%; animation: msgSlide 0.2s ease-out; }
+    @keyframes msgSlide { from { opacity: 0; transform: translateX(10px); } to { opacity: 1; transform: translateX(0); } }
+</style>
+
+<script>
+    function toggleChat() {
+        const chat = document.getElementById('chat-window');
+        chat.style.display = (chat.style.display === 'none' || chat.style.display === '') ? 'flex' : 'none';
+        if(chat.style.display === 'flex') document.getElementById('chat-input').focus();
+    }
+
+    const freddyKnowledge = {
+        "hola": "¡Hola! ¿Buscas la mejor pizza de la ciudad? Estás en el lugar correcto. 🍕",
+        "menu": "Nuestras estrellas son:\n1. Pepperoni Premium ($121.99)\n2. Pizza Suprema ($166.99)\n3. Margherita ($158.99)",
+        "horario": "Cocinamos de 12:00 PM a 11:00 PM, ¡todos los días de la semana!",
+        "pago": "Aceptamos efectivo al entregar y Mercado Pago (tarjetas) aquí en la web.",
+        "donde": "Estamos en el centro, pero nuestro delivery llega a todos lados. 🛵",
+        "freddy": "¡Ese soy yo! El oso pizzero. Mi misión es que no te quedes con hambre.",
+        "gracias": "¡A ti! Disfruta tu pizza y no olvides la salsa. 😉",
+        "promo": "¡Si pides ahora, Freddy te garantiza una pizza caliente y deliciosa!",
+        "admin": "Solo los elegidos entran al panel de admin... ¿tú eres uno?",
+        "carrito": "Haz clic en el icono del carrito arriba a la derecha para ver tu pedido."
+    };
+
+    function playChatSound() {
+        const sound = document.getElementById('chat-sound');
+        sound.currentTime = 0;
+        sound.play().catch(e => console.log("Audio block by browser"));
+    }
+
+    function sendMessage() {
+        const input = document.getElementById('chat-input');
+        const text = input.value.trim();
+        if (!text) return;
+
+        addMessage('Tú', text, 'chat-msg-user');
+        input.value = "";
+
+        setTimeout(() => {
+            const userQuery = text.toLowerCase();
+            let response = "Hmm, no tengo eso en mi cajón de pizzas. Prueba preguntando por el 'menu', 'horario' o 'pago'.";
+
+            for (let key in freddyKnowledge) {
+                if (userQuery.includes(key)) {
+                    response = freddyKnowledge[key];
+                    break;
+                }
+            }
+            addMessage('Freddy', response, 'chat-msg-bot');
+            playChatSound();
+        }, 700);
+    }
+
+    function addMessage(sender, text, className) {
+        const container = document.getElementById('chat-messages');
+        const msg = document.createElement('div');
+        msg.className = className;
+        msg.innerHTML = `<strong>${sender}:</strong> ${text.replace(/\n/g, '<br>')}`;
+        container.appendChild(msg);
+        container.scrollTop = container.scrollHeight;
+    }
+
+    document.getElementById('chat-input').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') sendMessage();
+    });
+</script>
+
     <header class="header">
         <a href="index.html" class="logo-container">
             <img src="imagenes/logo.png" alt="Freddy's Logo" class="logo-img">
