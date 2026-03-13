@@ -140,196 +140,126 @@
 </head>
 <body>
 
-<audio id="bg-music" src="https://www.myinstants.com/media/sounds/fnaf-sister-location-night-start.mp3" preload="auto" loop></audio>
-<audio id="response-bong" src="https://www.myinstants.com/media/sounds/freddys-honk-nose.mp3" preload="auto"></audio>
+<audio id="bg-music-freddy" src="https://www.myinstants.com/media/sounds/fnaf-sister-location-night-start.mp3" preload="auto" loop></audio>
+<audio id="sound-bong" src="https://www.myinstants.com/media/sounds/freddys-honk-nose.mp3" preload="auto"></audio>
 
-<div id="chat-btn" onclick="toggleChat()" style="position: fixed; bottom: 30px; right: 30px; background: #ff6b00; color: white; width: 75px; height: 75px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 38px; cursor: pointer; box-shadow: 0 0 20px rgba(255,107,0,0.4), 6px 6px 0px #000; z-index: 3000; border: 4px solid #000; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
+<div id="chat-btn" onclick="toggleChat()" style="position: fixed; bottom: 25px; right: 25px; background: #ff6b00; color: white; width: 65px; height: 65px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 32px; cursor: pointer; box-shadow: 4px 4px 0px #000; z-index: 4000; border: 3px solid #000;">
     🐻
 </div>
 
-<div id="chat-window" style="display: none; position: fixed; bottom: 120px; right: 30px; width: 380px; height: 600px; background: white; border: 4px solid #000; border-radius: 24px; flex-direction: column; overflow: hidden; z-index: 3000; box-shadow: 18px 18px 0px rgba(0,0,0,0.3); animation: slideInChat 0.4s ease;">
+<div id="chat-window" style="display: none; position: fixed; bottom: 100px; right: 25px; width: 350px; height: 550px; background: #fff; border: 4px solid #000; border-radius: 15px; flex-direction: column; overflow: hidden; z-index: 4000; box-shadow: 10px 10px 0px rgba(0,0,0,0.1); font-family: 'Segoe UI', sans-serif;">
     
-    <div style="background: #000; color: white; padding: 18px; font-family: 'Archivo Black', sans-serif; display: flex; justify-content: space-between; align-items: center; border-bottom: 5px solid #ff6b00;">
-        <div style="display: flex; align-items: center; gap: 12px;">
-            <div style="width: 14px; height: 14px; background: #00ff00; border-radius: 50%; box-shadow: 0 0 12px #00ff00;"></div>
-            <span style="letter-spacing: 1.5px; font-size: 15px;">FAZBEAR SUPPORT</span>
-        </div>
-        <div style="display: flex; gap: 15px; align-items: center;">
-            <span onclick="clearChat()" title="Limpiar" style="cursor:pointer; font-size: 18px; opacity: 0.7;">🗑️</span>
-            <span onclick="toggleChat()" style="cursor:pointer; font-size: 26px;">×</span>
+    <div style="background: #000; color: #fff; padding: 15px; display: flex; justify-content: space-between; align-items: center;">
+        <span style="font-weight: 900; letter-spacing: 1px;">FREDDY'S RESPONDE VA</span>
+        <button onclick="toggleChat()" style="background:none; border:none; color:#fff; font-size:24px; cursor:pointer;">&times;</button>
+    </div>
+
+    <div id="chat-messages" style="flex: 1; padding: 15px; overflow-y: auto; background: #fdf2e9; display: flex; flex-direction: column; gap: 15px;">
+        <div class="msg-bot">¡Hola! Soy Freddy. ¿Qué te gustaría hacer hoy? 🍕</div>
+        <div class="btn-group">
+            <button class="action-btn" onclick="processInput('Ver Menú')">🍕 Ver Menú</button>
+            <button class="action-btn" onclick="processInput('Soporte Técnico')">🛠️ Soporte</button>
+            <button class="action-btn" onclick="processInput('Ubicación')">📍 Dónde estamos</button>
         </div>
     </div>
 
-    <div id="chat-messages" style="flex: 1; padding: 20px; overflow-y: auto; background: #fdf2e9; display: flex; flex-direction: column; gap: 18px; font-family: 'Segoe UI', sans-serif; scroll-behavior: smooth;">
-        <div class="chat-msg-bot">
-            <strong>Freddy:</strong> ¡Bienvenido pizzero! Soy tu asistente virtual. ¿Listo para la mejor pizza de la ciudad o tienes alguna duda técnica?
-        </div>
-        <div id="main-opts" class="options-container">
-            <button class="opt-btn" onclick="handleInput('🍕 Ver Menú')">🍕 Ver Menú</button>
-            <button class="opt-btn" onclick="handleInput('🛠️ Reportar Error')">🛠️ Reportar Error</button>
-            <button class="opt-btn" onclick="handleInput('📞 Contacto')">📞 Contacto</button>
-        </div>
-    </div>
-
-    <div style="padding: 18px; border-top: 4px solid #000; display: flex; gap: 10px; background: #fff;">
-        <input type="text" id="chat-input" placeholder="Pregunta por horario, ubicación, menú..." style="flex: 1; border: 3px solid #000; padding: 14px; border-radius: 12px; font-weight: bold; outline: none; font-size: 15px;">
-        <button onclick="sendMessage()" style="background: #ff6b00; border: 3px solid #000; color: white; width: 55px; height: 55px; border-radius: 12px; cursor: pointer; box-shadow: 3px 3px 0px #000; display: flex; align-items: center; justify-content: center;">
-            ➤
-        </button>
+    <div style="padding: 15px; border-top: 3px solid #000; display: flex; gap: 8px; background: #fff;">
+        <input type="text" id="user-input" placeholder="Pregúntame algo..." style="flex: 1; border: 2px solid #000; padding: 10px; border-radius: 8px; outline: none; font-weight: bold;">
+        <button onclick="sendText()" style="background: #ff6b00; border: 2px solid #000; color: white; padding: 0 15px; border-radius: 8px; cursor: pointer; font-weight: bold;">></button>
     </div>
 </div>
 
 <style>
-    @keyframes slideInChat { from { transform: translateY(30px) scale(0.9); opacity: 0; } to { transform: translateY(0) scale(1); opacity: 1; } }
-    
-    .options-container { display: flex; flex-wrap: wrap; gap: 10px; padding-bottom: 5px; }
-    
-    .opt-btn { background: #fff; border: 3px solid #000; padding: 10px 15px; border-radius: 12px; cursor: pointer; font-size: 13px; font-weight: 900; box-shadow: 4px 4px 0px #000; transition: 0.2s; font-family: 'Archivo Black', sans-serif; text-transform: uppercase; }
-    .opt-btn:hover { background: #ff6b00; color: #fff; transform: translate(-3px, -3px); box-shadow: 7px 7px 0px #000; }
-    
-    .chat-msg-user { align-self: flex-end; background: #ff6b00; color: white; padding: 14px; border-radius: 18px 18px 2px 18px; border: 3px solid #000; box-shadow: 5px 5px 0px #000; max-width: 80%; }
-    .chat-msg-bot { align-self: flex-start; background: #fff; color: #000; padding: 14px; border-radius: 18px 18px 18px 2px; border: 3px solid #000; box-shadow: 5px 5px 0px #000; max-width: 85%; }
-
-    /* Tarjetas Visuales del Menú */
-    .menu-card { background: white; border: 2px solid #000; padding: 12px; border-radius: 12px; margin-top: 10px; display: flex; flex-direction: column; gap: 8px; box-shadow: 3px 3px 0px #000; }
-    .menu-item { display: flex; justify-content: space-between; border-bottom: 1px dashed #ccc; padding: 5px 0; font-weight: bold; font-size: 14px; }
+    .msg-bot { background: #fff; border: 2px solid #000; padding: 10px 14px; border-radius: 12px 12px 12px 2px; box-shadow: 3px 3px 0px #000; align-self: flex-start; max-width: 85%; font-size: 14px; color: #000; }
+    .msg-user { background: #ff6b00; border: 2px solid #000; padding: 10px 14px; border-radius: 12px 12px 2px 12px; box-shadow: 3px 3px 0px #000; align-self: flex-end; max-width: 80%; font-size: 14px; color: #fff; font-weight: bold; }
+    .btn-group { display: flex; flex-wrap: wrap; gap: 8px; }
+    .action-btn { background: #fff; border: 2px solid #000; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: bold; box-shadow: 2px 2px 0px #000; transition: 0.1s; }
+    .action-btn:hover { transform: translate(-2px, -2px); box-shadow: 4px 4px 0px #ff6b00; }
+    .pizza-card { border: 1px solid #ddd; padding: 8px; border-radius: 8px; margin-top: 5px; background: #fff; }
 </style>
 
 <script>
-    const chatBox = document.getElementById('chat-messages');
-    const music = document.getElementById('bg-music');
-    const bong = document.getElementById('response-bong');
+    const messagesContainer = document.getElementById('chat-messages');
+    const bgMusic = document.getElementById('bg-music-freddy');
+    const bong = document.getElementById('sound-bong');
 
     function toggleChat() {
         const win = document.getElementById('chat-window');
-        const isOpen = win.style.display === 'flex';
-        win.style.display = isOpen ? 'none' : 'flex';
-        
-        if (!isOpen) {
-            music.volume = 0.2; // Música suave de fondo
-            music.play().catch(e => console.log("Audio block by browser"));
-            document.getElementById('chat-input').focus();
+        const isHidden = win.style.display === 'none';
+        win.style.display = isHidden ? 'flex' : 'none';
+        if (isHidden) {
+            bgMusic.volume = 0.15;
+            bgMusic.play();
         } else {
-            music.pause();
+            bgMusic.pause();
         }
     }
 
-    // --- NUEVA IA INTELIGENTE ---
-    // Detecta palabras clave para responder aunque no sea exacto
-    function getBotResponse(input) {
-        const val = input.toLowerCase();
-        let res = { text: "", nextOpts: ["🍕 Ver Menú", "🛠️ Reportar Error", "🏠 Inicio"] };
-
-        // 1. Menú y Pizzas
-        if (val.includes("menu") || val.includes("pizza") || val.includes("comer") || val.includes("catalogo")) {
-            res.text = "Nuestras piezas maestras. ¡Mira qué delicia! 🍕";
-            res.content = `
-                <div class="menu-card">
-                    <div class="menu-item"><span>Suprema Premium</span><b>$166.99</b></div>
-                    <div class="menu-item"><span>Pepperoni Doble</span><b>$121.99</b></div>
-                    <div class="menu-item"><span>Margherita Special</span><b>$158.99</b></div>
-                    <a href="catalogo.html" class="opt-btn" style="text-align:center; margin-top:8px; text-decoration:none; display:block;">Ver Catálogo Completo</a>
-                </div>`;
-            res.nextOpts = ["🛒 Comprar", "🎁 Ofertas", "🏠 Inicio"];
-        }
-        // 2. Errores y Soporte
-        else if (val.includes("error") || val.includes("falla") || val.includes("problema") || val.includes("no funciona")) {
-            res.text = "¡Falla detectada! Mantén la calma pizzero: <br>1. Refresca la página (F5).<br>2. Si el carrito falla, asegúrate de estar logueado.<br>3. ¿Persiste el error? Escríbenos.";
-            res.nextOpts = ["📞 Soporte Técnico", "🛠️ Limpiar Carrito", "🏠 Inicio"];
-        }
-        // 3. Pago
-        else if (val.includes("pago") || val.includes("pagar") || val.includes("dinero") || val.includes("tarjeta")) {
-            res.text = "Aceptamos Efectivo al recibir o Mercado Pago con tarjeta aquí en la web. Seguro y rápido.";
-            res.nextOpts = ["💳 Ver Métodos", "🏠 Inicio"];
-        }
-        // 4. Carrito
-        else if (val.includes("carrito") || val.includes("pedido") || val.includes("comprar")) {
-            res.text = "Tu pedido te espera arriba a la derecha. ¡Haz clic en el icono del carrito para pagar!";
-            res.content = `<a href="carrito.html" class="opt-btn" style="text-align:center; margin-top:8px; text-decoration:none; display:block;">🛒 Ir al Carrito</a>`;
-            res.nextOpts = ["🏠 Inicio"];
-        }
-        // 5. Contacto e Historia
-        else if (val.includes("contacto") || val.includes("soporte") || val.includes("humano") || val.includes("llamar")) {
-            res.text = "Para ayuda directa o nuestra historia, ve a <a href='Conta.html'><b>Contacto y Atención</b></a>.";
-            res.nextOpts = ["⏰ Horarios", "🏠 Inicio"];
-        }
-        // 6. Horarios
-        else if (val.includes("horario") || val.includes("abierto") || val.includes("cierran")) {
-            res.text = "Estamos abiertos de 12:00 PM a 11:00 PM. ¡Después de eso, Freddy sale a patrullar! 🐻";
-            res.nextOpts = ["🍕 Menú", "🏠 Inicio"];
-        }
-        // 7. Saludos y Despedidas
-        else if (val.includes("hola") || val.includes("buenos dias") || val.includes("freddy")) {
-            res.text = "¡Hola de nuevo! ¿Te sirvo una Pepperoni Suprema?";
-            res.nextOpts = ["🍕 Ver Menú", "🛠️ Reportar Error"];
-        } else if (val.includes("gracias") || val.includes("adios") || val.includes("bye")) {
-            res.text = "¡De nada pizzero! Disfruta tu pizza Freddy. ¡Vuelve pronto! 👋🍕";
-            res.nextOpts = ["🍕 Ver Menú", "🏠 Inicio"];
-        } else if (val.includes("inicio")) {
-            res.text = "¿En qué más te ayudo hoy?";
-            res.nextOpts = ["🍕 Ver Menú", "🛠️ Reportar Error", "📞 Contacto"];
-        }
-        // 8. No entiende
-        else {
-            res.text = "Hmm, mis sensores no entienden eso. ¿Probamos con el menú principal?";
-        }
-
-        return res;
-    }
-
-    function handleInput(text) {
-        addMessage('Tú', text, 'chat-msg-user');
+    function processInput(val) {
+        addMsg(val, 'msg-user');
         
         setTimeout(() => {
-            // Sonido de respuesta (Bong de Freddy)
             bong.currentTime = 0;
-            bong.volume = 0.5;
             bong.play();
+            
+            let response = "";
+            let buttons = ["🍕 Ver Menú", "🛠️ Soporte", "🏠 Inicio"];
+            let input = val.toLowerCase();
 
-            const response = getBotResponse(text);
-            addMessage('Freddy', response.text + (response.content || ""), 'chat-msg-bot');
-            renderOptions(response.nextOpts);
+            if (input.includes("menú") || input.includes("pizza")) {
+                response = "¡Nuestras Pizzas Legendarias! 🍕<div class='pizza-card'><b>• Suprema:</b> $166.99<br><b>• Pepperoni:</b> $121.99<br><b>• Margherita:</b> $158.99</div>";
+                buttons = ["🛒 Ir al Carrito", "🏠 Inicio"];
+            } else if (input.includes("soporte") || input.includes("error") || input.includes("falla")) {
+                response = "🛠️ <b>Protocolo de Error:</b><br>1. Refresca la página (F5).<br>2. Revisa tus tokens de integración.<br>3. Verifica los fondos de tu tarjeta.";
+                buttons = ["📞 Contacto", "🏠 Inicio"];
+            } else if (input.includes("ubicación") || input.includes("donde")) {
+                response = "📍 Estamos ubicados en el corazón del centro educativo. ¡Te esperamos!";
+                buttons = ["⏰ Horarios", "🏠 Inicio"];
+            } else if (input.includes("carrito") || input.includes("comprar")) {
+                response = "¡Excelente elección! Puedes revisar tu pedido aquí:";
+                response += `<br><a href="carrito.html" style="display:block; background:#000; color:#fff; text-align:center; padding:10px; margin-top:10px; text-decoration:none; border-radius:5px; font-weight:bold;">🛒 IR AL CARRITO</a>`;
+            } else if (input.includes("hola")) {
+                response = "¡Hola pizzero! ¿En qué puedo ayudarte hoy?";
+            } else {
+                response = "Hmm, mis sensores no entienden eso. ¿Usamos el menú de ayuda?";
+            }
+
+            addMsg(response, 'msg-bot');
+            renderButtons(buttons);
         }, 600);
     }
 
-    function renderOptions(opts) {
-        // Eliminar botones viejos
-        document.querySelectorAll('.options-container').forEach(e => e.remove());
-
+    function addMsg(text, type) {
         const div = document.createElement('div');
-        div.className = "options-container";
-        opts.forEach(o => {
-            const b = document.createElement('button');
-            b.className = "opt-btn";
-            b.innerText = o;
-            b.onclick = () => handleInput(o);
-            div.appendChild(b);
+        div.className = type;
+        div.innerHTML = (type === 'msg-user' ? '<b>Tú:</b> ' : '<b>Freddy:</b> ') + text;
+        messagesContainer.appendChild(div);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    function renderButtons(opts) {
+        const div = document.createElement('div');
+        div.className = "btn-group";
+        opts.forEach(opt => {
+            const btn = document.createElement('button');
+            btn.className = "action-btn";
+            btn.innerText = opt;
+            btn.onclick = () => processInput(opt);
+            div.appendChild(btn);
         });
-        chatBox.appendChild(div);
-        chatBox.scrollTop = chatBox.scrollHeight;
+        messagesContainer.appendChild(div);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
     }
 
-    function sendMessage() {
-        const input = document.getElementById('chat-input');
-        if(!input.value.trim()) return;
-        handleInput(input.value);
-        input.value = "";
+    function sendText() {
+        const input = document.getElementById('user-input');
+        if (input.value.trim()) {
+            processInput(input.value);
+            input.value = "";
+        }
     }
 
-    function addMessage(sender, text, className) {
-        const msg = document.createElement('div');
-        msg.className = className;
-        msg.innerHTML = `<strong>${sender}:</strong> ${text}`;
-        chatBox.appendChild(msg);
-        chatBox.scrollTop = chatBox.scrollHeight;
-    }
-
-    function clearChat() {
-        chatBox.innerHTML = `<div class="chat-msg-bot"><strong>Freddy:</strong> Memoria reseteada. Empecemos de nuevo.</div>`;
-        renderOptions(["🍕 Ver Menú", "🛠️ Reportar Error", "📞 Contacto"]);
-    }
-
-    document.getElementById('chat-input').addEventListener('keypress', (e) => { if(e.key === 'Enter') sendMessage(); });
+    document.getElementById('user-input').addEventListener('keypress', (e) => { if(e.key === 'Enter') sendText(); });
 </script>
     <header class="header">
         <a href="index.html" class="logo-container">
