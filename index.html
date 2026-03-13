@@ -3,46 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FREDDY'S PIZZA</title>
+    <link rel="icon" type="image/x-icon" href="freddy.png">
+    <title>FREDDY'S PIZZA - Inicio</title>
     <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        /* Estilos rápidos para asegurar que el botón se vea y el chat funcione */
-        body { font-family: sans-serif; background: #fdf2e9; margin: 0; }
+        /* --- RESTAURANDO LA ESTÉTICA ORIGINAL (BORDES GRUESOS) --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: #fdf2e9; overflow-x: hidden; }
+
+        .header { 
+            background: #fff; padding: 15px 25px; display: flex; justify-content: space-between; 
+            align-items: center; border-bottom: 5px solid #000; position: sticky; top: 0; z-index: 1000; 
+        }
+        .logo-text { font-family: 'Archivo Black'; font-size: 24px; color: #ff4500; text-shadow: 2px 2px 0px #000; text-decoration: none; }
+
+        /* --- BOTÓN FLOTANTE ORIGINAL --- */
         #chat-trigger { 
             position: fixed; bottom: 20px; right: 20px; background: #ff6b00; 
             border: 4px solid #000; width: 70px; height: 70px; border-radius: 50%; 
             display: flex; align-items: center; justify-content: center; 
             font-size: 35px; cursor: pointer; z-index: 10001; box-shadow: 6px 6px 0px #000;
         }
+
+        /* --- VENTANA DE CHAT ESTILO COMIC --- */
         #chat-window { 
-            display: none; position: fixed; bottom: 100px; right: 20px; width: 320px; height: 450px; 
-            background: #fff; border: 4px solid #000; border-radius: 20px; flex-direction: column; 
-            z-index: 10000; box-shadow: 10px 10px 0px rgba(0,0,0,0.2); overflow: hidden;
+            display: none; position: fixed; bottom: 100px; right: 20px; width: 350px; height: 500px; 
+            background: #fff; border: 5px solid #000; border-radius: 20px; flex-direction: column; 
+            z-index: 10000; box-shadow: 15px 15px 0px rgba(0,0,0,0.2); overflow: hidden;
         }
-        .chat-header { background: #000; color: #fff; padding: 10px; font-family: 'Archivo Black'; display: flex; justify-content: space-between; }
-        #chat-messages { flex-grow: 1; padding: 10px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; background: #f9f9f9; }
-        .msg { padding: 8px 12px; border-radius: 12px; border: 2px solid #000; max-width: 80%; font-size: 14px; }
+        .chat-header { background: #000; color: #fff; padding: 12px; font-family: 'Archivo Black'; display: flex; justify-content: space-between; align-items: center; }
+        #chat-messages { flex-grow: 1; padding: 15px; overflow-y: auto; background: #fdf2e9; display: flex; flex-direction: column; gap: 10px; }
+        
+        /* BURBUJAS DE MENSAJE */
+        .msg { padding: 10px 15px; border-radius: 15px; border: 3px solid #000; max-width: 85%; font-size: 14px; font-weight: bold; position: relative; }
         .bot { background: #fff; align-self: flex-start; }
         .user { background: #ff6b00; color: #fff; align-self: flex-end; }
-        .music-btn { background: #ffeb3b; border: 2px solid #000; padding: 5px; cursor: pointer; font-weight: bold; font-size: 12px; text-align: center; }
+
+        .chat-footer { padding: 10px; border-top: 4px solid #000; display: flex; gap: 5px; background: #fff; }
+        .chat-input { flex: 1; padding: 10px; border: 3px solid #000; border-radius: 10px; font-weight: bold; }
+        .send-btn { background: #ff6b00; border: 3px solid #000; padding: 10px; border-radius: 10px; cursor: pointer; font-weight: bold; }
+
+        .music-bar { background: #8bc34a; color: #000; padding: 5px; text-align: center; font-size: 12px; font-weight: bold; border-bottom: 3px solid #000; cursor: pointer; }
     </style>
 </head>
 <body>
 
-    <audio id="bgMusic" loop>
-        <source src="imagenes/cancion.mp3" type="audio/mpeg">
+    <audio id="freddyMusic" loop>
+        <source src="https://www.myinstants.com/media/sounds/fnaf-sister-location-night-start-50502.mp3" type="audio/mpeg">
     </audio>
+
+    <header class="header">
+        <a href="#" class="logo-text">FREDDY'S PIZZA</a>
+    </header>
+
+    <main style="padding: 50px 20px; text-align: center;">
+        <h1 style="font-family: 'Archivo Black'; font-size: 45px;">¡BIENVENIDO! 🍕</h1>
+        <p style="font-weight: bold; margin-top: 10px;">Haz clic en la pizza para hablar con el bot.</p>
+    </main>
 
     <div id="chat-trigger">🍕</div>
 
     <div id="chat-window">
-        <div class="chat-header"><span>FREDDY BOT</span><span id="close-chat" style="cursor:pointer">X</span></div>
-        <div id="music-btn" class="music-btn">🎵 CLIC AQUÍ PARA LA MÚSICA 🎵</div>
+        <div class="chat-header">
+            <span>FREDDY'S BOT 🤖</span>
+            <span id="close-chat" style="cursor:pointer">✕</span>
+        </div>
+        <div id="music-btn" class="music-bar">🎵 CLIC PARA ACTIVAR SONIDO FNAF 🎵</div>
         <div id="chat-messages"></div>
-        <div style="padding:10px; border-top:2px solid #000; display:flex;">
-            <input type="text" id="chat-input" style="flex:1; padding:8px;" placeholder="Dime algo...">
-            <button id="send-btn" style="background:#ff6b00; border:2px solid #000; margin-left:5px; cursor:pointer;">></button>
+        <div class="chat-footer">
+            <input type="text" id="chat-input" placeholder="Escribe tu duda...">
+            <button id="send-btn" class="send-btn">></button>
         </div>
     </div>
 
@@ -50,55 +81,61 @@
         const supabaseClient = supabase.createClient('https://vndfmcxlifcwzpjbphoy.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZuZGZtY3hsaWZjd3pwamJwaG95Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3OTc3MDIsImV4cCI6MjA4NzM3MzcwMn0.OkQ6aSZsHkyLMgfT-x0w3beJ3Ey95smEujmhT7ZfjuY');
 
         const chistes = [
-            "¿Por qué la pizza lloraba? Porque tenía mucha masa emocional. 😂",
-            "¿Qué le dice una pizza a otra? '¡Qué buena masa tienes!' 🍕",
-            "Soy un robot, pero mi corazón es de pepperoni. Pregúntame por el menú.",
-            "No entendí eso, pero... ¿sabías que la pizza redonda viene en caja cuadrada y se come en triángulos? ¡Es magia! ✨",
-            "Mi vocabulario es limitado, pero mi hambre es infinita. ¡Pide una pizza!"
+            "¿Por qué la pizza fue al médico? Porque le faltaba un poco de 'masa' emocional. 😂",
+            "¿Qué hace una pizza en un gimnasio? ¡Estirar la masa! 🍕",
+            "Freddy dice: Si no hay pizza, no hay felicidad. ¡Pide ya!",
+            "¡Uh oh! Parece que mis cables se cruzaron. No entendí, pero te cuento que la pizza de pepperoni es mi favorita.",
+            "No estoy seguro de eso, pero... ¿sabías que puedo comer 20 pizzas en un minuto? (Es broma, soy un bot)."
         ];
 
+        // Abrir/Cerrar
         document.getElementById('chat-trigger').onclick = () => {
             document.getElementById('chat-window').style.display = 'flex';
             if(document.getElementById('chat-messages').innerHTML === "") {
-                addBotMsg("¡Hola! Soy Freddy. Escribe 'menu' para ver qué tenemos hoy.");
+                addBotMsg("¡Hola! Bienvenido a Freddy's. ¿Qué te gustaría ordenar o en qué te ayudo?");
             }
         };
 
         document.getElementById('close-chat').onclick = () => document.getElementById('chat-window').style.display = 'none';
 
+        // Música
         document.getElementById('music-btn').onclick = function() {
-            const audio = document.getElementById('bgMusic');
+            const audio = document.getElementById('freddyMusic');
             audio.play();
-            this.innerHTML = "🔊 MÚSICA ACTIVA";
-            this.style.background = "#8bc34a";
+            this.innerHTML = "🔊 MÚSICA DE FNAF ACTIVA";
+            this.style.background = "#ffeb3b";
         };
 
         async function handleChat() {
             const input = document.getElementById('chat-input');
-            const text = input.value.toLowerCase().trim();
-            if(!text) return;
+            const rawText = input.value.trim();
+            if(!rawText) return;
 
-            addUserMsg(input.value);
+            addUserMsg(rawText);
+            const text = rawText.toLowerCase();
             input.value = '';
 
-            // LÓGICA DE RESPUESTAS
-            if(text.includes("menu") || text.includes("pizza") || text.includes("bebida") || text.includes("tienen")) {
-                const { data, error } = await supabaseClient.from('productos').select('nombre, precio');
-                if(error) {
-                    addBotMsg("¡Ups! Mi conexión con la cocina falló (revisa si tu Supabase está pausado).");
-                } else {
-                    let lista = data.map(p => `• ${p.nombre} ($${p.precio})`).join('<br>');
-                    addBotMsg(`**Esto tenemos para ti:**<br>${lista}`);
+            setTimeout(async () => {
+                // Lógica de productos
+                if(text.includes("menu") || text.includes("pizza") || text.includes("bebida") || text.includes("tienen") || text.includes("precios")) {
+                    const { data, error } = await supabaseClient.from('productos').select('nombre, precio, categoria');
+                    if(error || !data) {
+                        addBotMsg("¡Vaya! No puedo leer el menú. **Recuerda darle a 'Resume' en tu Supabase**.");
+                    } else {
+                        let lista = data.map(p => `• ${p.nombre} ($${p.precio})`).join('<br>');
+                        addBotMsg(`**Esto tenemos para ti:**<br>${lista}`);
+                    }
+                } 
+                // Respuesta si dicen que no se oye
+                else if(text.includes("oye") || text.includes("audio") || text.includes("musica")) {
+                    addBotMsg("¿No se oye? ¡Asegúrate de darle al botón verde arriba en el chat para activar el sonido de Sister Location!");
                 }
-            } 
-            else if(text.includes("hola")) {
-                addBotMsg("¡Hola! ¿Buscas pizza o solo vienes a saludar?");
-            }
-            else {
-                // RESPUESTA ALEATORIA CUANDO NO ENTIENDE
-                const chisteAzar = chistes[Math.floor(Math.random() * chistes.length)];
-                addBotMsg(chisteAzar);
-            }
+                // Chistes/Inesperados
+                else {
+                    const azar = chistes[Math.floor(Math.random() * chistes.length)];
+                    addBotMsg(azar);
+                }
+            }, 600);
         }
 
         function addBotMsg(t) {
