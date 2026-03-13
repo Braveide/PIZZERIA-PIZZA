@@ -2,126 +2,131 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Freddy Fazbear's Pizza - Bot Panel</title>
+    <title>Freddy's Pizza - Bot Inteligente</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        :root { --pizzared: #8b0000; --fnafgold: #dbb400; }
-        body { background: #1a1a1a; color: white; font-family: 'Courier New', Courier, monospace; margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
+        /* Mantenemos tu estilo original de las capturas */
+        :root { --fnaf-orange: #ff6600; --fnaf-bg: #f5f5dc; }
+        body { font-family: 'Segoe UI', sans-serif; background-color: var(--fnaf-bg); margin: 0; }
         
-        #chat-container { width: 90%; max-width: 500px; background: #2a2a2a; border: 4px solid var(--pizzared); border-radius: 10px; margin-top: 20px; display: flex; flex-direction: column; height: 500px; box-shadow: 0 0 20px rgba(139, 0, 0, 0.5); }
-        #messages { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; }
+        /* Estilo del Chat que ya tenías */
+        #chat-window { 
+            position: fixed; bottom: 80px; right: 20px; 
+            width: 350px; height: 450px; 
+            background: white; border-radius: 15px; 
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            display: flex; flex-direction: column; overflow: hidden;
+            border: 2px solid black;
+        }
+        .chat-header { background: black; color: white; padding: 10px; font-weight: bold; display: flex; justify-content: space-between; }
+        #chat-messages { flex: 1; padding: 10px; overflow-y: auto; background: #fff; display: flex; flex-direction: column; gap: 8px; }
         
-        .msg { padding: 10px; border-radius: 8px; max-width: 80%; }
-        .bot { background: #444; border-left: 4px solid var(--fnafgold); align-self: flex-start; }
-        .user { background: var(--pizzared); align-self: flex-end; }
+        /* Burbujas de mensaje estilo Vercel */
+        .msg { padding: 8px 12px; border-radius: 15px; max-width: 80%; font-size: 14px; }
+        .bot-msg { background: #f1f1f1; align-self: flex-start; border: 1px solid #ccc; }
+        .user-msg { background: var(--fnaf-orange); color: white; align-self: flex-end; }
 
-        #input-area { display: flex; padding: 10px; border-top: 1px solid #444; }
-        input { flex: 1; padding: 10px; border: none; border-radius: 5px; background: #333; color: white; outline: none; }
-        button { padding: 10px 15px; margin-left: 5px; background: var(--fnafgold); border: none; cursor: pointer; font-weight: bold; border-radius: 5px; }
-        
-        #soporte-btn { background: #0066cc; color: white; margin-top: 5px; width: 100%; border-radius: 5px; border: none; padding: 8px; cursor: pointer; }
+        .input-area { border-top: 1px solid #eee; padding: 10px; display: flex; }
+        input { flex: 1; border: 1px solid #ccc; border-radius: 20px; padding: 8px 15px; outline: none; }
+        .send-btn { background: var(--fnaf-orange); border: none; color: white; border-radius: 50%; width: 35px; margin-left: 5px; cursor: pointer; }
+
+        /* El botón flotante de la pizza */
+        .pizza-floater { position: fixed; bottom: 20px; right: 20px; width: 60px; height: 60px; cursor: pointer; transition: transform 0.3s; }
+        .pizza-floater:hover { transform: scale(1.1); }
+
+        /* Banner de música activa */
+        #music-banner { background: #94ad4b; color: white; text-align: center; font-size: 10px; padding: 2px; display: none; }
     </style>
 </head>
-<body onclick="iniciarMusica()">
+<body>
 
-    <h1>Freddy's Pizza Hub</h1>
-    <p id="welcome-text">Iniciando sistema...</p>
+    <img src="https://cdn-icons-png.flaticon.com/512/1404/1404945.png" class="pizza-floater" onclick="toggleChat()">
 
-    <div id="chat-container">
-        <div id="messages">
-            <div class="msg bot">¡Hola! Soy FazBot. ¿Cómo te llamas para poder atenderte mejor?</div>
+    <div id="chat-window" style="display: none;">
+        <div class="chat-header">
+            <span>FREDDY'S BOT 🤖</span>
+            <span style="cursor:pointer" onclick="toggleChat()">✖</span>
         </div>
-        <div id="input-area">
-            <input type="text" id="userInput" placeholder="Escribe aquí..." onkeypress="handleEnter(event)">
-            <button onclick="sendMessage()">Enviar</button>
+        <div id="music-banner">🔊 MÚSICA DE FNAF ACTIVA</div>
+        <div id="chat-messages">
+            <div class="msg bot-msg">¡Hola! Bienvenido a Freddy's. ¿Cómo te llamas para darte una mejor atención?</div>
+        </div>
+        <div class="input-area">
+            <input type="text" id="userInput" placeholder="Escribe tu duda...">
+            <button class="send-btn" onclick="handleSend()">></button>
         </div>
     </div>
 
-    <audio id="fnafMusic" loop>
+    <audio id="bg-music" loop>
         <source src="https://www.myinstants.com/media/sounds/fnaf-1-music-box.mp3" type="audio/mpeg">
     </audio>
 
     <script>
-        // 1. CONFIGURACIÓN SUPABASE (Reemplaza con tus llaves reales)
-        const SUPABASE_URL = 'TU_URL_DE_SUPABASE';
-        const SUPABASE_KEY = 'TU_KEY_DE_SUPABASE';
-        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        // CONFIGURACIÓN DE TU SUPABASE
+        const _URL = "TU_SUPABASE_URL";
+        const _KEY = "TU_SUPABASE_KEY";
+        const supabase = supabase.createClient(_URL, _KEY);
 
-        let userName = "";
-        let musicStarted = false;
+        let nombreUsuario = "";
 
-        // 2. ACTIVAR MÚSICA (Solo tras interacción del usuario)
-        function iniciarMusica() {
-            if (!musicStarted) {
-                const audio = document.getElementById('fnafMusic');
-                audio.play();
-                musicStarted = true;
-            }
+        function toggleChat() {
+            const chat = document.getElementById('chat-window');
+            chat.style.display = chat.style.display === 'none' ? 'flex' : 'none';
+            // Iniciar música al abrir por primera vez
+            const music = document.getElementById('bg-music');
+            music.play().then(() => {
+                document.getElementById('music-banner').style.display = 'block';
+            }).catch(e => console.log("Esperando interacción"));
         }
 
-        async function sendMessage() {
+        async function handleSend() {
             const input = document.getElementById('userInput');
-            const text = input.value.trim();
-            if (!text) return;
+            const texto = input.value.trim();
+            if(!texto) return;
 
-            addMessage(text, 'user');
-            input.value = '';
+            renderMsg(texto, 'user-msg');
+            input.value = "";
 
-            // Lógica del Bot
-            let response = "";
+            let respuesta = "";
 
-            // A. Registrar nombre si no existe
-            if (!userName) {
-                userName = text;
-                response = `¡Mucho gusto, **${userName}**! ¿En qué puedo ayudarte hoy? Puedes preguntar por el menú, la pizza más barata o pedir soporte.`;
-                document.getElementById('welcome-text').innerText = `Usuario activo: ${userName}`;
+            // 1. Lógica para capturar el nombre
+            if(!nombreUsuario) {
+                nombreUsuario = texto;
+                respuesta = `¡Un placer, **${nombreUsuario}**! ¿Qué te gustaría ordenar? Puedes preguntar por las pizzas, bebidas o la más barata.`;
             } 
-            // B. Lógica de Soporte
-            else if (text.toLowerCase().includes("soporte") || text.toLowerCase().includes("ayuda")) {
-                response = `Entendido ${userName}, te he generado un botón de contacto directo abajo.`;
-                addSoporteBtn();
+            // 2. Lógica de Soporte con botón
+            else if(texto.toLowerCase().includes("soporte")) {
+                respuesta = `${nombreUsuario}, te he generado un botón de soporte. <br><button onclick="window.open('https://wa.me/tu_numero')" style="background:blue; color:white; border:none; padding:5px; border-radius:5px; margin-top:5px; cursor:pointer;">Hablar con Humano</button>`;
             }
-            // C. Lógica de Pizza más barata (Consulta BD)
-            else if (text.toLowerCase().includes("barata") || text.toLowerCase().includes("económica")) {
-                const { data } = await supabase.from('productos').select('*').eq('categoria', 'pizzas').order('precio', { ascending: true }).limit(1);
-                if (data && data.length > 0) {
-                    response = `¡Oferta especial para ti, ${userName}! La pizza más barata es la **${data[0].nombre}** a tan solo **$${data[0].precio}**.`;
-                } else {
-                    response = "Lo siento, no pude acceder a los precios ahora mismo.";
+            // 3. Lógica de BD: Pizza más barata
+            else if(texto.toLowerCase().includes("barata") || texto.toLowerCase().includes("económica")) {
+                const { data } = await supabase.from('productos').select('*').eq('categoria', 'pizzas').order('precio', {ascending: true}).limit(1);
+                if(data.length > 0) {
+                    respuesta = `Para ti ${nombreUsuario}, la opción más económica es la **${data[0].nombre}** a solo **$${data[0].precio}**.`;
                 }
             }
-            // D. Consulta de Menú
-            else if (text.toLowerCase().includes("pizzas") || text.toLowerCase().includes("menú")) {
+            // 4. Lógica de Menú
+            else if(texto.toLowerCase().includes("pizzas") || texto.toLowerCase().includes("menú")) {
                 const { data } = await supabase.from('productos').select('nombre').eq('categoria', 'pizzas');
                 const lista = data.map(p => p.nombre).join(", ");
-                response = `Claro ${userName}, tenemos: ${lista}. ¿Cuál te gustaría?`;
+                respuesta = `Claro ${nombreUsuario}, nuestras pizzas son: ${lista}.`;
             }
-            // E. Fallback (Humor Freddy)
+            // 5. Fallback (Chiste/Error)
             else {
-                response = `${userName}, no entiendo eso, pero recuerda: "The show must go on". ¡Prueba preguntando por el menú!`;
+                respuesta = `No te entendí muy bien, ${nombreUsuario}... 😅 pero si tienes hambre, ¡pide una pizza!`;
             }
 
-            setTimeout(() => addMessage(response, 'bot'), 600);
+            setTimeout(() => renderMsg(respuesta, 'bot-msg'), 500);
         }
 
-        function addMessage(text, sender) {
-            const msgDiv = document.createElement('div');
-            msgDiv.className = `msg ${sender}`;
-            msgDiv.innerHTML = text;
-            document.getElementById('messages').appendChild(msgDiv);
-            document.getElementById('messages').scrollTop = document.getElementById('messages').scrollHeight;
+        function renderMsg(text, tipo) {
+            const container = document.getElementById('chat-messages');
+            const div = document.createElement('div');
+            div.className = `msg ${tipo}`;
+            div.innerHTML = text;
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
         }
-
-        function addSoporteBtn() {
-            const btn = document.createElement('button');
-            btn.id = "soporte-btn";
-            btn.innerText = "Click aquí para Soporte Técnico";
-            btn.onclick = () => window.open('https://wa.me/TUNUMERO', '_blank');
-            document.getElementById('messages').appendChild(btn);
-        }
-
-        function handleEnter(e) { if (e.key === 'Enter') sendMessage(); }
     </script>
 </body>
 </html>
