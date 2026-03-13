@@ -50,7 +50,6 @@
 
         .header-right { display: flex; gap: 15px; align-items: center; }
 
-        /* --- BOTONES CIRCULARES --- */
         .cart-btn { 
             background: #fff; border: 3px solid #000; color: #000; 
             width: 48px; height: 48px; border-radius: 50%; cursor: pointer; 
@@ -77,7 +76,6 @@
             animation: slideDown 0.3s ease-out; 
         }
         .user-dropdown.active { display: block; }
-
         .user-info-box { text-align: center; padding-bottom: 15px; border-bottom: 2px solid #eee; margin-bottom: 15px; }
         .dropdown-avatar { width: 65px; height: 65px; border-radius: 50%; border: 3px solid #000; margin: 0 auto 10px; object-fit: cover; display: block; }
         .user-role-badge { font-size: 10px; font-weight: 900; color: #ff6b00; text-transform: uppercase; letter-spacing: 1px; margin-top: 5px; }
@@ -139,6 +137,10 @@
     </style>
 </head>
 <body>
+
+    <audio id="chatMusic" loop>
+        <source src="imagenes/cancion.mp3" type="audio/mpeg">
+    </audio>
 
     <header class="header">
         <a href="index.html" class="logo-container">
@@ -204,40 +206,34 @@
 
     <div class="container">
         <h2 class="section-title">Especialidades</h2>
-        <div class="grid-container">
-            <div class="card">
-                <img src="imagenes/pizza_pepe.png" class="card-image" alt="Pepperoni">
-                <div class="card-info">
-                    <h3>Pepperoni Premium</h3>
-                    <p>Corte grueso y extra queso.</p>
-                </div>
-                <div class="card-footer">
-                    <span class="card-price">$121.99</span>
-                    <button class="add-btn" onclick="addToCart('Pepperoni Premium', 121.99, 'imagenes/pizza_pepe.png')">AGREGAR</button>
-                </div>
+        <div class="grid-container" id="productos-container">
             </div>
-            <div class="card">
-                <img src="imagenes/pizza_suprema.png" class="card-image" alt="Suprema">
-                <div class="card-info">
-                    <h3>Pizza Suprema</h3>
-                    <p>Pimientos, cebolla y champiñones.</p>
-                </div>
-                <div class="card-footer">
-                    <span class="card-price">$166.99</span>
-                    <button class="add-btn" onclick="addToCart('Pizza Suprema', 166.99, 'imagenes/pizza_suprema.png')">AGREGAR</button>
-                </div>
+    </div>
+
+    <div id="chat-bubble" onclick="toggleChat()" style="position: fixed; bottom: 20px; right: 20px; background: #ff6b00; border: 3px solid #000; width: 65px; height: 65px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; cursor: pointer; z-index: 10000; box-shadow: 5px 5px 0px #000;">
+        🍕
+    </div>
+
+    <div id="chat-window" style="display: none; position: fixed; bottom: 95px; right: 20px; width: 350px; height: 500px; background: #fff; border: 4px solid #000; border-radius: 20px; flex-direction: column; z-index: 10000; box-shadow: 12px 12px 0px rgba(0,0,0,0.15); overflow: hidden; animation: fadeInUp 0.3s ease;">
+        <div style="background: #000; color: #fff; padding: 15px; font-family: 'Archivo Black', sans-serif; display: flex; justify-content: space-between; align-items: center;">
+            <span>FREDDY'S BOT 🤖</span>
+            <div style="display: flex; gap: 10px;">
+                <button onclick="clearChat()" style="background:none; border:none; color:#fff; cursor:pointer; font-size:12px;">🗑️ Limpiar</button>
+                <span onclick="toggleChat()" style="cursor:pointer; font-size: 20px;">✕</span>
             </div>
-            <div class="card">
-                <img src="imagenes/pizza_marg.png" class="card-image" alt="Margherita">
-                <div class="card-info">
-                    <h3>Margherita</h3>
-                    <p>Sencillez: mozzarella y albahaca.</p>
-                </div>
-                <div class="card-footer">
-                    <span class="card-price">$158.99</span>
-                    <button class="add-btn" onclick="addToCart('Margherita', 158.99, 'imagenes/pizza_marg.png')">AGREGAR</button>
-                </div>
-            </div>
+        </div>
+        <div id="chat-messages" style="flex-grow: 1; padding: 15px; overflow-y: auto; background: #fdf2e9; display: flex; flex-direction: column; gap: 12px;"></div>
+        
+        <div id="chat-buttons" style="padding: 10px; background: #fff; border-top: 2px solid #eee; display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+            <button onclick="window.location.href='catalogo.html'" style="padding: 8px; border: 2px solid #000; background: #fff; font-weight: bold; cursor: pointer; border-radius: 8px;">🍕 Menú</button>
+            <button onclick="showSchedule()" style="padding: 8px; border: 2px solid #000; background: #fff; font-weight: bold; cursor: pointer; border-radius: 8px;">⏰ Horarios</button>
+            <button onclick="window.location.href='Conta.html'" style="padding: 8px; border: 2px solid #000; background: #fff; font-weight: bold; cursor: pointer; border-radius: 8px;">📞 Contacto</button>
+            <button onclick="reportIssue()" style="padding: 8px; border: 2px solid #000; background: #fff; font-weight: bold; cursor: pointer; border-radius: 8px;">⚠️ Fallas</button>
+        </div>
+
+        <div style="padding: 10px; border-top: 3px solid #000; display: flex; gap: 5px; background: #fff;">
+            <input type="text" id="chat-input" placeholder="Escribe tu duda..." style="flex-grow: 1; padding: 10px; border: 2px solid #000; border-radius: 10px; outline: none;">
+            <button onclick="handleChat()" style="background: #ff6b00; border: 2px solid #000; width: 45px; border-radius: 10px; cursor: pointer; font-weight: bold;">></button>
         </div>
     </div>
 
@@ -258,99 +254,122 @@
         document.addEventListener('DOMContentLoaded', () => {
             initAuth();
             updateCartBadge();
+            cargarPizzasDesdeSupabase();
+            
             new Swiper('.hero-swiper', {
-                loop: true, 
-                autoplay: { delay: 5000 },
+                loop: true, autoplay: { delay: 5000 },
                 pagination: { el: '.swiper-pagination', clickable: true },
                 navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
             });
         });
 
+        // --- LÓGICA DE PIZZAS ---
+        async function cargarPizzasDesdeSupabase() {
+            const container = document.getElementById('productos-container');
+            const { data: pizzas, error } = await supabaseClient.from('pizzas').select('*');
+            if (error) { container.innerHTML = '<p>Error al cargar.</p>'; return; }
+            if (pizzas) {
+                container.innerHTML = '';
+                pizzas.forEach(p => {
+                    container.innerHTML += `
+                        <div class="card">
+                            <img src="${p.imagen_url}" class="card-image">
+                            <div class="card-info"><h3>${p.nombre}</h3><p>${p.descripcion || ''}</p></div>
+                            <div class="card-footer">
+                                <span class="card-price">$${p.precio}</span>
+                                <button class="add-btn" onclick="addToCart('${p.nombre}', ${p.precio}, '${p.imagen_url}')">AGREGAR</button>
+                            </div>
+                        </div>`;
+                });
+            }
+        }
+
+        // --- LÓGICA DE CHATBOT ---
+        let chatIniciado = false;
+        function toggleChat() {
+            const chat = document.getElementById('chat-window');
+            const isOpening = chat.style.display === 'none';
+            chat.style.display = isOpening ? 'flex' : 'none';
+            if (isOpening && !chatIniciado) {
+                document.getElementById('chatMusic').play().catch(e => console.log("Sonido bloqueado hasta interacción"));
+                iniciarSaludo();
+                chatIniciado = true;
+            }
+        }
+
+        async function iniciarSaludo() {
+            const { data: { user } } = await supabaseClient.auth.getUser();
+            let nombre = "Amigo";
+            if (user) {
+                const { data: p } = await supabaseClient.from('perfiles').select('nombre').eq('id', user.id).maybeSingle();
+                if (p?.nombre) nombre = p.nombre;
+            }
+            addMessage("bot", `¡Hola **${nombre}**! 🍕 Bienvenido a Freddy's. ¿Qué te gustaría ordenar o en qué te ayudo?`);
+        }
+
+        async function handleChat() {
+            const input = document.getElementById('chat-input');
+            const query = input.value.toLowerCase().trim();
+            if (!query) return;
+            addMessage("user", input.value);
+            input.value = '';
+
+            if (query.includes("menu") || query.includes("pizza") || query.includes("tienen")) {
+                const { data: p } = await supabaseClient.from('pizzas').select('nombre, precio');
+                let res = p.map(x => `• ${x.nombre} ($${x.precio})`).join('<br>');
+                addMessage("bot", `Claro, aquí tienes nuestro menú real:<br>${res}`);
+            } else if (query.includes("hola")) {
+                addMessage("bot", "¡Hola! ¿Buscas la mejor pizza del mundo?");
+            } else {
+                addMessage("bot", "No estoy seguro de eso, pero puedes usar los botones de abajo o ir a **Contacto** para hablar con un administrador. 📞");
+            }
+        }
+
+        function addMessage(sender, text) {
+            const msg = document.createElement('div');
+            msg.style = `padding:10px; border-radius:15px; border:2px solid #000; max-width:85%; font-size:14px; margin-bottom:10px; ${sender==='bot' ? 'background:#fff; align-self:flex-start;' : 'background:#ff6b00; color:#fff; align-self:flex-end;'}`;
+            msg.innerHTML = text;
+            document.getElementById('chat-messages').appendChild(msg);
+            document.getElementById('chat-messages').scrollTop = document.getElementById('chat-messages').scrollHeight;
+        }
+
+        function showSchedule() { addMessage("bot", "⏰ **Horarios:**<br>Lun-Vie: 11am-10pm<br>Sáb-Dom: 11am-12pm"); }
+        function reportIssue() { addMessage("bot", "⚠️ ¡Ups! Reporta la falla en la sección **Contacto** para que lo arreglemos."); }
+        function clearChat() { document.getElementById('chat-messages').innerHTML = ''; chatIniciado = false; iniciarSaludo(); }
+
+        // --- LÓGICA DE USUARIO Y CARRITO ---
         async function initAuth() {
             const { data: { user } } = await supabaseClient.auth.getUser();
             const userBtn = document.getElementById('userBtn');
             const userDropdown = document.getElementById('userDropdown');
-
             if (user) {
-                const { data: perfil } = await supabaseClient
-                    .from('perfiles')
-                    .select('rol, nombre, foto_url')
-                    .eq('id', user.id)
-                    .maybeSingle();
-
-                const rol = perfil?.rol || 'usuario';
-                const nombre = perfil?.nombre || user.email.split('@')[0];
-                const foto = perfil?.foto_url;
-
-                if (foto) {
-                    userBtn.innerHTML = `<img src="${foto}" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">`;
-                } else {
-                    const inicial = nombre.charAt(0).toUpperCase();
-                    userBtn.innerHTML = `<div style="width:100%; height:100%; background:#ff6b00; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:900; border-radius:50%; font-size:18px;">${inicial}</div>`;
-                }
-                
-                userBtn.onclick = (e) => { 
-                    e.stopPropagation();
-                    userDropdown.classList.toggle('active'); 
-                };
-
-                const avatarImg = document.getElementById('userAvatarDropdown');
-                const initialDiv = document.getElementById('userInitial');
-                
-                if (foto) {
-                    avatarImg.src = foto;
-                    avatarImg.style.display = 'block';
-                    initialDiv.style.display = 'none';
-                } else {
-                    avatarImg.style.display = 'none';
-                    initialDiv.textContent = nombre.charAt(0).toUpperCase();
-                    initialDiv.style.display = 'flex';
-                }
-
+                const { data: p } = await supabaseClient.from('perfiles').select('*').eq('id', user.id).maybeSingle();
+                const nombre = p?.nombre || user.email.split('@')[0];
+                userBtn.innerHTML = p?.foto_url ? `<img src="${p.foto_url}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">` : `<div style="width:100%; height:100%; background:#ff6b00; color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:900;">${nombre[0].toUpperCase()}</div>`;
+                userBtn.onclick = (e) => { e.stopPropagation(); userDropdown.classList.toggle('active'); };
                 document.getElementById('userName').textContent = nombre;
                 document.getElementById('userEmail').textContent = user.email;
-                document.getElementById('userRole').textContent = rol;
-                
-                if (rol === 'admin') {
-                    document.getElementById('adminLinkContainer').innerHTML = `
-                        <a href="panelA.html" class="profile-menu-link admin-link">⚙️ PANEL ADMIN</a>
-                    `;
-                }
+                document.getElementById('userRole').textContent = p?.rol || 'usuario';
+                if (p?.rol === 'admin') document.getElementById('adminLinkContainer').innerHTML = `<a href="panelA.html" class="profile-menu-link admin-link">⚙️ PANEL ADMIN</a>`;
             } else {
                 userBtn.onclick = () => window.location.href = 'login.html';
             }
         }
 
-        async function cerrarSesion() {
-            await supabaseClient.auth.signOut();
-            window.location.reload();
-        }
-
-        function addToCart(name, price, img) {
-            let cart = JSON.parse(localStorage.getItem('pizzaCart')) || {};
-            cart[name] = cart[name] ? {...cart[name], quantity: cart[name].quantity + 1} : {name, price, image: img, quantity: 1};
-            localStorage.setItem('pizzaCart', JSON.stringify(cart));
+        async function cerrarSesion() { await supabaseClient.auth.signOut(); window.location.reload(); }
+        function addToCart(n, p, i) {
+            let c = JSON.parse(localStorage.getItem('pizzaCart')) || {};
+            c[n] = c[n] ? {...c[n], quantity: c[n].quantity + 1} : {name:n, price:p, image:i, quantity:1};
+            localStorage.setItem('pizzaCart', JSON.stringify(c));
             updateCartBadge();
         }
-
         function updateCartBadge() {
-            let cart = JSON.parse(localStorage.getItem('pizzaCart')) || {};
-            let total = Object.values(cart).reduce((s, i) => s + i.quantity, 0);
-            const badge = document.getElementById('cartBadge');
-            if (total > 0) {
-                badge.style.display = 'flex';
-                badge.textContent = total;
-            } else {
-                badge.style.display = 'none';
-            }
+            let c = JSON.parse(localStorage.getItem('pizzaCart')) || {};
+            let t = Object.values(c).reduce((s, x) => s + x.quantity, 0);
+            document.getElementById('cartBadge').style.display = t > 0 ? 'flex' : 'none';
+            document.getElementById('cartBadge').textContent = t;
         }
-
-        window.onclick = (e) => {
-            const container = document.getElementById('userMenuContainer');
-            if (container && !container.contains(e.target)) {
-                document.getElementById('userDropdown').classList.remove('active');
-            }
-        };
+        window.onclick = (e) => { if (!document.getElementById('userMenuContainer').contains(e.target)) document.getElementById('userDropdown').classList.remove('active'); };
     </script>
 </body>
 </html>
