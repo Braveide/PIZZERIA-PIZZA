@@ -317,8 +317,8 @@
                 <div class="chat-header-info">
                     <div class="chat-avatar">🐻</div>
                     <div>
-                        <div class="chat-title">🔥 Freddy's TE RESPONDE , PASALEEEE</div>
-                        <div class="chat-subtitle">● TU ÑERO FAVORITOOOO</div>
+                        <div class="chat-title">🔥 Freddy's TE RESPONDE</div>
+                        <div class="chat-subtitle">● TU CHATBOT FAVORITOOOO</div>
                     </div>
                 </div>
                 <button id="clearChat">🗑 Limpiar</button>
@@ -337,7 +337,7 @@
 
     
             <div class="chat-input">
-                <input id="chatInput" placeholder="Pregúntale a Freddy, wey..." />
+                <input id="chatInput" placeholder="Pregúntale a Freddy..." />
                 <button onclick="sendMessage()">➤</button>
             </div>
         </div>
@@ -527,7 +527,7 @@
             const saludos = [
                 `¡Ey ey ey, ${nombre}! 🐻🔥 ¡Ya llegó Freddy, tu cuate de las pizzas! ¿Qué se te antoja o en qué te echo la mano?`,
                 `¡Órale ${nombre}! 🍕 Soy Freddy Fazbear, pero aquí todos me dicen el Rey de la Pizza 👑 ¿Qué onda, en qué te ayudo?`,
-                `¡Arre ${nombre}! 🐻 El mero mero Freddy a tus órdenes. ¿Vienes por pizza o qué pex?`
+                `¡Arre ${nombre}! 🐻 El mero mero Freddy a tus órdenes. ¿Vienes por pizza?`
             ];
             addBotMessage(saludos[Math.floor(Math.random() * saludos.length)]);
         }
@@ -561,17 +561,17 @@
                 .normalize("NFD").replace(/[\u0300-\u036f]/g, ""); // quita acentos
 
             // ── Saludos ──
-            if (/^(hola|buenas|ey|arre|que onda|qué onda|q onda|hey|hello|hi|buenas tardes|buenos dias|buenas noches|wey|wee|oye)/.test(msg)) {
+            if (/^(hola|buenas|ey|arre|que onda|qué onda|q onda|hey|hello|hi|buenas tardes|buenos dias|buenas noches|oye)/.test(msg)) {
                 const r = [
-                    "¡Ey ey! 🐻🔥 ¿Qué onda? ¡Aquí Freddy, el animatrónico más chido de la pizzería! ¿Qué necesitas, cuate?",
-                    "¡Órale! 👊 ¡Qué bueno que jalaste! ¿En qué te echo la mano hoy?",
+                    "¡Ey ey! 🐻🔥 ¿Qué onda? ¡Aquí Freddy, el animatrónico más cool de la pizzería! ¿Qué necesitas?",
+                    "¡Órale! 👊 ¡Qué bueno que te animas! ¿En qué te echo la mano hoy?",
                     "¡Arre! 🍕 ¡Ya llegaste! Freddy a tus órdenes, ¿qué se te antoja?"
                 ];
                 addBotMessage(random(r)); return;
             }
 
             // ── Menú / Pizzas desde Supabase o respaldo ──
-            if (/pizza|menu|menú|carta|comer|antoj|especialidad|que tienen|que venden|productos/.test(msg)) {
+            if (/pizza|menu|menú|carta|comer|antojo|especialidad|que tienen|que venden|productos/.test(msg)) {
                 mostrarProductos(); return;
             }
 
@@ -582,7 +582,7 @@
 
             // ── Pepperoni específico ──
             if (/pepperoni|pepe|pepper/.test(msg)) {
-                addBotMessage("🍕 ¡La Pepperoni Premium está de pelos, wey! Pepperoni de corte grueso, extra queso y esa mezcla secreta que te vuela la cabeza.");
+                addBotMessage("🍕 ¡La Pepperoni Premium es otra onda! Pepperoni de corte grueso, extra queso y esa mezcla secreta que te vuela la cabeza.");
                 addProductCard("Pepperoni Premium", "$121.99", "Corte grueso, extra queso 🧀🔥"); return;
             }
 
@@ -594,7 +594,7 @@
 
             // ── Suprema ──
             if (/suprema|supreme|pimiento|cebolla|champinon|champiñon|verdura/.test(msg)) {
-                addBotMessage("🍕 ¡La Suprema es para los que quieren el desmadre completo! Pimientos, cebolla y champiñones encima. ¡Está cabrona buena!");
+                addBotMessage("🍕 ¡La Suprema es para los que quieren el combo completo! Pimientos, cebolla y champiñones encima. ¡Está muy buena!");
                 addProductCard("Pizza Suprema", "$166.99", "Pimientos + cebolla + champiñones 🌶️"); return;
             }
 
@@ -605,16 +605,22 @@
             }
 
             // ── Reportar ──
-            if (/reportar|reporte|falla|error|problema|queja|mal|bug|no sirve/.test(msg)) {
-                addBotMessage("🛠️ ¡Noo, qué gacho! Si algo salió chueco, aquí puedes reportarlo y mi raza lo arregla en chinga:");
+            if (/reportar|reporte|falla|error|problema|queja|mal|queja|bug|no sirve/.test(msg)) {
+                addBotMessage("🛠️ ¡Noo, qué maaaaal! Si algo salió chueco, aquí puedes reportarlo y mi team lo arregla rapidísimo:");
                 addLinkBtn("Reportar ahorita", "Conta.html"); return;
             }
 
             // ── Nosotros / historia ──
             if (/quien|quién|son ustedes|nosotros|historia|freddy|animatronico|animatrónico|como nacieron/.test(msg)) {
-                addBotMessage("🐻 ¡Somos Freddy's Pizza, wey! La pizzería más chida del barrio. Nacimos con ganas de darle de comer rico a toda la raza. ¡Aquí puedes saber más:");
+                addBotMessage("🐻 ¡Somos Freddy's Pizza! La pizzería más chida del condado jaja. Nacimos con ganas de darle de comer rico a todos nuestros clientes. ¡Aquí puedes saber más:");
                 addLinkBtn("Ver quiénes somos", "contacto.html"); return;
             }
+
+            // ── Métodos de Pago ──
+            if (/pago|pagar|metodo|método|efectivo|mercadopago|mercado pago|tarjeta|pago con|dinero|feria||billete|como pago/.test(msg)) {
+                addBotMessage("🍕 ¡Aceptamos de todo para que no te quedes con el antojo! Puedes pagar con **Mercado Pago** (tarjeta) o en **Efectivo** al recibir tu pizza. Tú eliges al finalizar tu pedido en el carrito:");
+                addLinkBtn("Ver mi carrito 🛒", "carrito.html"); return;
+            }            
 
             // ── Pedido / orden ──
             if (/pedir|ordenar|orden|pedido|quiero|me das|me pones|lleva|domicilio|delivery|envio|envío/.test(msg)) {
@@ -624,7 +630,7 @@
 
             // ── Promos / descuentos ──
             if (/promo|promocion|promoción|descuento|oferta|2x1|gratis|barato|deal/.test(msg)) {
-                addBotMessage("🎉 ¡Ey! Las promos están en el catálogo, wey. A veces hay deals bien chidos, no te los pierdas:");
+                addBotMessage("🎉 ¡Ey! Las promos están en el catálogo. A veces hay deals bien cool, no te los pierdas:");
                 addLinkBtn("Ver promos", "catalogo.html"); return;
             }
 
@@ -636,16 +642,16 @@
 
             // ── Ubicación ──
             if (/donde|dónde|ubicacion|ubicación|direccion|dirección|mapa|local|sucursal|estan/.test(msg)) {
-                addBotMessage("📍 ¡Para saber dónde encontrarnos, wey, entra a contacto! Ahí está el mapa y todo:");
+                addBotMessage("📍 ¡Para saber dónde encontrarnos, entra a contacto! Ahí está el mapa y todo bien cute:");
                 addLinkBtn("Ver ubicación", "contacto.html"); return;
             }
 
             // ── Insultos / groserías → respuesta naca pero positiva ──
             if (/idiota|estupido|tonto|malo|feo|odio|asco|basura|mierda|puto|puta/.test(msg)) {
                 const r = [
-                    "¡Ey ey, cálmate! 😅 Aquí somos familia, wey. ¿Qué te hice? ¡Mejor cuéntame qué pizza se te antoja y ya armamos la paz! 🍕",
+                    "¡Ey ey, calma! 😅 Aquí somos familia. ¿Qué te hice? ¡Mejor cuéntame qué pizza se te antoja y ya armamos la paz! 🍕",
                     "¡Órale pues! 😂 No te enojes, cuate. ¿Te mandaron con hambre? ¡Una buena pizza te regresa el buen humor, confía en Freddy!",
-                    "¡Jajaja wey! 😂 No te me pongas así. Freddy te quiere aunque no lo creas 🐻 ¿Qué se te ofrece?"
+                    "¡Jajaja! 😂 No te me pongas así. Freddy te quiere aunque no lo creas 🐻 ¿Qué se te ofrece?"
                 ];
                 addBotMessage(random(r)); return;
             }
@@ -653,7 +659,7 @@
             // ── Gracias ──
             if (/gracias|gracia|thank|cheers|de nada|ok cool|perfecto|excelente/.test(msg)) {
                 const r = [
-                    "¡De nada, wey! 🐻 Para eso estoy. ¿Algo más en que te eche la mano?",
+                    "¡De nada! 🐻 Para eso estoy. ¿Algo más en que te eche la mano?",
                     "¡Arre! 👊 Freddy siempre a tus órdenes. ¿Algo más?",
                     "¡Con gusto, cuate! 🔥 ¿Algo más o ya te quedaste a gusto?"
                 ];
@@ -663,7 +669,7 @@
             // ── Adios ──
             if (/adios|adiós|bye|chao|hasta luego|nos vemos|me voy|chau/.test(msg)) {
                 const r = [
-                    "¡Arre! 👋 ¡Cuídate, wey! Vuelve pronto que aquí siempre hay pizza esperándote 🍕",
+                    "¡Arre! 👋 ¡Cuídate! Vuelve pronto que aquí siempre hay pizza esperándote 🍕",
                     "¡Hasta luego, cuate! 🐻 Freddy siempre va a estar aquí. ¡No me extrañes mucho!",
                     "¡Órale, nos vemos! 👊 ¡Regresa con hambre!"
                 ];
@@ -672,9 +678,9 @@
 
             // ── Respuesta genérica naca ──
             const genericas = [
-                "¡Ey wey! 🤔 No le entendí muy bien, pero aquí Freddy pa' lo que necesites. ¿Me preguntas sobre el menú, precios, pedidos o qué?",
-                "¡Arre! 😅 Esa no me la sabía, cuate. Pero sobre pizzas, precios y pedidos sí soy un chingón. ¿En qué te echo la mano?",
-                "¡Jajaja! 🐻 Freddy tiene sus límites, wey. ¡Pregúntame del menú o de los pedidos y ahí sí te mato!"
+                "¡El diaaaaablo! 🤔 No le entendí muy bien, pero aquí Freddy pa' lo que necesites. ¿Me preguntas sobre el menú, precios, pedidos o qué?",
+                "¡Arre! 😅 Esa no me la sabía, cuate. Pero sobre pizzas, precios y pedidos sí soy un el mejor. ¿En qué te echo la mano?",
+                "¡Jajaja! 🐻 Freddy tiene sus límites. ¡Pregúntame del menú o de los pedidos y ahí sí acierto!"
             ];
             addBotMessage(random(genericas));
         }
