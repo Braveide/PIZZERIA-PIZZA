@@ -523,7 +523,7 @@
 
         // ── Mensaje de bienvenida ──
         function initChat() {
-            const nombre = document.getElementById("userName")?.textContent?.trim() || "wey";
+            const nombre = document.getElementById("userName")?.textContent?.trim() || "Bro";
             const saludos = [
                 `¡Ey ey ey, ${nombre}! 🐻🔥 ¡Ya llegó Freddy, tu cuate de las pizzas! ¿Qué se te antoja o en qué te echo la mano?`,
                 `¡Órale ${nombre}! 🍕 Soy Freddy Fazbear, pero aquí todos me dicen el Rey de la Pizza 👑 ¿Qué onda, en qué te ayudo?`,
@@ -636,7 +636,7 @@
 
             // ── Horarios ──
             if (/horario|hora|abierto|cierran|cuando abren|cuándo abren|a qué hora|disponible/.test(msg)) {
-                addBotMessage("🕒 ¡Ey! Por los horarios exactos te mando pa' la página de contacto porque a veces cambian, wey. ¡Ahí encuentras todo:");
+                addBotMessage("🕒 ¡Ey! Por los horarios exactos te mando pa' la página de contacto porque a veces cambian. ¡Ahí encuentras todo:");
                 addLinkBtn("Ver horarios / contacto", "contacto.html"); return;
             }
 
@@ -696,7 +696,7 @@
                     { nombre: "Margherita",        precio: 158.99, descripcion: "Mozzarella y albahaca fresca" }
                 ];
             }
-            addBotMessage(`🍕 ¡Órale! Aquí está lo que tenemos, wey. Todo está de pelos:`);
+            addBotMessage(`🍕 ¡Órale! Aquí está lo que tenemos. Todo está genial:`);
             productos.slice(0, 5).forEach(p => {
                 addProductCard(p.nombre, `$${Number(p.precio).toFixed(2)}`, p.descripcion || "");
             });
@@ -713,7 +713,7 @@
                 ];
             }
             const lista = productos.slice(0,5).map(p => `• ${p.nombre}: $${Number(p.precio).toFixed(2)}`).join("\n");
-            addBotMessage(`💰 ¡Te digo los precios ahorita, wey! Aquí van:\n\n${lista}\n\n¡Todo está bien chido de precio!`);
+            addBotMessage(`💰 ¡Te digo los precios ahorita! Aquí van:\n\n${lista}\n\n¡Todo está bien chido de precio!`);
             addLinkBtn("Ver todo el menú", "catalogo.html");
         }
 
