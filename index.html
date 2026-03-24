@@ -600,7 +600,7 @@
 
             // ── Contacto ──
             if (/contacto|contactar|hablar|llamar|telefono|teléfono|whatsapp|numero|número|comunicar/.test(msg)) {
-                addBotMessage("📞 ¡Claro que sí, wey! Para hablar con mi raza de Freddy's, aquí puedes contactarlos:");
+                addBotMessage("📞 ¡Claro que sí! Para hablar con mi raza de Freddy's, aquí puedes contactarlos:");
                 addLinkBtn("Ir a Contacto", "Conta.html"); return;
             }
 
@@ -617,7 +617,7 @@
             }
 
             // ── Métodos de Pago ──
-            if (/pago|pagar|metodo|método|efectivo|mercadopago|mercado pago|tarjeta|pago con|dinero|feria||billete|como pago/.test(msg)) {
+            if (/pago|pagar|metodo|método|efectivo|mercadopago|mercado pago|tarjeta|pago con|como pago/.test(msg)) {
                 addBotMessage("🍕 ¡Aceptamos de todo para que no te quedes con el antojo! Puedes pagar con **Mercado Pago** (tarjeta) o en **Efectivo** al recibir tu pizza. Tú eliges al finalizar tu pedido en el carrito:");
                 addLinkBtn("Ver mi carrito 🛒", "carrito.html"); return;
             }            
